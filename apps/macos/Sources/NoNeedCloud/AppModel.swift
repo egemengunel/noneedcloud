@@ -8,6 +8,8 @@ final class AppModel: ObservableObject {
     let runStateDirectory: URL
     let photoSourceFactory: @Sendable () -> any PhotoLibrarySource
     let loginItem: (any LoginItemService)?
+    let keychain: any KeychainStore
+    let httpClient: any HTTPClient
 
     @Published private(set) var plans: [BackupPlan]
     @Published private(set) var isSetupCompleted: Bool
@@ -26,7 +28,9 @@ final class AppModel: ObservableObject {
         runStateDirectory: URL? = nil,
         historyStore: (any RunHistoryStore)? = nil,
         photoSourceFactory: @escaping @Sendable () -> any PhotoLibrarySource = { PhotosFrameworkSource() },
-        loginItem: (any LoginItemService)? = nil
+        loginItem: (any LoginItemService)? = nil,
+        keychain: (any KeychainStore)? = nil,
+        httpClient: (any HTTPClient)? = nil
     ) {
         self.store = store
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
@@ -35,6 +39,8 @@ final class AppModel: ObservableObject {
         self.historyStore = historyStore ?? JSONRunHistoryStore(directory: self.runStateDirectory)
         self.photoSourceFactory = photoSourceFactory
         self.loginItem = loginItem
+        self.keychain = keychain ?? SecKeychainStore()
+        self.httpClient = httpClient ?? URLSessionHTTPClient()
         plans = (try? store.loadPlans()) ?? []
         isSetupCompleted = store.loadSetupCompleted()
         history = (try? self.historyStore.loadRecords()) ?? []
@@ -124,6 +130,7 @@ final class AppModel: ObservableObject {
         var results: [CopyRunResult] = []
         var runErrors: [BackupFileError] = []
         var protectedTotal = 0
+        let destination = plan.destination.makeDestination(keychain: keychain, httpClient: httpClient)
         for source in plan.sources {
             let ubiquitousSource: (any UbiquitousFileSource)? = switch source {
             case .folder: nil
@@ -131,13 +138,11 @@ final class AppModel: ObservableObject {
             }
             let engine = CopyEngine(
                 sourceURL: source.sourceURL,
-                destinationURL: plan.destinationURL.appendingPathComponent(
-                    source.displayName,
-                    isDirectory: true
-                ),
+                destination: destination,
+                destinationScope: source.displayName,
                 stateURL: IncrementalIndex.indexFileURL(
                     stateDirectory: runStateDirectory,
-                    destination: plan.destinationURL,
+                    destination: plan.destination,
                     source: source
                 ),
                 ubiquitousSource: ubiquitousSource
@@ -151,21 +156,37 @@ final class AppModel: ObservableObject {
         }
         activeEngine = nil
         if plan.includePhotos, !results.contains(where: { $0.outcome == .cancelled }) {
-            let photoRunner = PhotoBackupCoordinator(
-                source: photoSourceFactory(),
-                destinationURL: plan.destinationURL,
-                options: plan.photoOptions,
-                stateURL: PhotoIncrementalIndex.indexFileURL(
-                    stateDirectory: runStateDirectory,
-                    destination: plan.destinationURL
+            switch plan.destination {
+            case .folder(let destinationURL):
+                let photoRunner = PhotoBackupCoordinator(
+                    source: photoSourceFactory(),
+                    destinationURL: destinationURL,
+                    options: plan.photoOptions,
+                    stateURL: PhotoIncrementalIndex.indexFileURL(
+                        stateDirectory: runStateDirectory,
+                        destination: destinationURL
+                    )
                 )
-            )
-            activePhotoRunner = photoRunner
-            let photoResult = await photoRunner.run()
-            activePhotoRunner = nil
-            results.append(photoResult)
-            runErrors += photoRunner.state.errors
-            protectedTotal += photoResult.itemsProtected
+                activePhotoRunner = photoRunner
+                let photoResult = await photoRunner.run()
+                activePhotoRunner = nil
+                results.append(photoResult)
+                runErrors += photoRunner.state.errors
+                protectedTotal += photoResult.itemsProtected
+            case .s3, .onedrive, .gdrive:
+                runErrors.append(BackupFileError(
+                    path: "Photos",
+                    reason: "Photos backup needs a folder destination. Cloud destinations (S3, OneDrive, Google Drive) back up folders only in this version."
+                ))
+                results.append(CopyRunResult(
+                    outcome: .failed,
+                    itemsCopied: 0,
+                    itemsSkipped: 0,
+                    itemsFailed: 1,
+                    bytesCopied: 0,
+                    itemsProtected: 0
+                ))
+            }
         }
         itemsProtected = protectedTotal
         if !results.isEmpty, results.allSatisfy({ $0.outcome == .completed }) {

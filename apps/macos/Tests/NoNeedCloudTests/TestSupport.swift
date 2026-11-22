@@ -32,4 +32,22 @@ enum TestSupport {
             schedule: schedule
         )
     }
+
+    static func makePlan(
+        name: String = "Test Plan",
+        sources: [URL] = [URL(fileURLWithPath: "/tmp/sources")],
+        includePhotos: Bool = false,
+        photoOptions: PhotoOptions = PhotoOptions(),
+        destination: Destination,
+        schedule: Schedule = .manual
+    ) -> BackupPlan {
+        BackupPlan(
+            name: name,
+            sources: sources.map(BackupSource.folder),
+            includePhotos: includePhotos,
+            photoOptions: photoOptions,
+            destination: destination,
+            schedule: schedule
+        )
+    }
 }

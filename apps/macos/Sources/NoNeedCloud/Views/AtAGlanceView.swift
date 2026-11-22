@@ -319,7 +319,7 @@ struct PlanSummaryCard: View {
             }
             LabeledContent("Sources") { Text(sourcesSummary) }
             LabeledContent("Destination") {
-                Text(plan.destinationURL.path(percentEncoded: false))
+                Text(plan.destination.displayName)
                     .lineLimit(1)
                     .truncationMode(.head)
             }

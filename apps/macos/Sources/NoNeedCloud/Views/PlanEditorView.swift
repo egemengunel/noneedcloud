@@ -114,7 +114,24 @@ struct PlanEditorView: View {
                 flow.usePhotoDateRange = true
                 flow.photoDateRangeEnd = end
             }
-            flow.destinationURL = plan.destinationURL
+            flow.keychain = model.keychain
+            flow.existingDestination = plan.destination
+            switch plan.destination {
+            case .folder(let url):
+                flow.destinationURL = url
+            case .s3(let config):
+                flow.destinationProvider = .s3
+                flow.s3Endpoint = config.endpointURL?.absoluteString ?? ""
+                flow.s3Region = config.region
+                flow.s3Bucket = config.bucket
+                flow.s3Prefix = config.prefix
+                flow.s3AccessKeyID = config.accessKeyID
+                flow.s3UsePathStyle = config.usePathStyle
+            case .onedrive:
+                flow.destinationProvider = .onedrive
+            case .gdrive:
+                flow.destinationProvider = .gdrive
+            }
         }
         _flow = StateObject(wrappedValue: flow)
         _scheduleForm = StateObject(wrappedValue: ScheduleForm(schedule: plan?.schedule ?? .manual))

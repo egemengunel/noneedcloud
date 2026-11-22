@@ -83,12 +83,27 @@ final class CancellationFlag: @unchecked Sendable {
     }
 }
 
+enum CopyError: LocalizedError {
+    case cancelled
+    case temporaryFileCreationFailed(path: String)
+
+    var errorDescription: String? {
+        switch self {
+        case .cancelled:
+            return "Copy cancelled."
+        case .temporaryFileCreationFailed(let path):
+            return "Could not create temporary copy file at \(path)."
+        }
+    }
+}
+
 final class CopyEngine: Sendable {
     static let chunkSize = 1 << 20
 
     let state: CopyEngineState
     private let sourceURL: URL
-    private let destinationURL: URL
+    private let destination: any BackupDestination
+    private let destinationScope: String
     private let stateURL: URL
     private let cancelFlag = CancellationFlag()
     private let perFileDelayNanos: UInt64
@@ -96,17 +111,39 @@ final class CopyEngine: Sendable {
 
     init(
         sourceURL: URL,
-        destinationURL: URL,
+        destination: any BackupDestination,
+        destinationScope: String = "",
         stateURL: URL,
         perFileDelayNanos: UInt64 = 0,
         ubiquitousSource: (any UbiquitousFileSource)? = nil
     ) {
         self.sourceURL = sourceURL
-        self.destinationURL = destinationURL
+        self.destination = destination
+        self.destinationScope = destinationScope
         self.stateURL = stateURL
         self.perFileDelayNanos = perFileDelayNanos
         self.ubiquitousSource = ubiquitousSource
         self.state = CopyEngineState()
+    }
+
+    convenience init(
+        sourceURL: URL,
+        destinationURL: URL,
+        stateURL: URL,
+        perFileDelayNanos: UInt64 = 0,
+        ubiquitousSource: (any UbiquitousFileSource)? = nil
+    ) {
+        self.init(
+            sourceURL: sourceURL,
+            destination: LocalFolderDestination(rootURL: destinationURL),
+            stateURL: stateURL,
+            perFileDelayNanos: perFileDelayNanos,
+            ubiquitousSource: ubiquitousSource
+        )
+    }
+
+    private func destinationRelPath(_ relativePath: String) -> String {
+        destinationScope.isEmpty ? relativePath : destinationScope + "/" + relativePath
     }
 
     nonisolated func stop() {
@@ -151,8 +188,29 @@ final class CopyEngine: Sendable {
             )
         }
 
+        func destinationFailureResult(reason: String) async -> CopyRunResult {
+            failed += 1
+            await state.begin(itemsTotal: 0, bytesTotal: 0, startedAt: startedAt)
+            await state.recordError(BackupFileError(path: destination.label, reason: reason))
+            await state.finish(cancelled: false)
+            return CopyRunResult(
+                outcome: .failed,
+                itemsCopied: copied,
+                itemsSkipped: skipped,
+                itemsFailed: failed,
+                bytesCopied: bytesCopied,
+                itemsProtected: index.count
+            )
+        }
+
         if let reason = Self.sourceAccessibilityError(at: sourceURL) {
             return await sourceFailureResult(reason: reason)
+        }
+
+        do {
+            try await destination.healthCheck()
+        } catch {
+            return await destinationFailureResult(reason: "Destination not ready — \(error.localizedDescription)")
         }
 
         guard let scan = Self.scanTree(at: sourceURL) else {
@@ -162,12 +220,8 @@ final class CopyEngine: Sendable {
         await state.begin(itemsTotal: scan.files.count, bytesTotal: scan.totalBytes, startedAt: startedAt)
 
         for relativeDirectory in scan.directories {
-            let destinationDirectory = destinationURL.appendingPathComponent(relativeDirectory)
             do {
-                try FileManager.default.createDirectory(
-                    at: destinationDirectory,
-                    withIntermediateDirectories: true
-                )
+                try await destination.ensureDirectory(relPath: destinationRelPath(relativeDirectory))
             } catch {
                 failed += 1
                 await state.recordError(BackupFileError(path: relativeDirectory, reason: error.localizedDescription))
@@ -182,7 +236,7 @@ final class CopyEngine: Sendable {
                 if cancelFlag.isCancelled { break }
             }
             lastFile = file.relativePath
-            let destinationFile = destinationURL.appendingPathComponent(file.relativePath)
+            let destinationRel = destinationRelPath(file.relativePath)
             if let known = index.entry(for: file.relativePath),
                known.size == file.size,
                known.mtime == file.mtime.timeIntervalSince1970 {
@@ -197,12 +251,11 @@ final class CopyEngine: Sendable {
                 source: ubiquitousSource,
                 isCancelled: { [cancelFlag] in cancelFlag.isCancelled }
             ) {
-                try Self.copyFile(
-                    from: fileURL,
-                    to: destinationFile,
+                try await destination.copyFile(
+                    relPath: destinationRel,
+                    fromFile: fileURL,
                     sourceModificationDate: file.mtime,
-                    chunkSize: Self.chunkSize,
-                    cancelFlag: cancelFlag
+                    isCancelled: { [cancelFlag] in cancelFlag.isCancelled }
                 )
             }
             switch offloadOutcome {
@@ -231,7 +284,7 @@ final class CopyEngine: Sendable {
                 await state.recordError(BackupFileError(path: file.relativePath, reason: error.localizedDescription))
             case .copyFailed(let error):
                 if let copyError = error as? CopyError, case .cancelled = copyError {
-                    if !FileManager.default.fileExists(atPath: destinationFile.path) {
+                    if !destination.destinationFileExists(relPath: destinationRel) {
                         index.remove(file.relativePath)
                     }
                     try? index.save()
@@ -245,7 +298,7 @@ final class CopyEngine: Sendable {
                         itemsProtected: index.count
                     )
                 }
-                if !FileManager.default.fileExists(atPath: destinationFile.path) {
+                if !destination.destinationFileExists(relPath: destinationRel) {
                     index.remove(file.relativePath)
                 }
                 failed += 1
@@ -265,20 +318,6 @@ final class CopyEngine: Sendable {
             bytesCopied: bytesCopied,
             itemsProtected: index.count
         )
-    }
-
-    private enum CopyError: LocalizedError {
-        case cancelled
-        case temporaryFileCreationFailed(path: String)
-
-        var errorDescription: String? {
-            switch self {
-            case .cancelled:
-                return "Copy cancelled."
-            case .temporaryFileCreationFailed(let path):
-                return "Could not create temporary copy file at \(path)."
-            }
-        }
     }
 
     private struct ScannedFile: Sendable {
@@ -344,46 +383,6 @@ final class CopyEngine: Sendable {
             directories: directories.sorted(),
             files: files.sorted { $0.relativePath < $1.relativePath },
             totalBytes: totalBytes
-        )
-    }
-
-    private static func copyFile(
-        from source: URL,
-        to destination: URL,
-        sourceModificationDate: Date,
-        chunkSize: Int,
-        cancelFlag: CancellationFlag
-    ) throws {
-        try FileManager.default.createDirectory(
-            at: destination.deletingLastPathComponent(),
-            withIntermediateDirectories: true
-        )
-        let input = try FileHandle(forReadingFrom: source)
-        defer { try? input.close() }
-        let temporaryURL = URL(fileURLWithPath: destination.path + ".tmp")
-        do {
-            guard FileManager.default.createFile(atPath: temporaryURL.path, contents: nil) else {
-                throw CopyError.temporaryFileCreationFailed(path: temporaryURL.path)
-            }
-            let output = try FileHandle(forWritingTo: temporaryURL)
-            defer { try? output.close() }
-            while true {
-                if cancelFlag.isCancelled { throw CopyError.cancelled }
-                guard let chunk = try input.read(upToCount: chunkSize), !chunk.isEmpty else { break }
-                try output.write(contentsOf: chunk)
-            }
-            if FileManager.default.fileExists(atPath: destination.path) {
-                _ = try FileManager.default.replaceItemAt(destination, withItemAt: temporaryURL)
-            } else {
-                try FileManager.default.moveItem(at: temporaryURL, to: destination)
-            }
-        } catch {
-            try? FileManager.default.removeItem(at: temporaryURL)
-            throw error
-        }
-        try FileManager.default.setAttributes(
-            [.modificationDate: sourceModificationDate],
-            ofItemAtPath: destination.path
         )
     }
 }

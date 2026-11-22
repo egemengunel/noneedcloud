@@ -76,7 +76,7 @@ struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
     var sources: [BackupSource]
     var includePhotos: Bool
     var photoOptions: PhotoOptions
-    var destinationURL: URL
+    var destination: Destination
     var schedule: Schedule = .manual
 
     enum CodingKeys: String, CodingKey {
@@ -84,8 +84,25 @@ struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
         case legacySourceFolderURLs = "sourceFolderURLs"
         case includePhotos
         case photoOptions
-        case destinationURL
+        case destination
+        case legacyDestinationURL = "destinationURL"
         case schedule
+    }
+
+    init(
+        name: String,
+        sources: [BackupSource],
+        includePhotos: Bool,
+        photoOptions: PhotoOptions,
+        destination: Destination,
+        schedule: Schedule = .manual
+    ) {
+        self.name = name
+        self.sources = sources
+        self.includePhotos = includePhotos
+        self.photoOptions = photoOptions
+        self.destination = destination
+        self.schedule = schedule
     }
 
     init(
@@ -96,12 +113,14 @@ struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
         destinationURL: URL,
         schedule: Schedule = .manual
     ) {
-        self.name = name
-        self.sources = sources
-        self.includePhotos = includePhotos
-        self.photoOptions = photoOptions
-        self.destinationURL = destinationURL
-        self.schedule = schedule
+        self.init(
+            name: name,
+            sources: sources,
+            includePhotos: includePhotos,
+            photoOptions: photoOptions,
+            destination: .folder(destinationURL),
+            schedule: schedule
+        )
     }
 
     init(
@@ -117,7 +136,7 @@ struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
             sources: sourceFolderURLs.map(BackupSource.folder),
             includePhotos: includePhotos,
             photoOptions: photoOptions,
-            destinationURL: destinationURL,
+            destination: .folder(destinationURL),
             schedule: schedule
         )
     }
@@ -127,6 +146,11 @@ struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
             if case .folder(let url) = $0 { return url }
             return nil
         }
+    }
+
+    var destinationURL: URL? {
+        if case .folder(let url) = destination { return url }
+        return nil
     }
 
     init(from decoder: Decoder) throws {
@@ -140,7 +164,11 @@ struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
         }
         includePhotos = try container.decode(Bool.self, forKey: .includePhotos)
         photoOptions = try container.decode(PhotoOptions.self, forKey: .photoOptions)
-        destinationURL = try container.decode(URL.self, forKey: .destinationURL)
+        if let decoded = try? container.decode(Destination.self, forKey: .destination) {
+            destination = decoded
+        } else {
+            destination = .folder(try container.decode(URL.self, forKey: .legacyDestinationURL))
+        }
         schedule = try container.decodeIfPresent(Schedule.self, forKey: .schedule) ?? .manual
     }
 
@@ -151,7 +179,7 @@ struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
         try container.encode(sources, forKey: .sources)
         try container.encode(includePhotos, forKey: .includePhotos)
         try container.encode(photoOptions, forKey: .photoOptions)
-        try container.encode(destinationURL, forKey: .destinationURL)
+        try container.encode(destination, forKey: .destination)
         try container.encode(schedule, forKey: .schedule)
     }
 }

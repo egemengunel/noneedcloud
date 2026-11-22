@@ -34,10 +34,13 @@ struct RootView: View {
 
     var body: some View {
         if model.isSetupNeeded {
-            SetupWizardView { plan in
-                model.finishSetup(plan)
-                model.startBackup(plan)
-            }
+            SetupWizardView(
+                onStartBackup: { plan in
+                    model.finishSetup(plan)
+                    model.startBackup(plan)
+                },
+                keychain: model.keychain
+            )
         } else {
             AtAGlanceView(model: model)
         }

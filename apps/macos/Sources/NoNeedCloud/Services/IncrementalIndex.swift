@@ -78,6 +78,14 @@ final class IncrementalIndex: @unchecked Sendable {
         )
     }
 
+    static func indexFileURL(stateDirectory: URL, destination: Destination, source: BackupSource) -> URL {
+        indexFileURL(
+            stateDirectory: stateDirectory,
+            sourceKey: destination.indexKey + "\n" + sourceKey(for: source),
+            name: destination.indexNameComponent + "-" + source.displayName
+        )
+    }
+
     private static func sourceKey(for source: BackupSource) -> String {
         switch source {
         case .folder(let url):

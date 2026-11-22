@@ -1,8 +1,15 @@
 import SwiftUI
 
 struct SetupWizardView: View {
-    @StateObject private var flow = SetupFlow()
     let onStartBackup: (BackupPlan) -> Void
+    @StateObject private var flow: SetupFlow
+
+    init(onStartBackup: @escaping (BackupPlan) -> Void, keychain: (any KeychainStore)? = nil) {
+        self.onStartBackup = onStartBackup
+        let setupFlow = SetupFlow()
+        setupFlow.keychain = keychain
+        _flow = StateObject(wrappedValue: setupFlow)
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -154,21 +161,91 @@ struct DestinationStep: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
+            Picker("Destination Type", selection: $flow.destinationProvider) {
+                ForEach(DestinationProvider.allCases) { provider in
+                    Text(provider.label).tag(provider)
+                }
+            }
+            .pickerStyle(.radioGroup)
+            .accessibilityIdentifier("destinationProvider")
+
+            switch flow.destinationProvider {
+            case .folder: folderSection
+            case .s3: s3Section
+            case .onedrive: tokenSection(title: "OneDrive Access Token", hint: Self.oneDriveHint)
+            case .gdrive: tokenSection(title: "Google Drive Access Token", hint: Self.googleDriveHint)
+            }
+
+            if let error = flow.destinationError {
+                Text(error)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+            }
+        }
+        .padding(20)
+    }
+
+    private var folderSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
             Text("Pick a folder on a drive you own. It should stay connected during backups.")
                 .foregroundStyle(.secondary)
-
-            Button("Choose Folder…") { chooseDestination() }
-
+            Button("Choose Folder…") { chooseFolder() }
             if let url = flow.destinationURL {
                 Text(url.path(percentEncoded: false))
                     .font(.callout)
                     .textSelection(.enabled)
             }
         }
-        .padding(20)
     }
 
-    private func chooseDestination() {
+    private var s3Section: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Works with AWS S3 and S3-compatible services (MinIO, Wasabi, Backblaze B2). Leave the endpoint empty for AWS.")
+                .foregroundStyle(.secondary)
+            HStack(spacing: 12) {
+                TextField("Bucket", text: $flow.s3Bucket)
+                    .textFieldStyle(.roundedBorder)
+                TextField("Endpoint URL (optional)", text: $flow.s3Endpoint)
+                    .textFieldStyle(.roundedBorder)
+            }
+            HStack(spacing: 12) {
+                TextField("Region", text: $flow.s3Region)
+                    .textFieldStyle(.roundedBorder)
+                TextField("Key Prefix (optional)", text: $flow.s3Prefix)
+                    .textFieldStyle(.roundedBorder)
+            }
+            HStack(spacing: 12) {
+                TextField("Access Key ID", text: $flow.s3AccessKeyID)
+                    .textFieldStyle(.roundedBorder)
+                SecureField("Secret Access Key", text: $flow.s3SecretAccessKey)
+                    .textFieldStyle(.roundedBorder)
+            }
+            SecureField("Session Token (optional)", text: $flow.s3SessionToken)
+                .textFieldStyle(.roundedBorder)
+            Toggle("Use Path-Style Requests (recommended for S3-compatible services)", isOn: $flow.s3UsePathStyle)
+            Text("The secret key and session token are stored in your macOS Keychain and never written to disk by NoNeedCloud.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private func tokenSection(title: String, hint: String) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(hint)
+                .foregroundStyle(.secondary)
+            SecureField(title, text: $flow.cloudToken)
+                .textFieldStyle(.roundedBorder)
+            Text("The token is stored in your macOS Keychain. Access tokens expire — when a run reports HTTP 401, paste a fresh one here.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    static let oneDriveHint = "Paste a Microsoft Graph access token with the Files.ReadWrite scope. One way to get one: run \"az login\" and then \"az account get-access-token --resource https://graph.microsoft.com\" in a terminal."
+
+    static let googleDriveHint = "Paste a Google OAuth access token with the Drive scope. One way to get one: open https://developers.google.com/oauthplayground, authorize Drive API v3 with the drive.file scope, and exchange it for an access token."
+
+    private func chooseFolder() {
         if let url = FolderPicker.chooseDirectory() {
             flow.destinationURL = url
         }
@@ -198,6 +275,12 @@ struct StartBackupStep: View {
             .controlSize(.large)
             .disabled(flow.makePlan() == nil)
 
+            if let error = flow.destinationError {
+                Text(error)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+            }
+
             Text("Your backup runs right away, then only changed files are copied next time.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -214,6 +297,6 @@ struct StartBackupStep: View {
     }
 
     private var destinationSummary: String {
-        flow.destinationURL?.path(percentEncoded: false) ?? "Not chosen"
+        flow.plannedDestination?.displayName ?? "Not chosen"
     }
 }
