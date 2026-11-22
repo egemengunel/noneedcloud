@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="NoNeedCloud’un açılış animasyonlarını ve SVG yükleme göstergelerini incele.">
+  <title>NoNeedCloud · Açılış animasyonları</title>
+  <link rel="icon" href="../assets/cloud.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="preview.css">
+  <script src="preview.js?v=2" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#icerik">İçeriğe geç</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../" aria-label="NoNeedCloud ürün sunumu">
+        <img src="../assets/wordmark.svg" width="1660" height="300" alt="NoNeedCloud">
+      </a>
+      <nav aria-label="Sayfa bölümleri">
+        <a href="#acilis">Açılış</a>
+        <a href="#yukleme">Yükleme</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="icerik" class="wrap motion-page">
+    <section id="acilis" aria-labelledby="intro-title">
+      <h1 id="intro-title">Açılış animasyonları</h1>
+      <p class="motion-intro">NoNeedCloud’un logosu, karşılama ve kurulum ekranlarında hareketle ortaya çıkıyor.</p>
+      <div class="motion-grid">
+        <article class="preview">
+          <div class="preview-stage lockup-stage">
+            <object type="image/svg+xml" data="assets/logo-birlesimi.svg" aria-label="noneed yazısı ve bulut işaretinin birleşmesi">
+              <span>NoNeedCloud logosunun oluşumu</span>
+            </object>
+          </div>
+          <div class="preview-info">
+            <h2>Logonun oluşumu</h2>
+            <p>Karşılama ekranında yazı soldan, bulut sağdan gelir ve birleşerek logoyu oluşturur.</p>
+            <div class="preview-actions">
+              <button type="button" data-action="replay" aria-label="Logonun oluşumunu yeniden oynat" disabled>Yeniden oynat</button>
+              <a class="text-link" href="assets/logo-birlesimi.svg" download aria-label="Logo animasyonunun SVG dosyasını indir">SVG indir</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="preview">
+          <div class="preview-stage art-stage">
+            <object type="image/svg+xml" data="assets/bulut-onboarding.svg" aria-label="Bulutun ve çevresindeki çizgilerin belirmesi">
+              <span>NoNeedCloud bulut animasyonu</span>
+            </object>
+          </div>
+          <div class="preview-info">
+            <h2>Bulutun belirmesi</h2>
+            <p>Kurulum ekranında bulutun dış çizgisi belirir. Çevresindeki çizgiler kısa bir hareketin ardından durur.</p>
+            <div class="preview-actions">
+              <button type="button" data-action="replay" aria-label="Bulutun belirme animasyonunu yeniden oynat" disabled>Yeniden oynat</button>
+              <a class="text-link" href="assets/bulut-onboarding.svg" download aria-label="Bulut animasyonunun SVG dosyasını indir">SVG indir</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="yukleme" class="loader-section" aria-labelledby="loader-title">
+      <h2 id="loader-title">Yükleme göstergeleri</h2>
+      <p class="motion-intro">Yükleme süresi belli olmayan işlemler için iki gösterge.</p>
+      <div class="motion-grid">
+        <article class="preview">
+          <div class="preview-stage compact-stage">
+            <div>
+              <object class="compact-small" type="image/svg+xml" data="assets/bulut-loader.svg" aria-label="32 piksellik bulut göstergesi">
+                <span>Bulut göstergesi</span>
+              </object>
+              <span>32 px</span>
+            </div>
+            <div>
+              <object class="compact-large" type="image/svg+xml" data="assets/bulut-loader.svg" aria-label="80 piksellik bulut göstergesi">
+                <span>Bulut göstergesi</span>
+              </object>
+              <span>80 px</span>
+            </div>
+          </div>
+          <div class="preview-info">
+            <h3>Bulutlu yükleme göstergesi</h3>
+            <p>Mavi çizgi bulutun dış çizgisi boyunca ilerler. Bağlantı kontrolü gibi kısa beklemelerde kullanılır.</p>
+            <div class="preview-actions">
+              <button type="button" data-action="toggle" aria-label="Bulutlu yükleme göstergesi animasyonunu duraklat" disabled>Duraklat</button>
+              <a class="text-link" href="assets/bulut-loader.svg" download aria-label="Bulutlu yükleme göstergesinin SVG dosyasını indir">SVG indir</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="preview">
+          <div class="preview-stage wide-loader-stage">
+            <object type="image/svg+xml" data="assets/logo-loader.svg" aria-label="NoNeedCloud logosunun altında kayan yükleme çizgisi">
+              <span>Logolu yükleme göstergesi</span>
+            </object>
+          </div>
+          <div class="preview-info">
+            <h3>Logolu yükleme göstergesi</h3>
+            <p>Logo sabit kalırken altındaki çizgi tekrar tekrar kayar. Uygulama açılırken hazırlığın sürdüğünü gösterir.</p>
+            <div class="preview-actions">
+              <button type="button" data-action="toggle" aria-label="Logolu yükleme göstergesi animasyonunu duraklat" disabled>Duraklat</button>
+              <a class="text-link" href="assets/logo-loader.svg" download aria-label="Logolu yükleme göstergesinin SVG dosyasını indir">SVG indir</a>
+            </div>
+          </div>
+        </article>
+      </div>
+      <p class="motion-note">Hareketi Azalt açıkken görseller sabit kalır.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <a class="text-link" href="../">Ürün sunumuna dön</a>
+    </div>
+  </footer>
+</body>
+</html>

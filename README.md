@@ -44,3 +44,16 @@ noneedcloud/
 ## Getting started
 
 Nothing to build yet. See `docs/PRD.md` once it lands.
+
+### Landing page
+
+Run these commands on a Mac with Node.js and npm installed:
+
+```sh
+git clone --branch codex/landing-page --single-branch https://github.com/egemengunel/noneedcloud.git
+cd noneedcloud
+npx --yes http-server@14.1.1 docs/design/web-planning -a 127.0.0.1 -p 8765 -c-1
+```
+
+With the server running, open [the landing page](http://127.0.0.1:8765/) or [the animation gallery](http://127.0.0.1:8765/onboarding/).
+The first run downloads the local web server. It supports the byte-range requests browsers use to play and seek through the recorded demos.
