@@ -45,7 +45,7 @@ struct RunningView: View {
 
             Spacer(minLength: 12)
             WindowFooter {
-                Text("You can stop the backup without deleting existing copies.  ·  Preview build: simulated, no files are copied.")
+                Text("You can stop the backup without deleting existing copies.")
                     .font(.system(size: 13))
                     .foregroundStyle(Theme.muted)
             } trailing: {

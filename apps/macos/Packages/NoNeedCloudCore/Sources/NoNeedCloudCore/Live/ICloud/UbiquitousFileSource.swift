@@ -45,7 +45,7 @@ final class ICloudDriveSource: UbiquitousFileSource {
     func isDataless(_ url: URL) throws -> Bool {
         let values = try url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
         guard let status = values.ubiquitousItemDownloadingStatus else { return false }
-        return status != .current
+        return status == .notDownloaded
     }
 
     func fetch(_ url: URL, isCancelled: @escaping @Sendable () -> Bool) async throws {
