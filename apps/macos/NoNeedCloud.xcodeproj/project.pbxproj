@@ -1,0 +1,404 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0E596762132013888127E106 /* NoNeedCloudApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E9BA66E4F0546416F210F2F /* NoNeedCloudApp.swift */; };
+		3615C899C385CBB1CB2252C4 /* SetupWizardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B2D92A486B7D4CCCC5075A /* SetupWizardView.swift */; };
+		4346FB0AE06ED8DDA5084CED /* NoNeedCloudCore in Frameworks */ = {isa = PBXBuildFile; productRef = D8F03B9BA56B3D64220C0868 /* NoNeedCloudCore */; };
+		43D506BC6586AEE8680221F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17AEF947035BC37AC7FBAC5E /* Assets.xcassets */; };
+		47067087D84208189844772F /* FolderPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B72A394AF9ABCE49C962308 /* FolderPicker.swift */; };
+		F2692D4CC954195EA1BAABE5 /* AtAGlanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19945170A778A0AC07426A1B /* AtAGlanceView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		17AEF947035BC37AC7FBAC5E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		19945170A778A0AC07426A1B /* AtAGlanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtAGlanceView.swift; sourceTree = "<group>"; };
+		309FE9B1FC429FE38C751B46 /* NoNeedCloudCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NoNeedCloudCore; path = Packages/NoNeedCloudCore; sourceTree = SOURCE_ROOT; };
+		3B72A394AF9ABCE49C962308 /* FolderPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderPicker.swift; sourceTree = "<group>"; };
+		5E9BA66E4F0546416F210F2F /* NoNeedCloudApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoNeedCloudApp.swift; sourceTree = "<group>"; };
+		66B2D92A486B7D4CCCC5075A /* SetupWizardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupWizardView.swift; sourceTree = "<group>"; };
+		AE5D1F4F9B038E7E76E6BA9B /* NoNeedCloud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NoNeedCloud.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5FB703D07CCA6591C7E1CAD /* NoNeedCloud.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NoNeedCloud.entitlements; sourceTree = "<group>"; };
+		FD8CA0E182941921443DD84D /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		87C854E82959E501310EB8CD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4346FB0AE06ED8DDA5084CED /* NoNeedCloudCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		06D08B227C687679E11376FD /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				17AEF947035BC37AC7FBAC5E /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		4DA04746A18985F7A89604BA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				19945170A778A0AC07426A1B /* AtAGlanceView.swift */,
+				3B72A394AF9ABCE49C962308 /* FolderPicker.swift */,
+				66B2D92A486B7D4CCCC5075A /* SetupWizardView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		4EC9079DCC71F58BCAEE754B /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				FD8CA0E182941921443DD84D /* Signing.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		6D6685A58DF1AF95B91CFB66 = {
+			isa = PBXGroup;
+			children = (
+				E385213BF5932A1AF1168851 /* App */,
+				4EC9079DCC71F58BCAEE754B /* Config */,
+				74E971C6A436AB5C9641A50F /* Packages */,
+				7AF8042F1A5ABF7D906666E2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		74E971C6A436AB5C9641A50F /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				309FE9B1FC429FE38C751B46 /* NoNeedCloudCore */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
+		7AF8042F1A5ABF7D906666E2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AE5D1F4F9B038E7E76E6BA9B /* NoNeedCloud.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E385213BF5932A1AF1168851 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				D5FB703D07CCA6591C7E1CAD /* NoNeedCloud.entitlements */,
+				5E9BA66E4F0546416F210F2F /* NoNeedCloudApp.swift */,
+				06D08B227C687679E11376FD /* Resources */,
+				4DA04746A18985F7A89604BA /* Views */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		18EC05EAE0A5E7944A57B6F1 /* NoNeedCloud */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D9249CE8A66EFAC05EDF3785 /* Build configuration list for PBXNativeTarget "NoNeedCloud" */;
+			buildPhases = (
+				EF8BEAD08627826C56EF5EA2 /* Sources */,
+				C69138AFC29ECCBA91FCEBD0 /* Resources */,
+				87C854E82959E501310EB8CD /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NoNeedCloud;
+			packageProductDependencies = (
+				D8F03B9BA56B3D64220C0868 /* NoNeedCloudCore */,
+			);
+			productName = NoNeedCloud;
+			productReference = AE5D1F4F9B038E7E76E6BA9B /* NoNeedCloud.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CB49B848E527B4DCD6421382 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					18EC05EAE0A5E7944A57B6F1 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 6A8E169FD86131A544C5FEE7 /* Build configuration list for PBXProject "NoNeedCloud" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 6D6685A58DF1AF95B91CFB66;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B0AA61B5372F78D15F0A231D /* XCLocalSwiftPackageReference "Packages/NoNeedCloudCore" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 7AF8042F1A5ABF7D906666E2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				18EC05EAE0A5E7944A57B6F1 /* NoNeedCloud */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C69138AFC29ECCBA91FCEBD0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				43D506BC6586AEE8680221F5 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EF8BEAD08627826C56EF5EA2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F2692D4CC954195EA1BAABE5 /* AtAGlanceView.swift in Sources */,
+				47067087D84208189844772F /* FolderPicker.swift in Sources */,
+				0E596762132013888127E106 /* NoNeedCloudApp.swift in Sources */,
+				3615C899C385CBB1CB2252C4 /* SetupWizardView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		100C6958983A0BF1799ECA8A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FD8CA0E182941921443DD84D /* Signing.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = App/NoNeedCloud.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = NoNeedCloud;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "NoNeedCloud reads your Photos library to keep a full-quality backup copy on storage you own. Nothing in iCloud is changed.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_NAME = NoNeedCloud;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		1DDFBB51F4412CEC1F4FD723 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FD8CA0E182941921443DD84D /* Signing.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = App/NoNeedCloud.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = NoNeedCloud;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "NoNeedCloud reads your Photos library to keep a full-quality backup copy on storage you own. Nothing in iCloud is changed.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_NAME = NoNeedCloud;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		D81C05B26662AEAC4A3A9823 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		E63CDDAC6C11DB3610002C1D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6A8E169FD86131A544C5FEE7 /* Build configuration list for PBXProject "NoNeedCloud" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E63CDDAC6C11DB3610002C1D /* Debug */,
+				D81C05B26662AEAC4A3A9823 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D9249CE8A66EFAC05EDF3785 /* Build configuration list for PBXNativeTarget "NoNeedCloud" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DDFBB51F4412CEC1F4FD723 /* Debug */,
+				100C6958983A0BF1799ECA8A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		B0AA61B5372F78D15F0A231D /* XCLocalSwiftPackageReference "Packages/NoNeedCloudCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/NoNeedCloudCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D8F03B9BA56B3D64220C0868 /* NoNeedCloudCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NoNeedCloudCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = CB49B848E527B4DCD6421382 /* Project object */;
+}

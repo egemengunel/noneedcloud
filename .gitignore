@@ -1,3 +1,21 @@
-.build/
-dist/
+# macOS
 .DS_Store
+
+# Xcode / Swift
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+.swiftpm/
+.build/
+apps/macos/Config/Signing.local.xcconfig
+
+# Node / backend
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+
+# Local research artifacts (third-party content, not for publishing)
+docs/research/

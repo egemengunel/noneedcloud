@@ -1,0 +1,18 @@
+// Signing and identity for the NoNeedCloud app target.
+//
+// PRODUCT_BUNDLE_IDENTIFIER is a placeholder until the team settles on one.
+// To sign with your own Apple Developer team without committing it, create
+// Config/Signing.local.xcconfig (git-ignored) with e.g.:
+//
+//   DEVELOPMENT_TEAM = ABCDE12345
+//   CODE_SIGN_IDENTITY = Apple Development
+//
+// Without it the app is signed "to run locally" (ad hoc), which is enough
+// for the sandbox and folder bookmarks during development.
+
+PRODUCT_BUNDLE_IDENTIFIER = com.noneedcloud.mac
+DEVELOPMENT_TEAM =
+CODE_SIGN_STYLE = Automatic
+CODE_SIGN_IDENTITY = -
+
+#include? "Signing.local.xcconfig"
