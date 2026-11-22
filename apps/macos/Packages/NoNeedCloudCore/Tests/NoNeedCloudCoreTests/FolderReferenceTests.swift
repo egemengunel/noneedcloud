@@ -49,9 +49,10 @@ struct FolderReferenceTests {
         let dir = TestSupport.makeTempDirectory()
         defer { try? FileManager.default.removeItem(at: dir) }
         try TestSupport.withTempStore { store, _ in
-            let plan = TestSupport.makePlan(sources: [try FolderReference(url: dir)])
+            let plan = TestSupport.makePlan(folders: [try FolderReference(url: dir)])
             try store.savePlans([plan])
-            #expect(try store.loadPlans() == [plan])
+            let loaded = try store.loadPlans()
+            #expect(loaded == [plan])
         }
     }
 }

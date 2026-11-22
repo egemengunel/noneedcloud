@@ -2,21 +2,35 @@ import Foundation
 import Testing
 @testable import NoNeedCloudCore
 
-@MainActor
 struct PlanStoreTests {
-    @Test func loadPlansReturnsEmptyWhenNoFileExists() throws {
+    @Test func emptyWhenNoFilesExist() throws {
         try TestSupport.withTempStore { store, _ in
             let plans = try store.loadPlans()
+            let runs = try store.loadRuns()
             #expect(plans.isEmpty)
+            #expect(runs.isEmpty)
         }
     }
 
-    @Test func saveThenLoadRoundTripsPlan() throws {
-        try TestSupport.withTempStore { store, _ in
+    @Test func plansRoundTrip() throws {
+        try TestSupport.withTempStore { store, dir in
             let plan = TestSupport.makePlan()
             try store.savePlans([plan])
-            let loaded = try store.loadPlans()
+            let loaded = try JSONPlanStore(directory: dir).loadPlans()
             #expect(loaded == [plan])
+        }
+    }
+
+    @Test func runsRoundTrip() throws {
+        try TestSupport.withTempStore { store, dir in
+            let run = TestSupport.run(
+                for: TestSupport.makePlan(),
+                outcome: .completedWithErrors,
+                finishedAt: Date(timeIntervalSince1970: 1_800_000_000)
+            )
+            try store.saveRuns([run])
+            let loaded = try JSONPlanStore(directory: dir).loadRuns()
+            #expect(loaded == [run])
         }
     }
 
@@ -25,45 +39,14 @@ struct PlanStoreTests {
             try store.savePlans([TestSupport.makePlan(name: "First")])
             try store.savePlans([TestSupport.makePlan(name: "Second")])
             let loaded = try store.loadPlans()
-            #expect(loaded.count == 1)
-            #expect(loaded[0].name == "Second")
+            #expect(loaded.map(\.name) == ["Second"])
         }
     }
 
-    @Test func corruptPlansFileThrowsOnLoad() throws {
+    @Test func corruptPlansFileThrows() throws {
         try TestSupport.withTempStore { store, dir in
             try Data("not json".utf8).write(to: dir.appendingPathComponent("plans.json"))
-            #expect(throws: (any Error).self) {
-                try store.loadPlans()
-            }
-        }
-    }
-
-    @Test func setupCompletedDefaultsToFalse() throws {
-        try TestSupport.withTempStore { store, _ in
-            #expect(!store.loadSetupCompleted())
-        }
-    }
-
-    @Test func setSetupCompletedPersistsAcrossInstances() throws {
-        try TestSupport.withTempStore { store, dir in
-            try store.setSetupCompleted(true)
-            #expect(JSONPlanStore(directory: dir).loadSetupCompleted())
-        }
-    }
-
-    @Test func setupFlagCanBeReset() throws {
-        try TestSupport.withTempStore { store, _ in
-            try store.setSetupCompleted(true)
-            try store.setSetupCompleted(false)
-            #expect(!store.loadSetupCompleted())
-        }
-    }
-
-    @Test func corruptSetupFileLoadsAsFalse() throws {
-        try TestSupport.withTempStore { store, dir in
-            try Data("garbage".utf8).write(to: dir.appendingPathComponent("setup.json"))
-            #expect(!store.loadSetupCompleted())
+            #expect(throws: (any Error).self) { try store.loadPlans() }
         }
     }
 }

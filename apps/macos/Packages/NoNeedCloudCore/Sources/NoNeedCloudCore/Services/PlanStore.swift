@@ -1,25 +1,24 @@
 import Foundation
 
+/// Persists backup plans and run history.
 public protocol PlanStore: AnyObject, Sendable {
     func loadPlans() throws -> [BackupPlan]
     func savePlans(_ plans: [BackupPlan]) throws
-    func loadSetupCompleted() -> Bool
-    func setSetupCompleted(_ completed: Bool) throws
+    func loadRuns() throws -> [BackupRun]
+    func saveRuns(_ runs: [BackupRun]) throws
 }
 
-private struct SetupFlag: Codable {
-    var setupCompleted: Bool
-}
-
+/// JSON files in Application Support (inside the sandbox container).
+/// Run history moves to SQLite with the real engine's index (M2/M3).
 public final class JSONPlanStore: PlanStore {
     private let directory: URL
     private let plansURL: URL
-    private let setupURL: URL
+    private let runsURL: URL
 
     public init(directory: URL) {
         self.directory = directory
         self.plansURL = directory.appendingPathComponent("plans.json")
-        self.setupURL = directory.appendingPathComponent("setup.json")
+        self.runsURL = directory.appendingPathComponent("runs.json")
     }
 
     public static func makeDefault() -> JSONPlanStore {
@@ -27,32 +26,23 @@ public final class JSONPlanStore: PlanStore {
         return JSONPlanStore(directory: appSupport.appendingPathComponent("NoNeedCloud", isDirectory: true))
     }
 
-    public func loadPlans() throws -> [BackupPlan] {
-        guard FileManager.default.fileExists(atPath: plansURL.path) else { return [] }
-        let data = try Data(contentsOf: plansURL)
-        return try JSONDecoder().decode([BackupPlan].self, from: data)
+    public func loadPlans() throws -> [BackupPlan] { try load(plansURL) ?? [] }
+    public func savePlans(_ plans: [BackupPlan]) throws { try save(plans, to: plansURL) }
+    public func loadRuns() throws -> [BackupRun] { try load(runsURL) ?? [] }
+    public func saveRuns(_ runs: [BackupRun]) throws { try save(runs, to: runsURL) }
+
+    private func load<T: Decodable>(_ url: URL) throws -> T? {
+        guard FileManager.default.fileExists(atPath: url.path) else { return nil }
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return try decoder.decode(T.self, from: Data(contentsOf: url))
     }
 
-    public func savePlans(_ plans: [BackupPlan]) throws {
-        let data = try JSONEncoder().encode(plans)
-        try write(data, to: plansURL)
-    }
-
-    public func loadSetupCompleted() -> Bool {
-        guard FileManager.default.fileExists(atPath: setupURL.path),
-              let data = try? Data(contentsOf: setupURL),
-              let flag = try? JSONDecoder().decode(SetupFlag.self, from: data)
-        else { return false }
-        return flag.setupCompleted
-    }
-
-    public func setSetupCompleted(_ completed: Bool) throws {
-        let data = try JSONEncoder().encode(SetupFlag(setupCompleted: completed))
-        try write(data, to: setupURL)
-    }
-
-    private func write(_ data: Data, to url: URL) throws {
+    private func save(_ value: some Encodable, to url: URL) throws {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        try data.write(to: url, options: .atomic)
+        try encoder.encode(value).write(to: url, options: .atomic)
     }
 }
