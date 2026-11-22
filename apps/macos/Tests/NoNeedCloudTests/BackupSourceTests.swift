@@ -3,9 +3,9 @@ import Testing
 @testable import NoNeedCloud
 
 struct BackupSourceTests {
-    @Test func sourceCatalogUsesSpecifiedBundles() {
-        #expect(BackupSource.pages == .appContainer(bundleID: "com.apple.iWork.Pages", displayName: "Pages"))
-        #expect(BackupSource.numbers == .appContainer(bundleID: "com.apple.iWork.Numbers", displayName: "Numbers"))
+    @Test func sourceCatalogUsesGroupContainerIDs() {
+        #expect(BackupSource.pages == .appContainer(groupID: "com~apple~Pages", displayName: "Pages"))
+        #expect(BackupSource.numbers == .appContainer(groupID: "com~apple~Numbers", displayName: "Numbers"))
         #expect(BackupSource.icloudDrive.displayName == "iCloud Drive")
         #expect(BackupSource.pages.displayName == "Pages")
         #expect(BackupSource.numbers.displayName == "Numbers")
@@ -18,14 +18,21 @@ struct BackupSourceTests {
 
         let mobileRoot = ICloudDriveSource.mobileDocumentsRoot
         #expect(BackupSource.icloudDrive.sourceURL == mobileRoot.appendingPathComponent("com~apple~CloudDocs", isDirectory: true))
-        #expect(BackupSource.pages.sourceURL == mobileRoot.appendingPathComponent("com.apple.iWork.Pages", isDirectory: true))
+        #expect(BackupSource.pages.sourceURL == mobileRoot.appendingPathComponent("com~apple~Pages/Documents", isDirectory: true))
+        #expect(BackupSource.numbers.sourceURL == mobileRoot.appendingPathComponent("com~apple~Numbers/Documents", isDirectory: true))
+    }
+
+    @Test func appContainerURLResolvesToDocumentsInGroupContainer() {
+        let home = URL(fileURLWithPath: "/Users/test", isDirectory: true)
+        let resolved = ICloudDriveSource.appContainerDocumentsURL(groupID: "com~apple~Pages", homeDirectory: home)
+        #expect(resolved == home.appendingPathComponent("Library/Mobile Documents/com~apple~Pages/Documents", isDirectory: true))
     }
 
     @Test func backupSourceCodableRoundTrip() throws {
         let sources: [BackupSource] = [
             .folder(URL(fileURLWithPath: "/Users/test/Docs")),
             .icloudDrive,
-            .appContainer(bundleID: "com.apple.iWork.Pages", displayName: "Pages"),
+            .appContainer(groupID: "com~apple~Pages", displayName: "Pages"),
         ]
         let data = try JSONEncoder().encode(sources)
         let decoded = try JSONDecoder().decode([BackupSource].self, from: data)

@@ -10,13 +10,14 @@ enum SmartOffload {
     static func run(
         for fileURL: URL,
         source: (any UbiquitousFileSource)?,
+        isCancelled: @escaping @Sendable () -> Bool = { Task.isCancelled },
         copy: () async throws -> Void
     ) async -> SmartOffloadOutcome {
         guard let source, isDataless(fileURL, source: source) else {
             return await copyOnly(copy)
         }
         do {
-            try await source.fetch(fileURL)
+            try await source.fetch(fileURL, isCancelled: isCancelled)
         } catch {
             return .fetchFailed(error)
         }

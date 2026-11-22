@@ -192,7 +192,11 @@ final class CopyEngine: Sendable {
                 continue
             }
             let fileURL = sourceURL.appendingPathComponent(file.relativePath)
-            let offloadOutcome = await SmartOffload.run(for: fileURL, source: ubiquitousSource) {
+            let offloadOutcome = await SmartOffload.run(
+                for: fileURL,
+                source: ubiquitousSource,
+                isCancelled: { [cancelFlag] in cancelFlag.isCancelled }
+            ) {
                 try Self.copyFile(
                     from: fileURL,
                     to: destinationFile,
@@ -211,6 +215,18 @@ final class CopyEngine: Sendable {
                     try? index.save()
                 }
             case .fetchFailed(let error):
+                if error is CancellationError {
+                    try? index.save()
+                    await state.finish(cancelled: true)
+                    return CopyRunResult(
+                        outcome: .cancelled,
+                        itemsCopied: copied,
+                        itemsSkipped: skipped,
+                        itemsFailed: failed,
+                        bytesCopied: bytesCopied,
+                        itemsProtected: index.count
+                    )
+                }
                 failed += 1
                 await state.recordError(BackupFileError(path: file.relativePath, reason: error.localizedDescription))
             case .copyFailed(let error):

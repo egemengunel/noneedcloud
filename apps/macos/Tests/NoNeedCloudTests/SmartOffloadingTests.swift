@@ -21,31 +21,35 @@ final class MockUbiquitousSource: UbiquitousFileSource, @unchecked Sendable {
     let log: EventLog
     var datalessPaths: Set<String>
     var fetchError: Error?
+    var fetchStallsUntilCancelled: Bool
     var materialize: (URL) -> Void
 
     init(
         log: EventLog = EventLog(),
         datalessPaths: Set<String> = [],
         fetchError: Error? = nil,
+        fetchStallsUntilCancelled: Bool = false,
         materialize: @escaping (URL) -> Void = { _ in }
     ) {
         self.log = log
         self.datalessPaths = datalessPaths
         self.fetchError = fetchError
+        self.fetchStallsUntilCancelled = fetchStallsUntilCancelled
         self.materialize = materialize
-    }
-
-    func enumerateFiles(under root: URL) throws -> [URL] {
-        log.append("enumerate")
-        return []
     }
 
     func isDataless(_ url: URL) throws -> Bool {
         datalessPaths.contains(url.path)
     }
 
-    func fetch(_ url: URL) async throws {
+    func fetch(_ url: URL, isCancelled: @escaping () -> Bool) async throws {
         log.append("fetch:\(url.lastPathComponent)")
+        if fetchStallsUntilCancelled {
+            while !isCancelled() {
+                try await Task.sleep(nanoseconds: 20_000_000)
+            }
+            throw CancellationError()
+        }
         if let fetchError { throw fetchError }
         materialize(url)
     }
@@ -163,6 +167,37 @@ struct SmartOffloadingTests {
         #expect(try Data(contentsOf: destination.appendingPathComponent("ok.txt")) == Data("plain".utf8))
         #expect(try Data(contentsOf: destination.appendingPathComponent("placeholder.txt")) == Data("from icloud".utf8))
         #expect(log.events == ["fetch:placeholder.txt", "evict:placeholder.txt"])
+    }
+
+    @Test @MainActor func stopDuringStalledFetchReturnsCancelledWithinTwoSeconds() async throws {
+        let root = TestSupport.makeTempDirectory()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let sourceDir = root.appendingPathComponent("Source", isDirectory: true)
+        let destination = root.appendingPathComponent("Dest", isDirectory: true)
+        try FileManager.default.createDirectory(at: sourceDir, withIntermediateDirectories: true)
+        try Data().write(to: sourceDir.appendingPathComponent("stuck.txt"))
+
+        let source = MockUbiquitousSource(
+            datalessPaths: [sourceDir.appendingPathComponent("stuck.txt").path],
+            fetchStallsUntilCancelled: true
+        )
+        let engine = CopyEngine(
+            sourceURL: sourceDir,
+            destinationURL: destination,
+            stateURL: IncrementalIndex.indexFileURL(stateDirectory: root, source: sourceDir),
+            ubiquitousSource: source
+        )
+
+        let runTask = Task(priority: .userInitiated) { await engine.run() }
+        try await Task.sleep(nanoseconds: 300_000_000)
+        let stopAt = Date()
+        engine.stop()
+        let result = await runTask.value
+
+        #expect(Date().timeIntervalSince(stopAt) < 2)
+        #expect(result.outcome == .cancelled)
+        #expect(result.itemsFailed == 0)
+        #expect(engine.state.errors.isEmpty)
     }
 
     @Test @MainActor func fetchFailureRecordsErrorAndEngineContinues() async throws {

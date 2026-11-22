@@ -65,8 +65,8 @@ final class IncrementalIndex: @unchecked Sendable {
             return indexFileURL(stateDirectory: stateDirectory, source: url)
         case .icloudDrive:
             return indexFileURL(stateDirectory: stateDirectory, sourceKey: "icloud-drive", name: "iCloud Drive")
-        case .appContainer(let bundleID, _):
-            return indexFileURL(stateDirectory: stateDirectory, sourceKey: bundleID, name: bundleID)
+        case .appContainer(let groupID, _):
+            return indexFileURL(stateDirectory: stateDirectory, sourceKey: groupID, name: groupID)
         }
     }
 

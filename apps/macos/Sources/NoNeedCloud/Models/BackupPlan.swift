@@ -3,10 +3,10 @@ import Foundation
 enum BackupSource: Hashable, Sendable {
     case folder(URL)
     case icloudDrive
-    case appContainer(bundleID: String, displayName: String)
+    case appContainer(groupID: String, displayName: String)
 
-    static let pages = BackupSource.appContainer(bundleID: "com.apple.iWork.Pages", displayName: "Pages")
-    static let numbers = BackupSource.appContainer(bundleID: "com.apple.iWork.Numbers", displayName: "Numbers")
+    static let pages = BackupSource.appContainer(groupID: "com~apple~Pages", displayName: "Pages")
+    static let numbers = BackupSource.appContainer(groupID: "com~apple~Numbers", displayName: "Numbers")
 
     var displayName: String {
         switch self {
@@ -20,14 +20,19 @@ enum BackupSource: Hashable, Sendable {
         switch self {
         case .folder(let url): url
         case .icloudDrive: ICloudDriveSource.cloudDocsRootURL
-        case .appContainer(let bundleID, _): ICloudDriveSource.containerURL(bundleID: bundleID)
+        case .appContainer(let groupID, _): ICloudDriveSource.appContainerDocumentsURL(
+            groupID: groupID,
+            homeDirectory: FileManager.default.homeDirectoryForCurrentUser
+        )
         }
     }
 }
 
 extension BackupSource: Codable {
     private enum CodingKeys: String, CodingKey {
-        case kind, url, bundleID, displayName
+        case kind, url
+        case groupID = "bundleID"
+        case displayName
     }
 
     private enum Kind: String, Codable {
@@ -43,7 +48,7 @@ extension BackupSource: Codable {
             self = .icloudDrive
         case .appContainer:
             self = .appContainer(
-                bundleID: try container.decode(String.self, forKey: .bundleID),
+                groupID: try container.decode(String.self, forKey: .groupID),
                 displayName: try container.decode(String.self, forKey: .displayName)
             )
         }
@@ -57,9 +62,9 @@ extension BackupSource: Codable {
             try container.encode(url, forKey: .url)
         case .icloudDrive:
             try container.encode(Kind.icloudDrive, forKey: .kind)
-        case .appContainer(let bundleID, let displayName):
+        case .appContainer(let groupID, let displayName):
             try container.encode(Kind.appContainer, forKey: .kind)
-            try container.encode(bundleID, forKey: .bundleID)
+            try container.encode(groupID, forKey: .groupID)
             try container.encode(displayName, forKey: .displayName)
         }
     }
