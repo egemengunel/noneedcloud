@@ -6,8 +6,7 @@ import SwiftUI
 struct NoNeedCloudApp: App {
     @State private var model = AppModel(
         store: JSONPlanStore.makeDefault(),
-        // The real copy engine replaces this in M2.
-        engine: SimulatedBackupEngine(),
+        engine: NoNeedCloudApp.makeEngine(),
         healthCheck: { plan in
             let details = plan.destination.flatMap(DestinationHealth.inspect)
             return HealthSnapshot(
@@ -15,11 +14,24 @@ struct NoNeedCloudApp: App {
                 photosAccessGranted: PhotosAccess.isGranted,
                 destination: details
             )
-        }
+        },
+        loginItem: .mainApp
     )
 
     @State private var router = AppRouter()
     @State private var statusItem: StatusItemController?
+    @State private var scheduleTicker: ScheduleTicker?
+
+    /// The real engine. A debug build can still demo the UI without touching
+    /// files: launch with `NNC_SIMULATED_ENGINE=1`.
+    private static func makeEngine() -> any BackupEngine {
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["NNC_SIMULATED_ENGINE"] == "1" {
+            return SimulatedBackupEngine()
+        }
+        #endif
+        return LiveBackupEngine()
+    }
 
     var body: some Scene {
         Window("NoNeedCloud", id: WindowID.main) {
@@ -29,6 +41,9 @@ struct NoNeedCloudApp: App {
                 .task {
                     if statusItem == nil {
                         statusItem = StatusItemController(model: model, router: router)
+                    }
+                    if scheduleTicker == nil {
+                        scheduleTicker = ScheduleTicker(model: model)
                     }
                     #if DEBUG
                     SnapshotRenderer.runIfRequested()

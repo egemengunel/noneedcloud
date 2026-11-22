@@ -7,7 +7,7 @@ protocol LoginItemService: AnyObject {
 }
 
 /// Thin wrapper around SMAppService for the app's own login item.
-final class SMLoginItemService: LoginItemService {
+final class SMLoginItemService: LoginItemService, Sendable {
     func isEnabled() -> Bool {
         SMAppService.mainApp.status == .enabled
     }

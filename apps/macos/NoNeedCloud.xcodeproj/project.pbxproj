@@ -36,6 +36,7 @@
 		DB2275C654AFF8341684896D /* SetupFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8631DB4006B85EA7A8B2306 /* SetupFlowView.swift */; };
 		E6AC50133917B9C456F70240 /* DestinationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420FBCF9EF4162D4ED37C305 /* DestinationSheet.swift */; };
 		EE59AD4AA92586545FA0E97E /* StatusItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEFE27155BC8168BBE80CF0 /* StatusItemController.swift */; };
+		F46BE1E3CF2658E5CD639C38 /* ScheduleTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2FED8EC2AB86F6169F0F0D /* ScheduleTicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		38A0DDC5E904E5E9DA6788D0 /* SourceFoldersSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceFoldersSheet.swift; sourceTree = "<group>"; };
 		3B2D35B6D3DFC58C71080C8A /* MainWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowView.swift; sourceTree = "<group>"; };
 		420FBCF9EF4162D4ED37C305 /* DestinationSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationSheet.swift; sourceTree = "<group>"; };
+		4B2FED8EC2AB86F6169F0F0D /* ScheduleTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTicker.swift; sourceTree = "<group>"; };
 		55D366E4FBD9F00EC3BD6CBC /* RunningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningView.swift; sourceTree = "<group>"; };
 		5E9BA66E4F0546416F210F2F /* NoNeedCloudApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoNeedCloudApp.swift; sourceTree = "<group>"; };
 		601752050A6DEA1D381B5373 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 				11D85D36EDE5C9A59305C110 /* Formatting.swift */,
 				CD2B0291D8AB68E874FC6CF2 /* PhotosAccess.swift */,
 				1F650A67DBF1559C8EFC1994 /* PreviewData.swift */,
+				4B2FED8EC2AB86F6169F0F0D /* ScheduleTicker.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -348,6 +351,7 @@
 				1479ADF8F850DDE705E60747 /* ProtectedView.swift in Sources */,
 				5A7816E51E7DBA4FFEAD8DB2 /* RunningView.swift in Sources */,
 				19746087709D375D4E4EED1F /* SchedulePopover.swift in Sources */,
+				F46BE1E3CF2658E5CD639C38 /* ScheduleTicker.swift in Sources */,
 				03580F87C83C91EE13CB031F /* SettingsView.swift in Sources */,
 				DB2275C654AFF8341684896D /* SetupFlowView.swift in Sources */,
 				235167AC8352EAD392EA55E2 /* SheetChrome.swift in Sources */,

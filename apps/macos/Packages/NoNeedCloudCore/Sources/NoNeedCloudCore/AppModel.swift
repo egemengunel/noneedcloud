@@ -14,6 +14,9 @@ public final class AppModel {
     @ObservationIgnored private let now: @Sendable () -> Date
     @ObservationIgnored private let minimumUpdateInterval: TimeInterval
     @ObservationIgnored private var runTask: Task<Void, Never>?
+    @ObservationIgnored private let loginItem: LoginItemControl?
+    /// Anchor for the first scheduled run when the plan has never run.
+    @ObservationIgnored private let launchedAt: Date
 
     /// The plan the main window edits. Multiple plans arrive with M6.
     public private(set) var plan: BackupPlan
@@ -29,15 +32,22 @@ public final class AppModel {
         engine: any BackupEngine,
         healthCheck: @escaping HealthCheck = { _ in HealthSnapshot() },
         now: @escaping @Sendable () -> Date = Date.init,
-        minimumUpdateInterval: TimeInterval = 0.2
+        minimumUpdateInterval: TimeInterval = 0.2,
+        loginItem: LoginItemControl? = nil
     ) {
         self.store = store
         self.engine = engine
         self.healthCheck = healthCheck
         self.now = now
         self.minimumUpdateInterval = minimumUpdateInterval
+        self.loginItem = loginItem
+        self.launchedAt = now()
         plan = (try? store.loadPlans())?.first ?? BackupPlan()
         runs = (try? store.loadRuns()) ?? []
+        // The login item can be removed in System Settings; reflect that.
+        if let loginItem, loginItem.isEnabled() != plan.schedule.startAtLogin {
+            plan.schedule.startAtLogin = loginItem.isEnabled()
+        }
     }
 
     // MARK: - Derived state
@@ -72,8 +82,21 @@ public final class AppModel {
         var updated = plan
         change(&updated)
         guard updated != plan else { return }
-        plan = updated
-        persistPlan()
+        let wantsLoginItem = updated.schedule.startAtLogin
+        var loginItemError: String?
+        if let loginItem, wantsLoginItem != plan.schedule.startAtLogin {
+            do {
+                try loginItem.setEnabled(wantsLoginItem)
+            } catch {
+                loginItemError = error.localizedDescription
+            }
+            updated.schedule.startAtLogin = loginItem.isEnabled()
+        }
+        if updated != plan {
+            plan = updated
+            persistPlan()
+        }
+        if let loginItemError { saveError = loginItemError }
     }
 
     public func addFolders(_ folders: [FolderReference]) {
@@ -120,6 +143,23 @@ public final class AppModel {
         planRuns.filter(\.didComplete).reduce(0) { $0 + $1.bytesWritten }
     }
 
+    /// When the next scheduled run is due. Unlike `nextScheduledRun` this is
+    /// anchored to the last run, so a time the Mac slept through stays due
+    /// (and runs once on wake) instead of being skipped.
+    public var scheduledRunDue: Date? {
+        let anchor = planRuns.first?.startedAt ?? launchedAt
+        return plan.schedule.nextRun(after: anchor)
+    }
+
+    /// Starts a scheduled backup if one is due. Called by the app's ticker
+    /// every minute and when the Mac wakes.
+    @discardableResult
+    public func runScheduledBackupIfDue() -> Bool {
+        guard let due = scheduledRunDue, now() >= due, canStartBackup else { return false }
+        startBackup(trigger: .scheduled)
+        return true
+    }
+
     // MARK: - Running
 
     public var canStartBackup: Bool {
@@ -161,7 +201,7 @@ public final class AppModel {
                 outcome = Task.isCancelled ? .cancelled : .failed
                 failureReason = Task.isCancelled ? nil : error.localizedDescription
             }
-            finishRun(plan: plan, progress: latest, outcome: outcome, trigger: trigger, failureReason: failureReason)
+            finishRun(plan: plan, startedAt: startedAt, progress: latest, outcome: outcome, trigger: trigger, failureReason: failureReason)
         }
     }
 
@@ -176,6 +216,7 @@ public final class AppModel {
 
     private func finishRun(
         plan: BackupPlan,
+        startedAt: Date,
         progress: BackupProgress,
         outcome: BackupRun.Outcome,
         trigger: BackupRun.Trigger,
@@ -185,7 +226,7 @@ public final class AppModel {
         let completed = outcome == .succeeded || outcome == .completedWithErrors
         let run = BackupRun(
             planID: plan.id,
-            startedAt: progress.startedAt,
+            startedAt: startedAt,
             finishedAt: now(),
             outcome: outcome,
             trigger: trigger,
