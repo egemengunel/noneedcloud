@@ -123,14 +123,21 @@ struct AppTitleToolbarItem: ToolbarContent {
         }
     }
 
+    @ViewBuilder
     private var label: some View {
-        HStack(spacing: 10) {
-            BrandCloud(color: onDark ? Theme.lightBlue : Theme.ink, width: 24)
-            Text(verbatim: title)
-                .font(.system(size: title == "NoNeedCloud" ? 15 : 16, weight: .semibold))
-                .foregroundStyle(onDark ? .white : Theme.ink)
+        if title == "NoNeedCloud" {
+            // The main window shows the wordmark as its logo.
+            Wordmark(color: onDark ? .white : Theme.ink, height: 20)
+                .padding(.horizontal, 4)
+        } else {
+            HStack(spacing: 10) {
+                BrandCloud(color: Theme.ink, width: 24)
+                Text(verbatim: title)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(Theme.ink)
+            }
+            .padding(.horizontal, 4)
         }
-        .padding(.horizontal, 4)
     }
 }
 

@@ -19,10 +19,7 @@ struct LaunchView: View {
 
             VStack(spacing: 14) {
                 Spacer()
-                Text(verbatim: "NoNeedCloud")
-                    .font(.system(size: 34, weight: .bold))
-                    .tracking(-1)
-                    .foregroundStyle(.white)
+                Wordmark(color: .white, height: 34)
                 HStack(spacing: 10) {
                     ProgressView()
                         .controlSize(.small)

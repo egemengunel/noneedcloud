@@ -70,6 +70,23 @@ extension Color {
     }
 }
 
+/// The NoNeedCloud wordmark ("noneed" + cloud), the app's main logo.
+/// Single-colour vector from the brand files, tinted per use.
+struct Wordmark: View {
+    var color: Color = Theme.ink
+    var height: CGFloat = 20
+
+    var body: some View {
+        Image("Wordmark")
+            .resizable()
+            .renderingMode(.template)
+            .aspectRatio(193.0 / 35.0, contentMode: .fit)
+            .frame(height: height)
+            .foregroundStyle(color)
+            .accessibilityLabel(Text(verbatim: "NoNeedCloud"))
+    }
+}
+
 /// The cover's three rings with the cloud on their centre, as in Figma
 /// "NoNeedCloud · Kapak": rings 625 / 494 / 382 pt, cloud 326 pt wide.
 /// The middle and inner ring share the cloud's centre; the outer ring sits

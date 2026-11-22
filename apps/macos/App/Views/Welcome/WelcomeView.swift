@@ -26,15 +26,12 @@ struct WelcomeView: View {
                         .font(.system(size: 11, weight: .semibold))
                         .tracking(1.6)
                         .foregroundStyle(Theme.lightBlue.opacity(0.85))
-                    Text(verbatim: "NoNeedCloud")
-                        .font(.system(size: 64, weight: .bold))
-                        .tracking(-2.4)
-                        .foregroundStyle(.white)
-                        .padding(.top, 10)
+                    Wordmark(color: .white, height: 62)
+                        .padding(.top, 16)
                     Text("Back up iCloud Photos and files to storage you own.")
                         .font(.system(size: 19, weight: .medium))
                         .foregroundStyle(.white.opacity(0.92))
-                        .padding(.top, 10)
+                        .padding(.top, 22)
 
                     VStack(alignment: .leading, spacing: 18) {
                         WelcomePoint(
