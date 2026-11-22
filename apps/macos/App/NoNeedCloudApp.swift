@@ -50,6 +50,13 @@ struct NoNeedCloudApp: App {
             }
         }
 
+        MenuBarExtra {
+            MenuBarPanel(model: model, router: router)
+        } label: {
+            MenuBarLabel(model: model)
+        }
+        .menuBarExtraStyle(.window)
+
         Settings {
             SettingsView(model: model)
         }

@@ -365,6 +365,16 @@
         }
       }
     },
+    "Back to backup status": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedekleme durumuna dön"
+          }
+        }
+      }
+    },
     "Back up": {
       "localizations": {
         "tr": {
@@ -735,6 +745,16 @@
         }
       }
     },
+    "Choose what to protect and where to keep it.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neyi koruyacağını ve nerede saklayacağını seç."
+          }
+        }
+      }
+    },
     "Coming later": {
       "localizations": {
         "tr": {
@@ -852,6 +872,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Devam et"
+          }
+        }
+      }
+    },
+    "Continue Setup": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kuruluma devam et"
           }
         }
       }
@@ -1224,6 +1254,16 @@
         }
       }
     },
+    "Finish setting up": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kurulumu tamamla"
+          }
+        }
+      }
+    },
     "First Backup": {
       "localizations": {
         "tr": {
@@ -1454,6 +1494,16 @@
         }
       }
     },
+    "Last successful backup %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son başarılı yedek %@"
+          }
+        }
+      }
+    },
     "Last successful backup %@.": {
       "localizations": {
         "tr": {
@@ -1641,12 +1691,32 @@
         }
       }
     },
+    "Next backup %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sonraki yedek %@"
+          }
+        }
+      }
+    },
     "No backup in %lld days": {
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
             "value": "%lld gündür yedek alınmadı"
+          }
+        }
+      }
+    },
+    "No backup scheduled": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zamanlanmış yedek yok"
           }
         }
       }
@@ -1761,6 +1831,16 @@
         }
       }
     },
+    "Not set up yet": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Henüz kurulmadı"
+          }
+        }
+      }
+    },
     "Nothing in iCloud is ever changed": {
       "localizations": {
         "tr": {
@@ -1827,6 +1907,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "OneDrive…"
+          }
+        }
+      }
+    },
+    "Open NoNeedCloud": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NoNeedCloud'u aç"
           }
         }
       }
@@ -1997,6 +2087,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Korunuyor"
+          }
+        }
+      }
+    },
+    "Quit NoNeedCloud": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NoNeedCloud'dan çık"
           }
         }
       }
@@ -2238,6 +2338,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ayarlar"
+          }
+        }
+      }
+    },
+    "Settings and Quit": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayarlar ve Çık"
+          }
+        }
+      }
+    },
+    "Settings…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayarlar…"
           }
         }
       }
