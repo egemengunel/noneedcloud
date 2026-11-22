@@ -394,7 +394,7 @@ railControls.hidden = false;
 updateRail();
 
 
-// ---- Hero: the whole app flow as one 3x recording, with a hand-built menu bar.
+// ---- Hero: the whole app flow as one 3x recording, with a backup progress panel.
 // Segment starts (seconds) match assets/recordings/flow.mp4.
 var heroFlowOn = Boolean(hero.video && document.querySelector("[data-flow-desktop]"));
 const flow = {
@@ -411,8 +411,6 @@ const flow = {
   ],
   desk: document.querySelector("[data-flow-desktop]"),
   panel: document.querySelector("[data-flow-panel]"),
-  status: document.querySelector("[data-flow-status]"),
-  fill: document.querySelector("[data-flow-fill]"),
   pct: document.querySelector("[data-flow-pct]"),
   left: document.querySelector("[data-flow-left]"),
   bar: document.querySelector("[data-flow-bar]"),
@@ -453,11 +451,9 @@ function flowTick() {
   if (index !== flow.current) flowApply(index);
   const [a, b] = flow.live;
   const live = t >= a && t < b;
-  const pct = live ? Math.round(3 + Math.min(1, (t - a) / (b - a)) * 55) : (t >= b ? 100 : 0);
-  flow.fill.setAttribute("width", String(96 * pct / 100));
-  flow.status.classList.toggle("active", live);
   flow.panel.classList.toggle("open", t >= a + 0.25 && t < b - 0.3);
   if (live) {
+    const pct = Math.round(3 + ((t - a) / (b - a)) * 55);
     flow.pct.textContent = `%${pct}`;
     flow.left.textContent = `${Math.max(0, Math.round(320 * (1 - pct / 100)))} öğe kaldı`;
     flow.bar.style.width = `${pct}%`;

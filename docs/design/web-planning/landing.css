@@ -426,23 +426,10 @@ html[data-motion="on"] .transfer-map:not(.active-visual) .map-line i { animation
 .scene-video { border-radius: 14px; }
 .scene-video[hidden], .scene-devices img[hidden] { display: none; }
 
-/* Hero flow: one 3x recording of the Mac app + a hand-built macOS menu bar and panel. */
+/* Hero flow: one 3x recording of the Mac app + a backup progress panel. */
 .flow-desktop { position: absolute; pointer-events: none; z-index: 2; color: #121B2D;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif; }
 .flow-desktop[hidden] { display: none; }
-.flow-menubar { position: absolute; left: 0; right: 0; top: -3.9em; height: 3.1em; display: flex; align-items: center;
-  gap: 1.7em; padding: 0 1.4em; border-radius: 1.1em; font-size: 1em; letter-spacing: -.01em;
-  background: rgba(255,255,255,.74); backdrop-filter: blur(18px) saturate(1.6); -webkit-backdrop-filter: blur(18px) saturate(1.6);
-  box-shadow: 0 .5em 1.8em rgba(18,27,45,.14), inset 0 0 0 1px rgba(255,255,255,.65); }
-.flow-menubar > span { font-size: 1.2em; white-space: nowrap; }
-.flow-menubar .mb-app { font-weight: 700; }
-.flow-menubar .mb-spacer { flex: 1; }
-.flow-menubar .mb-status { display: grid; place-items: center; width: 2.4em; height: 1.75em; border-radius: .55em; transition: background .2s; }
-.flow-menubar .mb-status.active { background: rgba(36,87,198,.16); }
-.flow-menubar .mb-status svg { width: 1.5em; height: auto; display: block; }
-.mb-cloud-track { fill: rgba(18,27,45,.3); }
-.mb-cloud-fill { fill: #2457C6; }
-.flow-menubar .mb-glyph { opacity: .55; }
 .flow-panel { position: absolute; top: .3em; right: 10.5em; width: 31em; padding: 1.3em; border-radius: 1.9em;
   background: rgba(248,249,252,.9); backdrop-filter: blur(24px) saturate(1.5); -webkit-backdrop-filter: blur(24px) saturate(1.5);
   box-shadow: 0 1.8em 4.4em rgba(18,27,45,.3), inset 0 0 0 1px rgba(255,255,255,.75);
