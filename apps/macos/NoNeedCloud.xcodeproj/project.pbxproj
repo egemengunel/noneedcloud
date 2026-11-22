@@ -8,21 +8,39 @@
 
 /* Begin PBXBuildFile section */
 		0E596762132013888127E106 /* NoNeedCloudApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E9BA66E4F0546416F210F2F /* NoNeedCloudApp.swift */; };
-		3615C899C385CBB1CB2252C4 /* SetupWizardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B2D92A486B7D4CCCC5075A /* SetupWizardView.swift */; };
+		1111536D4238AB3722B6DDE3 /* SourceFoldersSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A0DDC5E904E5E9DA6788D0 /* SourceFoldersSheet.swift */; };
+		1795B31C22A413B7E44AC33E /* PhotosSettingsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77007923CBCF052DBEEDC2F3 /* PhotosSettingsSheet.swift */; };
+		19746087709D375D4E4EED1F /* SchedulePopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91491D9FBDE28D4E92D15C43 /* SchedulePopover.swift */; };
+		235167AC8352EAD392EA55E2 /* SheetChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173C08A41DF91CD3CCBF6ED2 /* SheetChrome.swift */; };
+		362B3A0E29FBA73BE32B30B2 /* StatusArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA36F5231587DC6176F56CD /* StatusArea.swift */; };
 		4346FB0AE06ED8DDA5084CED /* NoNeedCloudCore in Frameworks */ = {isa = PBXBuildFile; productRef = D8F03B9BA56B3D64220C0868 /* NoNeedCloudCore */; };
 		43D506BC6586AEE8680221F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17AEF947035BC37AC7FBAC5E /* Assets.xcassets */; };
-		47067087D84208189844772F /* FolderPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B72A394AF9ABCE49C962308 /* FolderPicker.swift */; };
-		F2692D4CC954195EA1BAABE5 /* AtAGlanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19945170A778A0AC07426A1B /* AtAGlanceView.swift */; };
+		5133D691603F3CFFFA8D8AD9 /* PhotosAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2B0291D8AB68E874FC6CF2 /* PhotosAccess.swift */; };
+		55716F5EC0C9E8D12043F7D5 /* MainWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2D35B6D3DFC58C71080C8A /* MainWindowView.swift */; };
+		5DCED0B3DC6B4A7845E7ADFC /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E7CBA9686864A420852DE2 /* HistoryView.swift */; };
+		8225685EF5D78E7251ACB011 /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D85D36EDE5C9A59305C110 /* Formatting.swift */; };
+		9168325946564BDD659915F6 /* FolderPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C75BC82650C21A423C1C74 /* FolderPicker.swift */; };
+		DA18EAC42B7C7F5833271E3C /* YourSetupSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEDA26AA9A43513F589EE3B /* YourSetupSection.swift */; };
+		E6AC50133917B9C456F70240 /* DestinationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420FBCF9EF4162D4ED37C305 /* DestinationSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		11D85D36EDE5C9A59305C110 /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
+		173C08A41DF91CD3CCBF6ED2 /* SheetChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetChrome.swift; sourceTree = "<group>"; };
 		17AEF947035BC37AC7FBAC5E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		19945170A778A0AC07426A1B /* AtAGlanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtAGlanceView.swift; sourceTree = "<group>"; };
 		309FE9B1FC429FE38C751B46 /* NoNeedCloudCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NoNeedCloudCore; path = Packages/NoNeedCloudCore; sourceTree = SOURCE_ROOT; };
-		3B72A394AF9ABCE49C962308 /* FolderPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderPicker.swift; sourceTree = "<group>"; };
+		35E7CBA9686864A420852DE2 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		38A0DDC5E904E5E9DA6788D0 /* SourceFoldersSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceFoldersSheet.swift; sourceTree = "<group>"; };
+		3B2D35B6D3DFC58C71080C8A /* MainWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowView.swift; sourceTree = "<group>"; };
+		420FBCF9EF4162D4ED37C305 /* DestinationSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationSheet.swift; sourceTree = "<group>"; };
+		4BA36F5231587DC6176F56CD /* StatusArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusArea.swift; sourceTree = "<group>"; };
+		5DEDA26AA9A43513F589EE3B /* YourSetupSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourSetupSection.swift; sourceTree = "<group>"; };
 		5E9BA66E4F0546416F210F2F /* NoNeedCloudApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoNeedCloudApp.swift; sourceTree = "<group>"; };
-		66B2D92A486B7D4CCCC5075A /* SetupWizardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupWizardView.swift; sourceTree = "<group>"; };
+		71C75BC82650C21A423C1C74 /* FolderPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderPicker.swift; sourceTree = "<group>"; };
+		77007923CBCF052DBEEDC2F3 /* PhotosSettingsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosSettingsSheet.swift; sourceTree = "<group>"; };
+		91491D9FBDE28D4E92D15C43 /* SchedulePopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulePopover.swift; sourceTree = "<group>"; };
 		AE5D1F4F9B038E7E76E6BA9B /* NoNeedCloud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NoNeedCloud.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD2B0291D8AB68E874FC6CF2 /* PhotosAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosAccess.swift; sourceTree = "<group>"; };
 		D5FB703D07CCA6591C7E1CAD /* NoNeedCloud.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NoNeedCloud.entitlements; sourceTree = "<group>"; };
 		FD8CA0E182941921443DD84D /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -47,12 +65,22 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		47131B652463BC120D15362C /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				71C75BC82650C21A423C1C74 /* FolderPicker.swift */,
+				11D85D36EDE5C9A59305C110 /* Formatting.swift */,
+				CD2B0291D8AB68E874FC6CF2 /* PhotosAccess.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
 		4DA04746A18985F7A89604BA /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				19945170A778A0AC07426A1B /* AtAGlanceView.swift */,
-				3B72A394AF9ABCE49C962308 /* FolderPicker.swift */,
-				66B2D92A486B7D4CCCC5075A /* SetupWizardView.swift */,
+				EB1FE2F09BEF91F8FCE11376 /* History */,
+				96F6ABCC0316675FACA6152E /* Main */,
+				F67D4BE3F1821B471C65F29B /* Sheets */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -91,15 +119,46 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		96F6ABCC0316675FACA6152E /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				3B2D35B6D3DFC58C71080C8A /* MainWindowView.swift */,
+				4BA36F5231587DC6176F56CD /* StatusArea.swift */,
+				5DEDA26AA9A43513F589EE3B /* YourSetupSection.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
 		E385213BF5932A1AF1168851 /* App */ = {
 			isa = PBXGroup;
 			children = (
 				D5FB703D07CCA6591C7E1CAD /* NoNeedCloud.entitlements */,
 				5E9BA66E4F0546416F210F2F /* NoNeedCloudApp.swift */,
 				06D08B227C687679E11376FD /* Resources */,
+				47131B652463BC120D15362C /* Support */,
 				4DA04746A18985F7A89604BA /* Views */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		EB1FE2F09BEF91F8FCE11376 /* History */ = {
+			isa = PBXGroup;
+			children = (
+				35E7CBA9686864A420852DE2 /* HistoryView.swift */,
+			);
+			path = History;
+			sourceTree = "<group>";
+		};
+		F67D4BE3F1821B471C65F29B /* Sheets */ = {
+			isa = PBXGroup;
+			children = (
+				420FBCF9EF4162D4ED37C305 /* DestinationSheet.swift */,
+				77007923CBCF052DBEEDC2F3 /* PhotosSettingsSheet.swift */,
+				91491D9FBDE28D4E92D15C43 /* SchedulePopover.swift */,
+				173C08A41DF91CD3CCBF6ED2 /* SheetChrome.swift */,
+				38A0DDC5E904E5E9DA6788D0 /* SourceFoldersSheet.swift */,
+			);
+			path = Sheets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,10 +237,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F2692D4CC954195EA1BAABE5 /* AtAGlanceView.swift in Sources */,
-				47067087D84208189844772F /* FolderPicker.swift in Sources */,
+				E6AC50133917B9C456F70240 /* DestinationSheet.swift in Sources */,
+				9168325946564BDD659915F6 /* FolderPicker.swift in Sources */,
+				8225685EF5D78E7251ACB011 /* Formatting.swift in Sources */,
+				5DCED0B3DC6B4A7845E7ADFC /* HistoryView.swift in Sources */,
+				55716F5EC0C9E8D12043F7D5 /* MainWindowView.swift in Sources */,
 				0E596762132013888127E106 /* NoNeedCloudApp.swift in Sources */,
-				3615C899C385CBB1CB2252C4 /* SetupWizardView.swift in Sources */,
+				5133D691603F3CFFFA8D8AD9 /* PhotosAccess.swift in Sources */,
+				1795B31C22A413B7E44AC33E /* PhotosSettingsSheet.swift in Sources */,
+				19746087709D375D4E4EED1F /* SchedulePopover.swift in Sources */,
+				235167AC8352EAD392EA55E2 /* SheetChrome.swift in Sources */,
+				1111536D4238AB3722B6DDE3 /* SourceFoldersSheet.swift in Sources */,
+				362B3A0E29FBA73BE32B30B2 /* StatusArea.swift in Sources */,
+				DA18EAC42B7C7F5833271E3C /* YourSetupSection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

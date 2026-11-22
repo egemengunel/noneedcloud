@@ -1,27 +1,56 @@
+import AppKit
 import NoNeedCloudCore
 import SwiftUI
 
 @main
 struct NoNeedCloudApp: App {
-    @State private var model = AppModel(store: JSONPlanStore.makeDefault())
+    @State private var model = AppModel(
+        store: JSONPlanStore.makeDefault(),
+        // The real copy engine replaces this in M2.
+        engine: SimulatedBackupEngine(),
+        healthCheck: { plan in
+            HealthSnapshot(
+                destinationAvailable: plan.destination.map(DestinationHealth.isAvailable) ?? true,
+                photosAccessGranted: PhotosAccess.isGranted
+            )
+        }
+    )
 
     var body: some Scene {
-        WindowGroup("NoNeedCloud") {
-            RootView(model: model)
-                .frame(minWidth: 620, minHeight: 440)
+        Window("NoNeedCloud", id: WindowID.main) {
+            MainWindowView(model: model)
+                .frame(minWidth: 640, idealWidth: 720, minHeight: 640, idealHeight: 700)
+                .task { await model.refreshHealth() }
+                .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+                    Task { await model.refreshHealth() }
+                }
         }
         .windowResizability(.contentMinSize)
+        .commands {
+            CommandGroup(replacing: .newItem) {}
+            CommandGroup(after: .windowArrangement) {
+                OpenHistoryButton()
+            }
+        }
+
+        Window("Backup History", id: WindowID.history) {
+            HistoryView(model: model)
+                .frame(minWidth: 520, minHeight: 360)
+        }
+        .defaultSize(width: 620, height: 460)
     }
 }
 
-struct RootView: View {
-    let model: AppModel
+enum WindowID {
+    static let main = "main"
+    static let history = "history"
+}
+
+private struct OpenHistoryButton: View {
+    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
-        if model.isSetupNeeded {
-            SetupWizardView { model.finishSetup($0) }
-        } else {
-            AtAGlanceView(model: model)
-        }
+        Button("Backup History") { openWindow(id: WindowID.history) }
+            .keyboardShortcut("y", modifiers: [.command])
     }
 }
