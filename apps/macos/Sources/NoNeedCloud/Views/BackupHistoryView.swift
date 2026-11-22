@@ -17,7 +17,7 @@ struct BackupHistoryView: View {
                         NavigationLink {
                             BackupRunDetailView(record: record)
                         } label: {
-                            BackupRunRow(record: record)
+                            BackupRunRow(record: record, planName: model.planName(for: record.planId))
                         }
                     }
                 }
@@ -29,11 +29,15 @@ struct BackupHistoryView: View {
 
 struct BackupRunRow: View {
     let record: BackupRunRecord
+    let planName: String
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
                 OutcomeBadge(outcome: record.outcome)
+                Text(planName)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 Spacer()
                 Text(record.end.formatted(date: .abbreviated, time: .shortened))
                     .font(.caption)

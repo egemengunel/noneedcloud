@@ -3,15 +3,19 @@ import SwiftUI
 @main
 struct NoNeedCloudApp: App {
     @StateObject private var model: AppModel
+    @State private var scheduleRunner: ScheduleRunner?
 
     init() {
-        _model = StateObject(wrappedValue: AppModel(store: JSONPlanStore.makeDefault()))
+        let model = AppModel(store: JSONPlanStore.makeDefault(), loginItem: SMLoginItemService())
+        _model = StateObject(wrappedValue: model)
+        scheduleRunner = ScheduleRunner(scheduler: model)
     }
 
     var body: some Scene {
         WindowGroup("NoNeedCloud") {
             RootView(model: model)
                 .frame(minWidth: 620, minHeight: 440)
+                .task { scheduleRunner?.start() }
         }
         .windowResizability(.contentMinSize)
     }

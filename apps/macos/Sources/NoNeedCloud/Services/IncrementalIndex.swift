@@ -60,13 +60,32 @@ final class IncrementalIndex: @unchecked Sendable {
     }
 
     static func indexFileURL(stateDirectory: URL, source: BackupSource) -> URL {
+        indexFileURL(
+            stateDirectory: stateDirectory,
+            sourceKey: sourceKey(for: source),
+            name: source.displayName
+        )
+    }
+
+    /// The index records what has already been copied, so it must be scoped to
+    /// the (source, destination) pair: two plans sharing a source but writing
+    /// to different destinations each keep their own incremental state.
+    static func indexFileURL(stateDirectory: URL, destination: URL, source: BackupSource) -> URL {
+        indexFileURL(
+            stateDirectory: stateDirectory,
+            sourceKey: destination.path(percentEncoded: false) + "\n" + sourceKey(for: source),
+            name: destination.lastPathComponent + "-" + source.displayName
+        )
+    }
+
+    private static func sourceKey(for source: BackupSource) -> String {
         switch source {
         case .folder(let url):
-            return indexFileURL(stateDirectory: stateDirectory, source: url)
+            url.path(percentEncoded: false)
         case .icloudDrive:
-            return indexFileURL(stateDirectory: stateDirectory, sourceKey: "icloud-drive", name: "iCloud Drive")
+            "icloud-drive"
         case .appContainer(let groupID, _):
-            return indexFileURL(stateDirectory: stateDirectory, sourceKey: groupID, name: groupID)
+            groupID
         }
     }
 

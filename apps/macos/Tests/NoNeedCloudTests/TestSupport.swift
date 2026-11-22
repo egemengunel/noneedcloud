@@ -20,14 +20,16 @@ enum TestSupport {
         sources: [URL] = [URL(fileURLWithPath: "/tmp/sources")],
         includePhotos: Bool = false,
         photoOptions: PhotoOptions = PhotoOptions(),
-        destination: URL = URL(fileURLWithPath: "/tmp/dest")
+        destination: URL = URL(fileURLWithPath: "/tmp/dest"),
+        schedule: Schedule = .manual
     ) -> BackupPlan {
         BackupPlan(
             name: name,
             sourceFolderURLs: sources,
             includePhotos: includePhotos,
             photoOptions: photoOptions,
-            destinationURL: destination
+            destinationURL: destination,
+            schedule: schedule
         )
     }
 }

@@ -142,4 +142,17 @@ struct BackupSourceTests {
         #expect(firstIndex.count == 1)
         #expect(secondIndex.count == 1)
     }
+
+    @Test func indexFileURLsDifferPerDestinationForSameSource() {
+        let stateDirectory = TestSupport.makeTempDirectory()
+        defer { try? FileManager.default.removeItem(at: stateDirectory) }
+        let source = BackupSource.folder(URL(fileURLWithPath: "/root/Docs"))
+        let destinationA = URL(fileURLWithPath: "/volumes/A")
+        let destinationB = URL(fileURLWithPath: "/volumes/B")
+
+        #expect(IncrementalIndex.indexFileURL(stateDirectory: stateDirectory, destination: destinationA, source: source)
+            != IncrementalIndex.indexFileURL(stateDirectory: stateDirectory, destination: destinationB, source: source))
+        #expect(IncrementalIndex.indexFileURL(stateDirectory: stateDirectory, destination: destinationA, source: source)
+            == IncrementalIndex.indexFileURL(stateDirectory: stateDirectory, destination: destinationA, source: source))
+    }
 }

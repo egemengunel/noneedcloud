@@ -230,4 +230,165 @@ struct AppModelTests {
         #expect(model.history[0].errors.contains { $0.path == missing.path })
         #expect(model.lastBackupDate == nil)
     }
+
+    @Test @MainActor func addUpdateDeletePlansPersistAcrossRelaunch() throws {
+        try TestSupport.withTempStore { store, dir in
+            let model = AppModel(store: store)
+            let first = TestSupport.makePlan(name: "First")
+            let second = TestSupport.makePlan(name: "Second")
+
+            model.addPlan(first)
+            model.addPlan(second)
+            #expect(model.plans.map(\.name) == ["First", "Second"])
+
+            var renamed = first
+            renamed.name = "Renamed"
+            renamed.schedule = .daily(hour: 9, minute: 0)
+            model.updatePlan(renamed)
+            #expect(model.plans.map(\.name) == ["Renamed", "Second"])
+            #expect(model.plans[0].schedule == .daily(hour: 9, minute: 0))
+
+            let renamedRelaunch = AppModel(store: JSONPlanStore(directory: dir))
+            #expect(renamedRelaunch.plans.map(\.name) == ["Renamed", "Second"])
+            #expect(renamedRelaunch.plans[0].schedule == .daily(hour: 9, minute: 0))
+
+            model.deletePlan(first.id)
+            #expect(model.plans.map(\.name) == ["Second"])
+
+            let relaunched = AppModel(store: JSONPlanStore(directory: dir))
+            #expect(relaunched.plans.map(\.name) == ["Second"])
+        }
+    }
+
+    @Test @MainActor func updatingUnknownPlanIsIgnored() throws {
+        try TestSupport.withTempStore { store, _ in
+            let model = AppModel(store: store)
+            let plan = TestSupport.makePlan(name: "Real")
+            model.addPlan(plan)
+
+            var stranger = TestSupport.makePlan(name: "Stranger")
+            stranger.id = UUID()
+            model.updatePlan(stranger)
+
+            #expect(model.plans.map(\.name) == ["Real"])
+        }
+    }
+
+    @Test @MainActor func deletePlanKeepsHistoryAndMissedItems() async throws {
+        let root = TestSupport.makeTempDirectory()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("Source", isDirectory: true)
+        let destination = root.appendingPathComponent("Dest", isDirectory: true)
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        let lockedPath = source.appendingPathComponent("locked.txt")
+        try Data("secret".utf8).write(to: lockedPath)
+        try FileManager.default.setAttributes([.posixPermissions: 0o000], ofItemAtPath: lockedPath.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o644], ofItemAtPath: lockedPath.path) }
+        let store = JSONPlanStore(directory: root.appendingPathComponent("State", isDirectory: true))
+        let model = AppModel(store: store, runStateDirectory: root.appendingPathComponent("RunState", isDirectory: true))
+        let plan = TestSupport.makePlan(name: "Doomed", sources: [source], destination: destination)
+
+        _ = await model.backup(plan)
+        #expect(model.missedItems(for: plan.id).count == 1)
+
+        model.deletePlan(plan.id)
+        #expect(model.plans.isEmpty)
+        #expect(model.history.count == 1)
+        #expect(model.missedItems(for: plan.id).count == 1)
+
+        let relaunched = AppModel(store: store, runStateDirectory: root.appendingPathComponent("RunState", isDirectory: true))
+        #expect(relaunched.history.count == 1)
+        #expect(relaunched.missedItems(for: plan.id).count == 1)
+    }
+
+    @Test @MainActor func startBackupMarksPlanRunningUntilFinished() async throws {
+        let root = TestSupport.makeTempDirectory()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("Source", isDirectory: true)
+        let destination = root.appendingPathComponent("Dest", isDirectory: true)
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        try Data("one".utf8).write(to: source.appendingPathComponent("a.txt"))
+        let store = JSONPlanStore(directory: root.appendingPathComponent("State", isDirectory: true))
+        let model = AppModel(store: store, runStateDirectory: root.appendingPathComponent("RunState", isDirectory: true))
+        let plan = TestSupport.makePlan(name: "Real", sources: [source], destination: destination)
+
+        model.startBackup(plan)
+        #expect(model.isPlanRunning(plan.id))
+
+        await waitForPlanIdle(model, plan.id)
+        #expect(!model.isPlanRunning(plan.id))
+        #expect(model.history.count == 1)
+    }
+
+    @Test @MainActor func concurrentBackupsSerializeThroughGlobalGuard() async throws {
+        let root = TestSupport.makeTempDirectory()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("Source", isDirectory: true)
+        let destination = root.appendingPathComponent("Dest", isDirectory: true)
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        try Data("one".utf8).write(to: source.appendingPathComponent("a.txt"))
+        let store = JSONPlanStore(directory: root.appendingPathComponent("State", isDirectory: true))
+        let model = AppModel(store: store, runStateDirectory: root.appendingPathComponent("RunState", isDirectory: true))
+        let plan = TestSupport.makePlan(name: "Real", sources: [source], destination: destination)
+
+        async let first = model.backup(plan)
+        async let second = model.backup(plan)
+        let results = await [first, second]
+
+        #expect(results.filter(\.isEmpty).count == 1)
+        #expect(model.history.count == 1)
+    }
+
+    @Test @MainActor func sameSourceDifferentDestinationsBackUpIndependently() async throws {
+        let root = TestSupport.makeTempDirectory()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("Source", isDirectory: true)
+        let destinationA = root.appendingPathComponent("DestA", isDirectory: true)
+        let destinationB = root.appendingPathComponent("DestB", isDirectory: true)
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        try Data("one".utf8).write(to: source.appendingPathComponent("a.txt"))
+        let store = JSONPlanStore(directory: root.appendingPathComponent("State", isDirectory: true))
+        let model = AppModel(store: store, runStateDirectory: root.appendingPathComponent("RunState", isDirectory: true))
+        let planA = TestSupport.makePlan(name: "A", sources: [source], destination: destinationA)
+        let planB = TestSupport.makePlan(name: "B", sources: [source], destination: destinationB)
+
+        let resultsA = await model.backup(planA)
+        let resultsB = await model.backup(planB)
+
+        #expect(resultsA[0].itemsCopied == 1)
+        #expect(resultsB[0].itemsCopied == 1)
+        #expect(try Data(contentsOf: destinationA.appendingPathComponent("Source/a.txt")) == Data("one".utf8))
+        #expect(try Data(contentsOf: destinationB.appendingPathComponent("Source/a.txt")) == Data("one".utf8))
+        #expect(model.history.map(\.planId) == [planA.id, planB.id])
+    }
+
+    @Test @MainActor func lastRunDateTracksMostRecentRecordEnd() async throws {
+        let root = TestSupport.makeTempDirectory()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("Source", isDirectory: true)
+        let destination = root.appendingPathComponent("Dest", isDirectory: true)
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        try Data("one".utf8).write(to: source.appendingPathComponent("a.txt"))
+        let store = JSONPlanStore(directory: root.appendingPathComponent("State", isDirectory: true))
+        let model = AppModel(store: store, runStateDirectory: root.appendingPathComponent("RunState", isDirectory: true))
+        let plan = TestSupport.makePlan(name: "Real", sources: [source], destination: destination)
+
+        #expect(model.lastRunDate(for: plan.id) == nil)
+
+        _ = await model.backup(plan)
+        #expect(model.lastRunDate(for: plan.id) == model.history[0].end)
+
+        _ = await model.backup(plan)
+        #expect(model.lastRunDate(for: plan.id) == model.history[1].end)
+        #expect(model.lastRunDate(for: UUID()) == nil)
+    }
+}
+
+@MainActor
+private func waitForPlanIdle(_ model: AppModel, _ planId: UUID) async {
+    for _ in 0..<2000 {
+        if !model.isPlanRunning(planId) { return }
+        try? await Task.sleep(nanoseconds: 2_000_000)
+    }
+    Issue.record("Backup did not finish in time")
 }

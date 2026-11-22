@@ -2,6 +2,9 @@ import SwiftUI
 
 struct AtAGlanceView: View {
     @ObservedObject var model: AppModel
+    @State private var selectedPlanId: UUID?
+    @State private var editorTarget: PlanEditorTarget?
+    @State private var planPendingDelete: BackupPlan?
 
     var body: some View {
         NavigationStack {
@@ -14,45 +17,29 @@ struct AtAGlanceView: View {
                     HStack(spacing: 12) {
                         StatTile(
                             title: "Items Protected",
-                            value: "\(model.itemsProtected)",
-                            detail: model.itemsProtected > 0 ? "In your latest backup" : "Nothing backed up yet"
+                            value: "\(selectedPlanProtectedCount)",
+                            detail: selectedPlanLastRecord == nil ? "Nothing backed up yet" : "In \(selectedPlan?.name ?? "your plan")'s latest run"
                         )
                         StatTile(
                             title: "Last Backup",
-                            value: lastBackupText,
-                            detail: model.lastBackupDate == nil ? "No backup has run" : "Completed successfully"
+                            value: selectedPlanLastBackupText,
+                            detail: selectedPlanLastRunDetail
                         )
                     }
 
-                    LastRunCard(record: model.history.last)
+                    LastRunCard(record: selectedPlanLastRecord)
 
-                    if let engine = model.activeEngine {
-                        BackupProgressCard(state: engine.state, onStop: { model.stopBackup() })
-                    } else if let photoRunner = model.activePhotoRunner {
-                        BackupProgressCard(state: photoRunner.state, onStop: { model.stopBackup() })
-                    } else if let plan = model.plans.first {
-                        Button("Start Backup") { model.startBackup(plan) }
-                            .controlSize(.large)
-                    }
+                    progressOrStart
 
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Missed Items")
                             .font(.headline)
-                        MissedItemsView(items: missedItemsForPlans)
+                        MissedItemsView(items: selectedPlanMissedItems)
                     }
 
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Backup Plans")
-                            .font(.headline)
-                        if model.plans.isEmpty {
-                            Text("No backup plans yet.")
-                                .foregroundStyle(.secondary)
-                        } else {
-                            ForEach(model.plans) { plan in
-                                PlanSummaryCard(plan: plan)
-                            }
-                        }
-                    }
+                    plansSection
+
+                    loginItemSection
 
                     NavigationLink {
                         BackupHistoryView(model: model)
@@ -70,17 +57,136 @@ struct AtAGlanceView: View {
                 .padding(28)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .sheet(item: $editorTarget) { target in
+                PlanEditorView(model: model, plan: target.plan)
+            }
+            .alert(
+                "Delete Plan",
+                isPresented: Binding(
+                    get: { planPendingDelete != nil },
+                    set: { if !$0 { planPendingDelete = nil } }
+                )
+            ) {
+                Button("Delete", role: .destructive) { confirmDelete() }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Delete \"\(planPendingDelete?.name ?? "")\"? Its backup history is kept.")
+            }
         }
     }
 
-    private var missedItemsForPlans: [BackupFileError] {
-        guard let plan = model.plans.first else { return [] }
+    private var selectedPlan: BackupPlan? {
+        model.plans.first { $0.id == selectedPlanId } ?? model.plans.first
+    }
+
+    private var selectedPlanLastRecord: BackupRunRecord? {
+        guard let plan = selectedPlan else { return nil }
+        return model.history.last { $0.planId == plan.id }
+    }
+
+    private var selectedPlanProtectedCount: Int {
+        guard let record = selectedPlanLastRecord else { return 0 }
+        return record.itemsCopied + record.itemsSkipped
+    }
+
+    private var selectedPlanLastBackupText: String {
+        guard let record = selectedPlanLastRecord else { return "Never" }
+        return record.end.formatted(date: .abbreviated, time: .shortened)
+    }
+
+    private var selectedPlanLastRunDetail: String {
+        guard let record = selectedPlanLastRecord else { return "No backup has run" }
+        return switch record.outcome {
+        case .completed: "Completed successfully"
+        case .cancelled: "Last run was stopped"
+        case .failed: "Last run had errors"
+        }
+    }
+
+    private var selectedPlanMissedItems: [BackupFileError] {
+        guard let plan = selectedPlan else { return [] }
         return model.missedItems(for: plan.id)
     }
 
-    private var lastBackupText: String {
-        guard let lastBackupDate = model.lastBackupDate else { return "Never" }
-        return lastBackupDate.formatted(date: .abbreviated, time: .shortened)
+    @ViewBuilder
+    private var progressOrStart: some View {
+        if let engine = model.activeEngine {
+            BackupProgressCard(state: engine.state, onStop: { model.stopBackup() })
+        } else if let photoRunner = model.activePhotoRunner {
+            BackupProgressCard(state: photoRunner.state, onStop: { model.stopBackup() })
+        } else if let plan = selectedPlan {
+            HStack(spacing: 16) {
+                Picker("Plan", selection: Binding(
+                    get: { selectedPlan?.id },
+                    set: { selectedPlanId = $0 }
+                )) {
+                    ForEach(model.plans) { plan in
+                        Text(plan.name).tag(plan.id)
+                    }
+                }
+                .frame(maxWidth: 240)
+
+                Button("Start Backup") { model.startBackup(plan) }
+                    .controlSize(.large)
+                    .disabled(model.isBackupRunning)
+            }
+        }
+    }
+
+    private var plansSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Backup Plans")
+                    .font(.headline)
+                Spacer()
+                Button("Add Plan…") { editorTarget = PlanEditorTarget(plan: nil) }
+            }
+            if model.plans.isEmpty {
+                Text("No backup plans yet.")
+                    .foregroundStyle(.secondary)
+            } else {
+                ForEach(model.plans) { plan in
+                    PlanSummaryCard(
+                        plan: plan,
+                        lastRecord: model.history.last { $0.planId == plan.id },
+                        isSelected: plan.id == selectedPlan?.id,
+                        onEdit: { editorTarget = PlanEditorTarget(plan: plan) },
+                        onDelete: { planPendingDelete = plan }
+                    )
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var loginItemSection: some View {
+        if model.loginItem != nil {
+            VStack(alignment: .leading, spacing: 6) {
+                Text("General")
+                    .font(.headline)
+                Toggle(
+                    "Start NoNeedCloud at Login",
+                    isOn: Binding(
+                        get: { model.startAtLogin },
+                        set: { model.setStartAtLogin($0) }
+                    )
+                )
+                if let error = model.loginItemError {
+                    Text(error)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
+        }
+    }
+
+    private func confirmDelete() {
+        guard let plan = planPendingDelete else { return }
+        planPendingDelete = nil
+        model.deletePlan(plan.id)
+        if selectedPlanId == plan.id {
+            selectedPlanId = nil
+        }
     }
 }
 struct BackupProgressCard: View {
@@ -173,22 +279,57 @@ struct StatTile: View {
 
 struct PlanSummaryCard: View {
     let plan: BackupPlan
+    let lastRecord: BackupRunRecord?
+    let isSelected: Bool
+    let onEdit: () -> Void
+    let onDelete: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(plan.name)
-                .font(.headline)
+            HStack {
+                Text(plan.name)
+                    .font(.headline)
+                if isSelected {
+                    Text("Selected")
+                        .font(.caption2)
+                        .bold()
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color.accentColor.opacity(0.15), in: Capsule())
+                        .foregroundStyle(Color.accentColor)
+                }
+                Spacer()
+                Button {
+                    onEdit()
+                } label: {
+                    Image(systemName: "pencil")
+                }
+                .buttonStyle(.borderless)
+                .help("Edit Plan")
+                Button(role: .destructive) {
+                    onDelete()
+                } label: {
+                    Image(systemName: "trash")
+                }
+                .buttonStyle(.borderless)
+                .help("Delete Plan")
+            }
             LabeledContent("Sources") { Text(sourcesSummary) }
             LabeledContent("Destination") {
                 Text(plan.destinationURL.path(percentEncoded: false))
                     .lineLimit(1)
                     .truncationMode(.head)
             }
-            LabeledContent("Schedule") { Text(scheduleSummary) }
+            LabeledContent("Schedule") { Text(plan.schedule.summary) }
+            LabeledContent("Last Run") { Text(lastRunSummary) }
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 10))
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .strokeBorder(isSelected ? Color.accentColor.opacity(0.6) : Color.clear, lineWidth: 2)
+        )
     }
 
     private var sourcesSummary: String {
@@ -199,9 +340,13 @@ struct PlanSummaryCard: View {
         return parts.isEmpty ? "Nothing selected" : parts.joined(separator: " · ")
     }
 
-    private var scheduleSummary: String {
-        switch plan.schedule {
-        case .manual: "Manual"
+    private var lastRunSummary: String {
+        guard let lastRecord else { return "Never" }
+        let outcome: String = switch lastRecord.outcome {
+        case .completed: "Completed"
+        case .cancelled: "Stopped"
+        case .failed: "Failed"
         }
+        return "\(lastRecord.end.formatted(date: .abbreviated, time: .shortened)) · \(outcome)"
     }
 }
