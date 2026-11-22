@@ -19,6 +19,7 @@ struct NoNeedCloudApp: App {
     )
 
     @State private var router = AppRouter()
+    @State private var statusItem: StatusItemController?
 
     var body: some Scene {
         Window("NoNeedCloud", id: WindowID.main) {
@@ -26,6 +27,9 @@ struct NoNeedCloudApp: App {
                 .environment(router)
                 .frame(minWidth: 960, minHeight: 600)
                 .task {
+                    if statusItem == nil {
+                        statusItem = StatusItemController(model: model, router: router)
+                    }
                     #if DEBUG
                     SnapshotRenderer.runIfRequested()
                     #endif
@@ -49,13 +53,6 @@ struct NoNeedCloudApp: App {
                 OpenHistoryButton(router: router)
             }
         }
-
-        MenuBarExtra {
-            MenuBarPanel(model: model, router: router)
-        } label: {
-            MenuBarLabel(model: model)
-        }
-        .menuBarExtraStyle(.window)
 
         Settings {
             SettingsView(model: model)

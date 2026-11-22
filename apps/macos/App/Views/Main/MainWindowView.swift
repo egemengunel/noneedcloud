@@ -10,6 +10,8 @@ struct MainWindowView: View {
 
     let model: AppModel
     @Environment(AppRouter.self) private var router
+    @Environment(\.openWindow) private var openWindow
+    @Environment(\.openSettings) private var openSettings
     /// Every launch starts at `.loading`; nothing is persisted, so onboarding shows each time.
     @State private var phase: LaunchPhase
     @State private var activeSheet: SetupSheet?
@@ -68,6 +70,13 @@ struct MainWindowView: View {
         }
         .animation(.smooth(duration: 0.25), value: model.screenState)
         .animation(.smooth(duration: 0.3), value: router.showsHistory)
+        .onAppear {
+            router.openWindow = openWindow
+            router.openSettings = { [openSettings] in
+                NSApp.activate()
+                openSettings()
+            }
+        }
         .onReceive(NotificationCenter.default.publisher(for: .showWelcome)) { _ in
             withAnimation { phase = .onboarding }
         }

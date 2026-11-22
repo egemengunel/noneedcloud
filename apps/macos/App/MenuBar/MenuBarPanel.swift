@@ -2,49 +2,14 @@ import AppKit
 import NoNeedCloudCore
 import SwiftUI
 
-// Menu bar extra, Figma "NoNeedCloud · macOS Menü çubuğu": a cloud in the
-// menu bar (with the percentage while backing up, "!" when something needs
-// attention) and a 348 pt panel showing the same state as the main window.
-
-/// The status item: brand cloud, plus "58%" or "!" when relevant.
-struct MenuBarLabel: View {
-    let model: AppModel
-
-    var body: some View {
-        HStack(spacing: 3) {
-            Image(nsImage: Self.cloud)
-            switch model.screenState {
-            case .running:
-                if let fraction = model.progress?.fractionCompleted {
-                    Text(fraction.formatted(.percent.precision(.fractionLength(0))))
-                        .monospacedDigit()
-                }
-            case .needsAttention:
-                Text(verbatim: "!")
-                    .fontWeight(.bold)
-            default:
-                EmptyView()
-            }
-        }
-        .accessibilityLabel(Text(verbatim: "NoNeedCloud"))
-    }
-
-    /// The brand cloud at menu bar size, as a template so it follows the bar's appearance.
-    static let cloud: NSImage = {
-        let size = NSSize(width: 20, height: 14)
-        let image = NSImage(size: size, flipped: false) { rect in
-            NSImage(named: "BrandCloud")?.draw(in: rect)
-            return true
-        }
-        image.isTemplate = true
-        return image
-    }()
-}
+// Menu bar panel, Figma "NoNeedCloud · macOS Menü çubuğu": a 348 pt panel
+// showing the same state as the main window. Shown by StatusItemController.
 
 struct MenuBarPanel: View {
     let model: AppModel
     let router: AppRouter
-    @Environment(\.openWindow) private var openWindow
+    /// Called after an action that should close the panel.
+    var onAction: () -> Void = {}
 
     var body: some View {
         VStack(spacing: 0) {
@@ -81,7 +46,7 @@ struct MenuBarPanel: View {
             }
             Spacer()
             Menu {
-                SettingsLink { Text("Settings…") }
+                Button("Settings…") { router.openSettings?(); onAction() }
                 Divider()
                 Button("Quit NoNeedCloud") { NSApp.terminate(nil) }
             } label: {
@@ -227,7 +192,7 @@ struct MenuBarPanel: View {
                     .disabled(!model.canStartBackup)
             }
         case .setup:
-            fullWidth("Continue Setup", style: .primary) { router.showMainWindow(openWindow: openWindow) }
+            fullWidth("Continue Setup", style: .primary) { router.showMainWindow(); onAction() }
         }
     }
 
@@ -244,11 +209,13 @@ struct MenuBarPanel: View {
         VStack(spacing: 0) {
             Rectangle().fill(Theme.line).frame(height: 1)
             MenuActionRow(systemImage: "macbook", title: "Open NoNeedCloud", weight: .semibold) {
-                router.showMainWindow(openWindow: openWindow)
+                router.showMainWindow()
+                onAction()
             }
             Rectangle().fill(Theme.lightLine).frame(height: 1).padding(.leading, 37).padding(.trailing, 4)
             MenuActionRow(systemImage: "clock", title: "Backup History", weight: .medium) {
-                router.showMainWindow(history: true, openWindow: openWindow)
+                router.showMainWindow(history: true)
+                onAction()
             }
         }
     }

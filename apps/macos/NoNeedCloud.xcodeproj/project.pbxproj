@@ -14,7 +14,9 @@
 		1795B31C22A413B7E44AC33E /* PhotosSettingsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77007923CBCF052DBEEDC2F3 /* PhotosSettingsSheet.swift */; };
 		19746087709D375D4E4EED1F /* SchedulePopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91491D9FBDE28D4E92D15C43 /* SchedulePopover.swift */; };
 		235167AC8352EAD392EA55E2 /* SheetChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173C08A41DF91CD3CCBF6ED2 /* SheetChrome.swift */; };
+		26036A802155863A8F1D2243 /* CloudProgressIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C95F5A08550A18BD99E78A59 /* CloudProgressIcon.swift */; };
 		27B840A94D8B5A5956857678 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1202EDDF04340DCD480FBCE /* Components.swift */; };
+		2D5B9CC0A642F272697CA05D /* MenuBarPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA92DE0CBDCADA2D661A9B62 /* MenuBarPanel.swift */; };
 		4346FB0AE06ED8DDA5084CED /* NoNeedCloudCore in Frameworks */ = {isa = PBXBuildFile; productRef = D8F03B9BA56B3D64220C0868 /* NoNeedCloudCore */; };
 		43D506BC6586AEE8680221F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17AEF947035BC37AC7FBAC5E /* Assets.xcassets */; };
 		44FD0E7A7C2D92029F0B5014 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A083CA08DBD27BA66BADF385 /* Theme.swift */; };
@@ -33,7 +35,7 @@
 		D2CCF22336B37A356F4CB965 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = FA17A56FA094F1078512A15A /* AppIcon.icon */; };
 		DB2275C654AFF8341684896D /* SetupFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8631DB4006B85EA7A8B2306 /* SetupFlowView.swift */; };
 		E6AC50133917B9C456F70240 /* DestinationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420FBCF9EF4162D4ED37C305 /* DestinationSheet.swift */; };
-		EC8EDF7CE6309DBEB71D37C6 /* MenuBarExtraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4BA12555A4824EBB1D513E /* MenuBarExtraView.swift */; };
+		EE59AD4AA92586545FA0E97E /* StatusItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEFE27155BC8168BBE80CF0 /* StatusItemController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,12 +56,13 @@
 		8AAFB303E8CAC5C37B76C247 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		91491D9FBDE28D4E92D15C43 /* SchedulePopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulePopover.swift; sourceTree = "<group>"; };
 		9AD7D207C5371ECC0901CAE3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		9C4BA12555A4824EBB1D513E /* MenuBarExtraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarExtraView.swift; sourceTree = "<group>"; };
 		9F37761E66705831266FA580 /* AttentionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttentionView.swift; sourceTree = "<group>"; };
 		A083CA08DBD27BA66BADF385 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		A1202EDDF04340DCD480FBCE /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		AA92DE0CBDCADA2D661A9B62 /* MenuBarPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarPanel.swift; sourceTree = "<group>"; };
 		AE5D1F4F9B038E7E76E6BA9B /* NoNeedCloud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NoNeedCloud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8631DB4006B85EA7A8B2306 /* SetupFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFlowView.swift; sourceTree = "<group>"; };
+		C95F5A08550A18BD99E78A59 /* CloudProgressIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudProgressIcon.swift; sourceTree = "<group>"; };
 		CD2B0291D8AB68E874FC6CF2 /* PhotosAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosAccess.swift; sourceTree = "<group>"; };
 		D5FB703D07CCA6591C7E1CAD /* NoNeedCloud.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NoNeedCloud.entitlements; sourceTree = "<group>"; };
 		EA9C3D11B636B04C9A2A38AF /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
@@ -67,6 +70,7 @@
 		F631BBFC43363B90833B2835 /* ProtectedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtectedView.swift; sourceTree = "<group>"; };
 		FA17A56FA094F1078512A15A /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		FD8CA0E182941921443DD84D /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
+		FEEFE27155BC8168BBE80CF0 /* StatusItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,14 +93,6 @@
 				EEF44787527AD1831E164121 /* Localizable.xcstrings */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		222E2AD7552F7D6688F31B16 /* MenuBar */ = {
-			isa = PBXGroup;
-			children = (
-				9C4BA12555A4824EBB1D513E /* MenuBarExtraView.swift */,
-			);
-			path = MenuBar;
 			sourceTree = "<group>";
 		};
 		2B479C1AD9F0916F2EFB7899 /* Welcome */ = {
@@ -125,7 +121,6 @@
 			children = (
 				EB1FE2F09BEF91F8FCE11376 /* History */,
 				96F6ABCC0316675FACA6152E /* Main */,
-				222E2AD7552F7D6688F31B16 /* MenuBar */,
 				B5F727B39D1D569E0AC517C8 /* Settings */,
 				55D8719E5F49BF40A4A14AAA /* Setup */,
 				F67D4BE3F1821B471C65F29B /* Sheets */,
@@ -194,6 +189,16 @@
 			path = Main;
 			sourceTree = "<group>";
 		};
+		A2D8AD4AD7746F5D198F4446 /* MenuBar */ = {
+			isa = PBXGroup;
+			children = (
+				C95F5A08550A18BD99E78A59 /* CloudProgressIcon.swift */,
+				AA92DE0CBDCADA2D661A9B62 /* MenuBarPanel.swift */,
+				FEEFE27155BC8168BBE80CF0 /* StatusItemController.swift */,
+			);
+			path = MenuBar;
+			sourceTree = "<group>";
+		};
 		B5F727B39D1D569E0AC517C8 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -208,6 +213,7 @@
 				D5FB703D07CCA6591C7E1CAD /* NoNeedCloud.entitlements */,
 				5E9BA66E4F0546416F210F2F /* NoNeedCloudApp.swift */,
 				8036A9D7071B1772399248CB /* DesignSystem */,
+				A2D8AD4AD7746F5D198F4446 /* MenuBar */,
 				06D08B227C687679E11376FD /* Resources */,
 				47131B652463BC120D15362C /* Support */,
 				4DA04746A18985F7A89604BA /* Views */,
@@ -326,6 +332,7 @@
 			files = (
 				AC15EA60912293B93EE30E86 /* AppRouter.swift in Sources */,
 				9E3999DF6B087FC1C4995019 /* AttentionView.swift in Sources */,
+				26036A802155863A8F1D2243 /* CloudProgressIcon.swift in Sources */,
 				27B840A94D8B5A5956857678 /* Components.swift in Sources */,
 				E6AC50133917B9C456F70240 /* DestinationSheet.swift in Sources */,
 				9168325946564BDD659915F6 /* FolderPicker.swift in Sources */,
@@ -333,7 +340,7 @@
 				5DCED0B3DC6B4A7845E7ADFC /* HistoryView.swift in Sources */,
 				59070849627CFACC2986354F /* LaunchView.swift in Sources */,
 				55716F5EC0C9E8D12043F7D5 /* MainWindowView.swift in Sources */,
-				EC8EDF7CE6309DBEB71D37C6 /* MenuBarExtraView.swift in Sources */,
+				2D5B9CC0A642F272697CA05D /* MenuBarPanel.swift in Sources */,
 				0E596762132013888127E106 /* NoNeedCloudApp.swift in Sources */,
 				5133D691603F3CFFFA8D8AD9 /* PhotosAccess.swift in Sources */,
 				1795B31C22A413B7E44AC33E /* PhotosSettingsSheet.swift in Sources */,
@@ -345,6 +352,7 @@
 				DB2275C654AFF8341684896D /* SetupFlowView.swift in Sources */,
 				235167AC8352EAD392EA55E2 /* SheetChrome.swift in Sources */,
 				1111536D4238AB3722B6DDE3 /* SourceFoldersSheet.swift in Sources */,
+				EE59AD4AA92586545FA0E97E /* StatusItemController.swift in Sources */,
 				44FD0E7A7C2D92029F0B5014 /* Theme.swift in Sources */,
 				CB6F5E2F817EC8004D319F6F /* WelcomeView.swift in Sources */,
 			);
