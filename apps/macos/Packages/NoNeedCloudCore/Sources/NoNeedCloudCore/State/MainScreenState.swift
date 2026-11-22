@@ -20,10 +20,17 @@ public struct HealthSnapshot: Equatable, Sendable {
     public var destinationAvailable: Bool
     /// nil = not asked yet.
     public var photosAccessGranted: Bool?
+    /// Volume details when the destination is reachable.
+    public var destination: DestinationDetails?
 
-    public init(destinationAvailable: Bool = true, photosAccessGranted: Bool? = nil) {
+    public init(
+        destinationAvailable: Bool = true,
+        photosAccessGranted: Bool? = nil,
+        destination: DestinationDetails? = nil
+    ) {
         self.destinationAvailable = destinationAvailable
         self.photosAccessGranted = photosAccessGranted
+        self.destination = destination
     }
 }
 
@@ -68,6 +75,13 @@ public enum MainScreenState: Equatable, Sendable {
             return .needsAttention(.backupStale(days: days))
         }
         return .protected
+    }
+
+    /// The step to show when the user has navigated with Back/Continue.
+    /// Never ahead of what the plan allows.
+    public static func visibleStep(requested: SetupStep?, reached: SetupStep) -> SetupStep {
+        guard let requested else { return reached }
+        return requested.rawValue <= reached.rawValue ? requested : reached
     }
 
     public var setupStep: SetupStep? {

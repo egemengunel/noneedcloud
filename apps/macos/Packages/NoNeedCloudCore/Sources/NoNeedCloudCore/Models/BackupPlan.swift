@@ -79,6 +79,31 @@ public struct ScheduleSettings: Codable, Equatable, Sendable {
         self.dayOfMonth = dayOfMonth
         self.startAtLogin = startAtLogin
     }
+
+    /// The next time a scheduled backup is due after `date`, or nil when off.
+    public func nextRun(after date: Date, calendar: Calendar = .current) -> Date? {
+        let hour = timeOfDayMinutes / 60, minute = timeOfDayMinutes % 60
+        switch frequency {
+        case .off:
+            return nil
+        case .hourly:
+            return calendar.nextDate(after: date, matching: DateComponents(minute: 0), matchingPolicy: .nextTime)
+        case .daily:
+            return calendar.nextDate(after: date, matching: DateComponents(hour: hour, minute: minute), matchingPolicy: .nextTime)
+        case .weekly:
+            return calendar.nextDate(
+                after: date,
+                matching: DateComponents(hour: hour, minute: minute, weekday: weekday),
+                matchingPolicy: .nextTime
+            )
+        case .monthly:
+            return calendar.nextDate(
+                after: date,
+                matching: DateComponents(day: dayOfMonth, hour: hour, minute: minute),
+                matchingPolicy: .nextTime
+            )
+        }
+    }
 }
 
 public struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
@@ -88,6 +113,8 @@ public struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
     public var files: FolderSettings
     public var mirroring: MirroringSettings
     public var destination: FolderReference?
+    /// Last known details of the destination volume (see `DestinationDetails`).
+    public var destinationDetails: DestinationDetails?
     public var schedule: ScheduleSettings
 
     public init(
@@ -97,6 +124,7 @@ public struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
         files: FolderSettings = FolderSettings(),
         mirroring: MirroringSettings = MirroringSettings(),
         destination: FolderReference? = nil,
+        destinationDetails: DestinationDetails? = nil,
         schedule: ScheduleSettings = ScheduleSettings()
     ) {
         self.id = id
@@ -105,6 +133,7 @@ public struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
         self.files = files
         self.mirroring = mirroring
         self.destination = destination
+        self.destinationDetails = destinationDetails
         self.schedule = schedule
     }
 

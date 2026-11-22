@@ -94,13 +94,30 @@ public final class AppModel {
     }
 
     public func setDestination(_ destination: FolderReference?) {
-        updatePlan { $0.destination = destination }
+        updatePlan {
+            $0.destination = destination
+            $0.destinationDetails = nil
+        }
         Task { await refreshHealth() }
     }
 
     public func refreshHealth() async {
         let snapshot = await healthCheck(plan)
         if snapshot != health { health = snapshot }
+        // Remember the volume details so they're still shown when it's unplugged.
+        if let details = snapshot.destination, details != plan.destinationDetails {
+            updatePlan { $0.destinationDetails = details }
+        }
+    }
+
+    /// When the next scheduled backup is due, or nil for manual backups.
+    public var nextScheduledRun: Date? {
+        plan.schedule.nextRun(after: now())
+    }
+
+    /// Bytes copied across all completed runs: an estimate of the archive size.
+    public var archiveBytes: Int64 {
+        planRuns.filter(\.didComplete).reduce(0) { $0 + $1.bytesWritten }
     }
 
     // MARK: - Running
