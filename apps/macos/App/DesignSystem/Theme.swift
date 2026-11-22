@@ -23,6 +23,9 @@ enum Theme {
     static let amberTint = Color.dynamic(light: 0xFFF1D8, dark: 0x3A2C14)
     static let amberLine = Color.dynamic(light: 0xF2DEB8, dark: 0x5A4421)
     static let red = Color.dynamic(light: 0xA93435, dark: 0xF08A8A)
+    static let redTint = Color.dynamic(light: 0xFBE9E9, dark: 0x3A1C1E)
+    static let redLine = Color.dynamic(light: 0xF2CACA, dark: 0x5C2A2D)
+    static let mintLine = Color.dynamic(light: 0xBFE6D3, dark: 0x24513F)
 
     // Protected hero artwork (Yörünge / Bulut zemini).
     static let heroOrbitOuter = Color.dynamic(light: 0xDFEAFE, dark: 0x1E3158)

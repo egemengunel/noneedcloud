@@ -108,25 +108,26 @@ struct MainWindowView: View {
     }
 }
 
-/// Brand cloud + name at the leading edge of the toolbar. On macOS 26 the
+/// Brand cloud + title at the leading edge of the toolbar. On macOS 26 the
 /// item's glass capsule is hidden so it reads as a title, like the design.
-private struct AppTitleToolbarItem: ToolbarContent {
-    let onDark: Bool
+struct AppTitleToolbarItem: ToolbarContent {
+    var title: String = "NoNeedCloud"
+    var onDark = false
 
     var body: some ToolbarContent {
         if #available(macOS 26.0, *) {
-            ToolbarItem(placement: .navigation) { title }
+            ToolbarItem(placement: .navigation) { label }
                 .sharedBackgroundVisibility(.hidden)
         } else {
-            ToolbarItem(placement: .navigation) { title }
+            ToolbarItem(placement: .navigation) { label }
         }
     }
 
-    private var title: some View {
+    private var label: some View {
         HStack(spacing: 10) {
             BrandCloud(color: onDark ? Theme.lightBlue : Theme.ink, width: 24)
-            Text(verbatim: "NoNeedCloud")
-                .font(.system(size: 15, weight: .semibold))
+            Text(verbatim: title)
+                .font(.system(size: title == "NoNeedCloud" ? 15 : 16, weight: .semibold))
                 .foregroundStyle(onDark ? .white : Theme.ink)
         }
         .padding(.horizontal, 4)

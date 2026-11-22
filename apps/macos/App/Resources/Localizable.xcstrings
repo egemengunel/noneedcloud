@@ -135,12 +135,52 @@
         }
       }
     },
+    "%lld items couldn't be copied": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld öğe kopyalanamadı"
+          }
+        }
+      }
+    },
+    "%lld runs": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld çalıştırma"
+          }
+        }
+      }
+    },
     "1 item": {
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
             "value": "1 öğe"
+          }
+        }
+      }
+    },
+    "1 item couldn't be copied": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 öğe kopyalanamadı"
+          }
+        }
+      }
+    },
+    "1 run": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 çalıştırma"
           }
         }
       }
@@ -231,6 +271,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ağ konumu ekle"
+          }
+        }
+      }
+    },
+    "All statuses": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tüm durumlar"
+          }
+        }
+      }
+    },
+    "Already backed up": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hedefte zaten vardı"
           }
         }
       }
@@ -715,7 +775,18 @@
         }
       }
     },
+    "Completed with warnings": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uyarıyla tamamlandı"
+          }
+        }
+      }
+    },
     "Completed, some missed": {
+      "extractionState": "stale",
       "localizations": {
         "tr": {
           "stringUnit": {
@@ -786,6 +857,7 @@
       }
     },
     "Copied": {
+      "extractionState": "stale",
       "localizations": {
         "tr": {
           "stringUnit": {
@@ -831,6 +903,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ konumuna kopyalanıyor"
+          }
+        }
+      }
+    },
+    "Couldn't copy": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kopyalanamadı"
           }
         }
       }
@@ -936,6 +1018,7 @@
       }
     },
     "Duration": {
+      "extractionState": "stale",
       "localizations": {
         "tr": {
           "stringUnit": {
@@ -1021,6 +1104,16 @@
         }
       }
     },
+    "Every item was copied.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tüm öğeler kopyalandı."
+          }
+        }
+      }
+    },
     "Every month": {
       "localizations": {
         "tr": {
@@ -1081,12 +1174,32 @@
         }
       }
     },
+    "File": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dosya"
+          }
+        }
+      }
+    },
     "Files": {
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
             "value": "Dosya"
+          }
+        }
+      }
+    },
+    "Files that couldn't be copied": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kopyalanamayan dosyalar"
           }
         }
       }
@@ -1261,6 +1374,16 @@
         }
       }
     },
+    "Items processed": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İşlenen öğeler"
+          }
+        }
+      }
+    },
     "Keep for 30 days": {
       "localizations": {
         "tr": {
@@ -1411,6 +1534,16 @@
         }
       }
     },
+    "Manual backup": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manuel yedek"
+          }
+        }
+      }
+    },
     "Manually": {
       "localizations": {
         "tr": {
@@ -1442,6 +1575,7 @@
       }
     },
     "Missed": {
+      "extractionState": "stale",
       "localizations": {
         "tr": {
           "stringUnit": {
@@ -1877,6 +2011,16 @@
         }
       }
     },
+    "Reason": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neden"
+          }
+        }
+      }
+    },
     "Remove": {
       "localizations": {
         "tr": {
@@ -1928,6 +2072,7 @@
       }
     },
     "Result": {
+      "extractionState": "stale",
       "localizations": {
         "tr": {
           "stringUnit": {
@@ -1977,6 +2122,26 @@
         }
       }
     },
+    "Run summary": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çalıştırma özeti"
+          }
+        }
+      }
+    },
+    "Runs": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çalıştırmalar"
+          }
+        }
+      }
+    },
     "Runs appear here after your first backup.": {
       "localizations": {
         "tr": {
@@ -2017,12 +2182,32 @@
         }
       }
     },
+    "Scheduled backup": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zamanlanmış yedek"
+          }
+        }
+      }
+    },
     "Scheduled backups run once the scheduler ships. For now, start backups manually.": {
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
             "value": "Zamanlanmış yedekler zamanlayıcı geldiğinde çalışacak. Şimdilik yedeklemeyi elle başlat."
+          }
+        }
+      }
+    },
+    "Search history": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geçmişte ara"
           }
         }
       }
@@ -2063,6 +2248,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Paylaşılan Albümler"
+          }
+        }
+      }
+    },
+    "Show": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Göster"
           }
         }
       }
@@ -2158,6 +2353,7 @@
       }
     },
     "Started": {
+      "extractionState": "stale",
       "localizations": {
         "tr": {
           "stringUnit": {
@@ -2173,6 +2369,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Başlangıç: %@"
+          }
+        }
+      }
+    },
+    "Started at %@  ·  took %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Started at %1$@  ·  took %2$@"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ başladı  ·  %2$@ sürdü"
           }
         }
       }
@@ -2197,12 +2409,52 @@
         }
       }
     },
+    "Stopped before finishing. The next run picks up where this one left off.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bitmeden durduruldu. Sonraki çalıştırma kaldığı yerden devam eder."
+          }
+        }
+      }
+    },
+    "Stopped by you": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kullanıcı durdurdu"
+          }
+        }
+      }
+    },
+    "Succeeded": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Başarılı"
+          }
+        }
+      }
+    },
     "System Settings → Privacy & Security → Photos": {
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
             "value": "Sistem Ayarları → Gizlilik ve Güvenlik → Fotoğraflar"
+          }
+        }
+      }
+    },
+    "The backup stopped unexpectedly.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedekleme beklenmedik şekilde durdu."
           }
         }
       }
@@ -2223,6 +2475,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Son yedekleme tamamlanmadı"
+          }
+        }
+      }
+    },
+    "These items will be retried in the next backup.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu öğeler bir sonraki yedeklemede yeniden denenecek."
           }
         }
       }
@@ -2287,6 +2549,16 @@
         }
       }
     },
+    "Total items": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toplam öğe"
+          }
+        }
+      }
+    },
     "Total size": {
       "localizations": {
         "tr": {
@@ -2347,6 +2619,16 @@
         }
       }
     },
+    "Unchanged": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Değişmedi"
+          }
+        }
+      }
+    },
     "Unlock it if it's encrypted": {
       "localizations": {
         "tr": {
@@ -2403,6 +2685,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Yedeğinin saklandığı yer. Finder'da açabileceğin sıradan dosya ve klasörler olarak saklanır."
+          }
+        }
+      }
+    },
+    "Will be retried": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeniden denenecek"
+          }
+        }
+      }
+    },
+    "With warnings": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uyarılı"
           }
         }
       }

@@ -49,9 +49,10 @@ struct NoNeedCloudApp: App {
 
         Window("Backup History", id: WindowID.history) {
             HistoryView(model: model)
-                .frame(minWidth: 520, minHeight: 360)
+                .frame(minWidth: 960, minHeight: 600)
         }
-        .defaultSize(width: 620, height: 460)
+        .defaultSize(width: 1120, height: 710)
+        .windowToolbarStyle(.unified)
 
         Settings {
             SettingsView(model: model)
