@@ -12,9 +12,11 @@
 		1795B31C22A413B7E44AC33E /* PhotosSettingsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77007923CBCF052DBEEDC2F3 /* PhotosSettingsSheet.swift */; };
 		19746087709D375D4E4EED1F /* SchedulePopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91491D9FBDE28D4E92D15C43 /* SchedulePopover.swift */; };
 		235167AC8352EAD392EA55E2 /* SheetChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173C08A41DF91CD3CCBF6ED2 /* SheetChrome.swift */; };
+		27B840A94D8B5A5956857678 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1202EDDF04340DCD480FBCE /* Components.swift */; };
 		362B3A0E29FBA73BE32B30B2 /* StatusArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA36F5231587DC6176F56CD /* StatusArea.swift */; };
 		4346FB0AE06ED8DDA5084CED /* NoNeedCloudCore in Frameworks */ = {isa = PBXBuildFile; productRef = D8F03B9BA56B3D64220C0868 /* NoNeedCloudCore */; };
 		43D506BC6586AEE8680221F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17AEF947035BC37AC7FBAC5E /* Assets.xcassets */; };
+		44FD0E7A7C2D92029F0B5014 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A083CA08DBD27BA66BADF385 /* Theme.swift */; };
 		5133D691603F3CFFFA8D8AD9 /* PhotosAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2B0291D8AB68E874FC6CF2 /* PhotosAccess.swift */; };
 		55716F5EC0C9E8D12043F7D5 /* MainWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2D35B6D3DFC58C71080C8A /* MainWindowView.swift */; };
 		5DCED0B3DC6B4A7845E7ADFC /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E7CBA9686864A420852DE2 /* HistoryView.swift */; };
@@ -40,6 +42,8 @@
 		71C75BC82650C21A423C1C74 /* FolderPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderPicker.swift; sourceTree = "<group>"; };
 		77007923CBCF052DBEEDC2F3 /* PhotosSettingsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosSettingsSheet.swift; sourceTree = "<group>"; };
 		91491D9FBDE28D4E92D15C43 /* SchedulePopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulePopover.swift; sourceTree = "<group>"; };
+		A083CA08DBD27BA66BADF385 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		A1202EDDF04340DCD480FBCE /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
 		AE5D1F4F9B038E7E76E6BA9B /* NoNeedCloud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NoNeedCloud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD2B0291D8AB68E874FC6CF2 /* PhotosAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosAccess.swift; sourceTree = "<group>"; };
 		D5FB703D07CCA6591C7E1CAD /* NoNeedCloud.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NoNeedCloud.entitlements; sourceTree = "<group>"; };
@@ -122,6 +126,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		8036A9D7071B1772399248CB /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				A1202EDDF04340DCD480FBCE /* Components.swift */,
+				A083CA08DBD27BA66BADF385 /* Theme.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
 		96F6ABCC0316675FACA6152E /* Main */ = {
 			isa = PBXGroup;
 			children = (
@@ -137,6 +150,7 @@
 			children = (
 				D5FB703D07CCA6591C7E1CAD /* NoNeedCloud.entitlements */,
 				5E9BA66E4F0546416F210F2F /* NoNeedCloudApp.swift */,
+				8036A9D7071B1772399248CB /* DesignSystem */,
 				06D08B227C687679E11376FD /* Resources */,
 				47131B652463BC120D15362C /* Support */,
 				4DA04746A18985F7A89604BA /* Views */,
@@ -241,6 +255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27B840A94D8B5A5956857678 /* Components.swift in Sources */,
 				E6AC50133917B9C456F70240 /* DestinationSheet.swift in Sources */,
 				9168325946564BDD659915F6 /* FolderPicker.swift in Sources */,
 				8225685EF5D78E7251ACB011 /* Formatting.swift in Sources */,
@@ -253,6 +268,7 @@
 				235167AC8352EAD392EA55E2 /* SheetChrome.swift in Sources */,
 				1111536D4238AB3722B6DDE3 /* SourceFoldersSheet.swift in Sources */,
 				362B3A0E29FBA73BE32B30B2 /* StatusArea.swift in Sources */,
+				44FD0E7A7C2D92029F0B5014 /* Theme.swift in Sources */,
 				DA18EAC42B7C7F5833271E3C /* YourSetupSection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
