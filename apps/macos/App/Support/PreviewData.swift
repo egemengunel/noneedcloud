@@ -101,7 +101,7 @@ enum SnapshotRenderer {
         Task { @MainActor in
             let outDir = URL(fileURLWithPath: dir, isDirectory: true)
             try? FileManager.default.createDirectory(at: outDir, withIntermediateDirectories: true)
-            for state in ["welcome", "setup1", "setup2", "setup3", "protected", "running", "attention"] {
+            for state in ["launch", "welcome", "setup1", "setup2", "setup3", "protected", "running", "attention"] {
                 let model = PreviewData.model(state)
                 await model.refreshHealth()
                 if state == "running" {
@@ -132,7 +132,9 @@ private struct SnapshotScreen: View {
     var body: some View {
         let actions = SetupActions(model: model, showSheet: { _ in })
         Group {
-            if state == "welcome" {
+            if state == "launch" {
+                LaunchView()
+            } else if state == "welcome" {
                 WelcomeView {}
             } else {
                 Group {
@@ -156,12 +158,15 @@ private struct SnapshotScreen: View {
             }
         }
         .environment(\.colorScheme, .light)
+        // A snapshot is one frame: render entrance animations at their end state.
+        .transaction { $0.animation = nil }
     }
 }
 
+#Preview("Launch") { LaunchView().frame(width: 1000, height: 588) }
 #Preview("Welcome") { WelcomeView {}.frame(width: 1000, height: 588) }
-#Preview("Setup · Sources") { MainWindowView(model: PreviewData.model("setup1")).frame(width: 1000, height: 650) }
-#Preview("Setup · Destination") { MainWindowView(model: PreviewData.model("setup2")).frame(width: 1000, height: 650) }
-#Preview("Protected") { MainWindowView(model: PreviewData.model("protected")).frame(width: 1000, height: 650) }
-#Preview("Needs attention") { MainWindowView(model: PreviewData.model("attention")).frame(width: 1000, height: 650) }
+#Preview("Setup · Sources") { MainWindowView(model: PreviewData.model("setup1"), startingAt: .app).frame(width: 1000, height: 650) }
+#Preview("Setup · Destination") { MainWindowView(model: PreviewData.model("setup2"), startingAt: .app).frame(width: 1000, height: 650) }
+#Preview("Protected") { MainWindowView(model: PreviewData.model("protected"), startingAt: .app).frame(width: 1000, height: 650) }
+#Preview("Needs attention") { MainWindowView(model: PreviewData.model("attention"), startingAt: .app).frame(width: 1000, height: 650) }
 #endif
