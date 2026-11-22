@@ -25,6 +25,7 @@
 		8225685EF5D78E7251ACB011 /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D85D36EDE5C9A59305C110 /* Formatting.swift */; };
 		9168325946564BDD659915F6 /* FolderPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C75BC82650C21A423C1C74 /* FolderPicker.swift */; };
 		9E3999DF6B087FC1C4995019 /* AttentionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F37761E66705831266FA580 /* AttentionView.swift */; };
+		CB2A75C1DD11C90DEAC58B0D /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F650A67DBF1559C8EFC1994 /* PreviewData.swift */; };
 		CB6F5E2F817EC8004D319F6F /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601752050A6DEA1D381B5373 /* WelcomeView.swift */; };
 		D2CCF22336B37A356F4CB965 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = FA17A56FA094F1078512A15A /* AppIcon.icon */; };
 		DB2275C654AFF8341684896D /* SetupFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8631DB4006B85EA7A8B2306 /* SetupFlowView.swift */; };
@@ -35,6 +36,7 @@
 		11D85D36EDE5C9A59305C110 /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
 		173C08A41DF91CD3CCBF6ED2 /* SheetChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetChrome.swift; sourceTree = "<group>"; };
 		17AEF947035BC37AC7FBAC5E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1F650A67DBF1559C8EFC1994 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		309FE9B1FC429FE38C751B46 /* NoNeedCloudCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NoNeedCloudCore; path = Packages/NoNeedCloudCore; sourceTree = SOURCE_ROOT; };
 		35E7CBA9686864A420852DE2 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		38A0DDC5E904E5E9DA6788D0 /* SourceFoldersSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceFoldersSheet.swift; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 				71C75BC82650C21A423C1C74 /* FolderPicker.swift */,
 				11D85D36EDE5C9A59305C110 /* Formatting.swift */,
 				CD2B0291D8AB68E874FC6CF2 /* PhotosAccess.swift */,
+				1F650A67DBF1559C8EFC1994 /* PreviewData.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -309,6 +312,7 @@
 				0E596762132013888127E106 /* NoNeedCloudApp.swift in Sources */,
 				5133D691603F3CFFFA8D8AD9 /* PhotosAccess.swift in Sources */,
 				1795B31C22A413B7E44AC33E /* PhotosSettingsSheet.swift in Sources */,
+				CB2A75C1DD11C90DEAC58B0D /* PreviewData.swift in Sources */,
 				1479ADF8F850DDE705E60747 /* ProtectedView.swift in Sources */,
 				5A7816E51E7DBA4FFEAD8DB2 /* RunningView.swift in Sources */,
 				19746087709D375D4E4EED1F /* SchedulePopover.swift in Sources */,

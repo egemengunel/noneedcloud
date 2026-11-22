@@ -22,7 +22,12 @@ struct NoNeedCloudApp: App {
         Window("NoNeedCloud", id: WindowID.main) {
             MainWindowView(model: model)
                 .frame(minWidth: 960, minHeight: 600)
-                .task { await model.refreshHealth() }
+                .task {
+                    #if DEBUG
+                    SnapshotRenderer.runIfRequested()
+                    #endif
+                    await model.refreshHealth()
+                }
                 .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
                     Task { await model.refreshHealth() }
                 }
