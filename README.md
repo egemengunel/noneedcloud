@@ -15,6 +15,7 @@ noneedcloud/
 ├── backend/            # Server-side services
 ├── docs/
 │   ├── PRD.md          # Product requirements (client first)   [planned]
+│   ├── design/         # UX & interaction specs (macos-ux-spec.md)
 │   └── research/       # Competitive / reverse-engineering notes (local only, not committed)
 └── README.md           # This file: global overview for the whole monorepo
 ```
