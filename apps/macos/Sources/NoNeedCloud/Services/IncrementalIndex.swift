@@ -32,6 +32,10 @@ final class IncrementalIndex: @unchecked Sendable {
         _ = lock.withLock { entries.removeValue(forKey: relativePath) }
     }
 
+    func allEntries() -> [String: IncrementalEntry] {
+        lock.withLock { entries }
+    }
+
     func save() throws {
         let data: Data
         let current: [String: IncrementalEntry] = lock.withLock { entries }

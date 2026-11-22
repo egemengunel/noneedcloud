@@ -145,7 +145,8 @@ final class AppModel: ObservableObject {
                     destination: plan.destination,
                     source: source
                 ),
-                ubiquitousSource: ubiquitousSource
+                ubiquitousSource: ubiquitousSource,
+                mirrorOptions: plan.mirrorOptions
             )
             activeEngine = engine
             let result = await engine.run()

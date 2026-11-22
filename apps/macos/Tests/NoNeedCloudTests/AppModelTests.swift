@@ -74,6 +74,35 @@ struct AppModelTests {
         #expect(try Data(contentsOf: destination.appendingPathComponent("Source/nested/b.txt")) == Data("two".utf8))
     }
 
+    @Test @MainActor func mirroringPlanMovesDeletedItemsToDeletedFolder() async throws {
+        let root = TestSupport.makeTempDirectory()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("Source", isDirectory: true)
+        let destination = root.appendingPathComponent("Dest", isDirectory: true)
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        try Data("one".utf8).write(to: source.appendingPathComponent("a.txt"))
+        try Data("two".utf8).write(to: source.appendingPathComponent("b.txt"))
+        let store = JSONPlanStore(directory: root.appendingPathComponent("State", isDirectory: true))
+        let model = AppModel(store: store, runStateDirectory: root.appendingPathComponent("RunState", isDirectory: true))
+        var plan = TestSupport.makePlan(name: "Mirror", sources: [source], destination: destination)
+        plan.mirrorOptions = MirrorOptions(enabled: true, retention: .days(90))
+
+        let firstResults = await model.backup(plan)
+        #expect(firstResults[0].itemsMirrored == 0)
+
+        try FileManager.default.removeItem(at: source.appendingPathComponent("a.txt"))
+        let secondResults = await model.backup(plan)
+
+        #expect(secondResults[0].outcome == .completed)
+        #expect(secondResults[0].itemsMirrored == 1)
+        let deletedRoot = destination.appendingPathComponent("Source/Deleted", isDirectory: true)
+        let dateFolders = try FileManager.default.contentsOfDirectory(atPath: deletedRoot.path)
+        #expect(dateFolders.count == 1)
+        #expect(try Data(contentsOf: deletedRoot.appendingPathComponent("\(dateFolders[0])/a.txt")) == Data("one".utf8))
+        #expect(!FileManager.default.fileExists(atPath: destination.appendingPathComponent("Source/a.txt").path))
+        #expect(try Data(contentsOf: destination.appendingPathComponent("Source/b.txt")) == Data("two".utf8))
+    }
+
     @Test @MainActor func backupAppendsHistoryRecordAndPersistsAcrossRelaunch() async throws {
         let root = TestSupport.makeTempDirectory()
         defer { try? FileManager.default.removeItem(at: root) }

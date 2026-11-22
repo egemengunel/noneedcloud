@@ -44,6 +44,8 @@ final class SetupFlow: ObservableObject {
 
     @Published var destinationProvider: DestinationProvider = .folder
     @Published var destinationURL: URL?
+    @Published var mirrorEnabled = false
+    @Published var mirrorRetention: Retention = .days(90)
     @Published var s3Endpoint = ""
     @Published var s3Region = "us-east-1"
     @Published var s3Bucket = ""
@@ -160,7 +162,8 @@ final class SetupFlow: ObservableObject {
                 dateRangeStart: usePhotoDateRange ? photoDateRangeStart : nil,
                 dateRangeEnd: usePhotoDateRange ? photoDateRangeEnd : nil
             ),
-            destination: destination
+            destination: destination,
+            mirrorOptions: MirrorOptions(enabled: mirrorEnabled, retention: mirrorRetention)
         )
     }
 

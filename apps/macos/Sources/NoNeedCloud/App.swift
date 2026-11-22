@@ -8,6 +8,7 @@ struct NoNeedCloudApp: App {
     init() {
         let model = AppModel(store: JSONPlanStore.makeDefault(), loginItem: SMLoginItemService())
         _model = StateObject(wrappedValue: model)
+        AppModelAccess.shared = model
         scheduleRunner = ScheduleRunner(scheduler: model)
     }
 

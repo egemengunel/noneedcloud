@@ -78,6 +78,7 @@ struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
     var photoOptions: PhotoOptions
     var destination: Destination
     var schedule: Schedule = .manual
+    var mirrorOptions = MirrorOptions()
 
     enum CodingKeys: String, CodingKey {
         case id, name, sources
@@ -87,6 +88,7 @@ struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
         case destination
         case legacyDestinationURL = "destinationURL"
         case schedule
+        case mirrorOptions
     }
 
     init(
@@ -95,7 +97,8 @@ struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
         includePhotos: Bool,
         photoOptions: PhotoOptions,
         destination: Destination,
-        schedule: Schedule = .manual
+        schedule: Schedule = .manual,
+        mirrorOptions: MirrorOptions = MirrorOptions()
     ) {
         self.name = name
         self.sources = sources
@@ -103,6 +106,7 @@ struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
         self.photoOptions = photoOptions
         self.destination = destination
         self.schedule = schedule
+        self.mirrorOptions = mirrorOptions
     }
 
     init(
@@ -170,6 +174,7 @@ struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
             destination = .folder(try container.decode(URL.self, forKey: .legacyDestinationURL))
         }
         schedule = try container.decodeIfPresent(Schedule.self, forKey: .schedule) ?? .manual
+        mirrorOptions = try container.decodeIfPresent(MirrorOptions.self, forKey: .mirrorOptions) ?? MirrorOptions()
     }
 
     func encode(to encoder: Encoder) throws {
@@ -181,5 +186,6 @@ struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
         try container.encode(photoOptions, forKey: .photoOptions)
         try container.encode(destination, forKey: .destination)
         try container.encode(schedule, forKey: .schedule)
+        try container.encode(mirrorOptions, forKey: .mirrorOptions)
     }
 }

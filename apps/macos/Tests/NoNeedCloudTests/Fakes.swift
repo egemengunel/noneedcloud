@@ -48,10 +48,15 @@ final class FakeBackupDestination: BackupDestination, @unchecked Sendable {
     let label = "Fake Destination"
     var healthCheckError: Error?
     var copyErrors: [String: Error] = [:]
+    var mirroringSupported = false
+    var moveToDeletedError: Error?
 
     private let lock = NSLock()
     private(set) var ensuredDirectories: [String] = []
     private(set) var copiedFiles: [(relPath: String, sourceModificationDate: Date, data: Data)] = []
+    private(set) var movedToDeleted: [(relPath: String, deletedRelPath: String)] = []
+
+    var supportsMirroring: Bool { mirroringSupported }
 
     func healthCheck() async throws {
         if let healthCheckError { throw healthCheckError }
@@ -68,4 +73,9 @@ final class FakeBackupDestination: BackupDestination, @unchecked Sendable {
     }
 
     func destinationFileExists(relPath: String) -> Bool { false }
+
+    func moveToDeleted(relPath: String, deletedRelPath: String) throws {
+        if let moveToDeletedError { throw moveToDeletedError }
+        lock.withLock { movedToDeleted.append((relPath, deletedRelPath)) }
+    }
 }

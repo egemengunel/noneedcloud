@@ -261,8 +261,11 @@ struct StartBackupStep: View {
             VStack(alignment: .leading, spacing: 6) {
                 LabeledContent("Sources") { Text(sourcesSummary) }
                 LabeledContent("Destination") { Text(destinationSummary) }
+                LabeledContent("Mirroring") { Text(mirroringSummary) }
                 LabeledContent("Schedule") { Text("Manual") }
             }
+
+            mirroringSection
 
             Button {
                 if let plan = flow.makePlan() {
@@ -284,6 +287,33 @@ struct StartBackupStep: View {
             Text("Your backup runs right away, then only changed files are copied next time.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
+        }
+        .padding(20)
+    }
+
+    private var mirroringSummary: String {
+        flow.mirrorEnabled ? "On · \(flow.mirrorRetention.summary)" : "Off"
+    }
+
+    private var mirroringSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Toggle("Move Deleted Items to a Deleted Folder", isOn: $flow.mirrorEnabled)
+            if flow.mirrorEnabled {
+                Picker("Keep Deleted Items", selection: $flow.mirrorRetention) {
+                    Text("Forever").tag(Retention.forever)
+                    Text("90 Days").tag(Retention.days(90))
+                    Text("30 Days").tag(Retention.days(30))
+                    Text("Until Next Backup").tag(Retention.untilNextBackup)
+                }
+                Text("Deleted backup copies are kept in Deleted/<date>/ and purged per this setting.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                if flow.destinationProvider != .folder {
+                    Text("This destination type does not support mirroring yet — deletions will not be mirrored.")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                }
+            }
         }
         .padding(20)
     }

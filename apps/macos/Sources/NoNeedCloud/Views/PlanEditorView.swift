@@ -106,6 +106,8 @@ struct PlanEditorView: View {
             flow.videosOnly = plan.photoOptions.videosOnly
             flow.includeEdits = plan.photoOptions.includeEdits
             flow.includeSharedAlbums = plan.photoOptions.includeSharedAlbums
+            flow.mirrorEnabled = plan.mirrorOptions.enabled
+            flow.mirrorRetention = plan.mirrorOptions.retention
             if let start = plan.photoOptions.dateRangeStart {
                 flow.usePhotoDateRange = true
                 flow.photoDateRangeStart = start
@@ -146,6 +148,7 @@ struct PlanEditorView: View {
                     TextField("Plan Name", text: $name)
                     SourcesStep(flow: flow)
                     DestinationStep(flow: flow)
+                    mirroringSection
                     scheduleSection
                 }
                 .padding(24)
@@ -161,6 +164,31 @@ struct PlanEditorView: View {
             .padding(20)
         }
         .frame(minWidth: 520, minHeight: 560)
+    }
+
+    private var mirroringSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Mirroring")
+                .font(.headline)
+            Toggle("Move Deleted Items to a Deleted Folder", isOn: $flow.mirrorEnabled)
+            if flow.mirrorEnabled {
+                Picker("Keep Deleted Items", selection: $flow.mirrorRetention) {
+                    Text("Forever").tag(Retention.forever)
+                    Text("90 Days").tag(Retention.days(90))
+                    Text("30 Days").tag(Retention.days(30))
+                    Text("Until Next Backup").tag(Retention.untilNextBackup)
+                }
+                Text("When a source item is deleted, its backup copy is moved to Deleted/<date>/ on the next run and purged per this setting.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                if flow.destinationProvider != .folder {
+                    Text("This destination type does not support mirroring yet — deletions will not be mirrored until a folder destination is selected.")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                }
+            }
+        }
+        .padding(20)
     }
 
     private var scheduleSection: some View {

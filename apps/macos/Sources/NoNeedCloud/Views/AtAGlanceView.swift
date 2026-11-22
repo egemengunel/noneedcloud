@@ -323,6 +323,7 @@ struct PlanSummaryCard: View {
                     .lineLimit(1)
                     .truncationMode(.head)
             }
+            LabeledContent("Mirroring") { Text(plan.mirrorOptions.stateSummary) }
             LabeledContent("Schedule") { Text(plan.schedule.summary) }
             LabeledContent("Last Run") { Text(lastRunSummary) }
         }

@@ -37,4 +37,34 @@ protocol BackupDestination: AnyObject, Sendable {
     /// Used after a failed copy to decide whether the incremental entry,
     /// which still describes the last fully copied version, can be kept.
     func destinationFileExists(relPath: String) -> Bool
+
+    /// Whether the destination can cheaply move an existing copy into the
+    /// Deleted folder (local folders can; cloud object stores would need an
+    /// expensive download-then-reupload).
+    var supportsMirroring: Bool { get }
+
+    /// Moves the destination copy at `relPath` to `deletedRelPath`
+    /// (`Deleted/<date>/<original relPath>`). A missing source copy counts as
+    /// already gone, so the move is idempotent.
+    func moveToDeleted(relPath: String, deletedRelPath: String) async throws
+
+    /// Top-level folder names inside the Deleted root, for retention purging.
+    func deletedFolderNames(rootRelPath: String) async throws -> [String]
+
+    /// Removes one Deleted date folder (`relPath` includes the Deleted root).
+    func purgeDeletedFolder(relPath: String) async throws
+}
+
+extension BackupDestination {
+    var supportsMirroring: Bool { false }
+
+    func moveToDeleted(relPath: String, deletedRelPath: String) async throws {
+        throw DestinationError("Mirroring is not supported by this destination.")
+    }
+
+    func deletedFolderNames(rootRelPath: String) async throws -> [String] { [] }
+
+    func purgeDeletedFolder(relPath: String) async throws {
+        throw DestinationError("Mirroring is not supported by this destination.")
+    }
 }

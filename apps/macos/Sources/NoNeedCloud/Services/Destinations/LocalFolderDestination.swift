@@ -71,4 +71,39 @@ final class LocalFolderDestination: BackupDestination {
     func destinationFileExists(relPath: String) -> Bool {
         FileManager.default.fileExists(atPath: rootURL.appendingPathComponent(relPath).path)
     }
+
+    var supportsMirroring: Bool { true }
+
+    func moveToDeleted(relPath: String, deletedRelPath: String) throws {
+        let sourceURL = rootURL.appendingPathComponent(relPath)
+        guard FileManager.default.fileExists(atPath: sourceURL.path) else { return }
+        let targetURL = rootURL.appendingPathComponent(deletedRelPath)
+        try FileManager.default.createDirectory(
+            at: targetURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        if FileManager.default.fileExists(atPath: targetURL.path) {
+            try FileManager.default.removeItem(at: targetURL)
+        }
+        try FileManager.default.moveItem(at: sourceURL, to: targetURL)
+    }
+
+    func deletedFolderNames(rootRelPath: String) throws -> [String] {
+        let deletedRoot = rootURL.appendingPathComponent(rootRelPath)
+        guard let contents = try? FileManager.default.contentsOfDirectory(atPath: deletedRoot.path) else { return [] }
+        return contents.filter { name in
+            var isDirectory: ObjCBool = false
+            guard FileManager.default.fileExists(
+                atPath: deletedRoot.appendingPathComponent(name).path,
+                isDirectory: &isDirectory
+            ) else { return false }
+            return isDirectory.boolValue
+        }.sorted()
+    }
+
+    func purgeDeletedFolder(relPath: String) throws {
+        let folderURL = rootURL.appendingPathComponent(relPath)
+        guard FileManager.default.fileExists(atPath: folderURL.path) else { return }
+        try FileManager.default.removeItem(at: folderURL)
+    }
 }

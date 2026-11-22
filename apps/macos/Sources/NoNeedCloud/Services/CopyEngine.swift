@@ -19,6 +19,7 @@ struct CopyRunResult: Equatable, Sendable {
     var itemsFailed: Int
     var bytesCopied: Int64
     var itemsProtected: Int
+    var itemsMirrored: Int = 0
 }
 
 @MainActor
@@ -108,6 +109,8 @@ final class CopyEngine: Sendable {
     private let cancelFlag = CancellationFlag()
     private let perFileDelayNanos: UInt64
     private let ubiquitousSource: (any UbiquitousFileSource)?
+    private let mirrorOptions: MirrorOptions
+    private let now: @Sendable () -> Date
 
     init(
         sourceURL: URL,
@@ -115,7 +118,9 @@ final class CopyEngine: Sendable {
         destinationScope: String = "",
         stateURL: URL,
         perFileDelayNanos: UInt64 = 0,
-        ubiquitousSource: (any UbiquitousFileSource)? = nil
+        ubiquitousSource: (any UbiquitousFileSource)? = nil,
+        mirrorOptions: MirrorOptions = .disabled,
+        now: @escaping @Sendable () -> Date = Date.init
     ) {
         self.sourceURL = sourceURL
         self.destination = destination
@@ -123,6 +128,8 @@ final class CopyEngine: Sendable {
         self.stateURL = stateURL
         self.perFileDelayNanos = perFileDelayNanos
         self.ubiquitousSource = ubiquitousSource
+        self.mirrorOptions = mirrorOptions
+        self.now = now
         self.state = CopyEngineState()
     }
 
@@ -131,14 +138,18 @@ final class CopyEngine: Sendable {
         destinationURL: URL,
         stateURL: URL,
         perFileDelayNanos: UInt64 = 0,
-        ubiquitousSource: (any UbiquitousFileSource)? = nil
+        ubiquitousSource: (any UbiquitousFileSource)? = nil,
+        mirrorOptions: MirrorOptions = .disabled,
+        now: @escaping @Sendable () -> Date = Date.init
     ) {
         self.init(
             sourceURL: sourceURL,
             destination: LocalFolderDestination(rootURL: destinationURL),
             stateURL: stateURL,
             perFileDelayNanos: perFileDelayNanos,
-            ubiquitousSource: ubiquitousSource
+            ubiquitousSource: ubiquitousSource,
+            mirrorOptions: mirrorOptions,
+            now: now
         )
     }
 
@@ -151,13 +162,15 @@ final class CopyEngine: Sendable {
     }
 
     func run() async -> CopyRunResult {
-        let startedAt = Date()
+        let startedAt = now()
         let index = IncrementalIndex(url: stateURL)
         var copied = 0
         var skipped = 0
         var failed = 0
+        var mirrored = 0
         var bytesCopied: Int64 = 0
         var bytesSkipped: Int64 = 0
+        var mirroringKeepPaths: Set<String> = []
         var lastPublish = Date.distantPast
 
         func publishIfDue(currentFile: String, force: Bool = false) async {
@@ -218,6 +231,41 @@ final class CopyEngine: Sendable {
         }
 
         await state.begin(itemsTotal: scan.files.count, bytesTotal: scan.totalBytes, startedAt: startedAt)
+
+        if mirrorOptions.enabled {
+            let deletedRoot = destinationRelPath("Deleted")
+            if !destination.supportsMirroring {
+                await state.recordError(BackupFileError(
+                    path: destination.label,
+                    reason: "Mirroring is supported on local folder destinations only. Deleted items are not mirrored; the destination only grows."
+                ))
+            } else {
+                if case .untilNextBackup = mirrorOptions.retention {
+                    await performRetentionPurge(deletedRoot: deletedRoot, runDate: startedAt, retention: mirrorOptions.retention)
+                }
+                let scanPaths = Set(scan.files.map(\.relativePath))
+                let deletedPaths = index.allEntries().keys.filter { !scanPaths.contains($0) }.sorted()
+                let dateFolder = RetentionPolicy.folderName(for: startedAt)
+                for deletedPath in deletedPaths {
+                    if cancelFlag.isCancelled { break }
+                    do {
+                        try await destination.moveToDeleted(
+                            relPath: destinationRelPath(deletedPath),
+                            deletedRelPath: destinationRelPath("Deleted/\(dateFolder)/\(deletedPath)")
+                        )
+                        index.remove(deletedPath)
+                        mirrored += 1
+                    } catch {
+                        mirroringKeepPaths.insert(deletedPath)
+                        failed += 1
+                        await state.recordError(BackupFileError(
+                            path: deletedPath,
+                            reason: "Mirroring failed: \(error.localizedDescription)"
+                        ))
+                    }
+                }
+            }
+        }
 
         for relativeDirectory in scan.directories {
             do {
@@ -307,6 +355,16 @@ final class CopyEngine: Sendable {
         }
 
         await publishIfDue(currentFile: lastFile, force: true)
+        if mirrorOptions.enabled, destination.supportsMirroring, case .days = mirrorOptions.retention, !cancelFlag.isCancelled {
+            await performRetentionPurge(deletedRoot: destinationRelPath("Deleted"), runDate: startedAt, retention: mirrorOptions.retention)
+        }
+        if !cancelFlag.isCancelled {
+            let scanPaths = Set(scan.files.map(\.relativePath))
+            for stalePath in index.allEntries().keys
+            where !scanPaths.contains(stalePath) && !mirroringKeepPaths.contains(stalePath) {
+                index.remove(stalePath)
+            }
+        }
         try? index.save()
         let cancelled = cancelFlag.isCancelled
         await state.finish(cancelled: cancelled)
@@ -316,8 +374,35 @@ final class CopyEngine: Sendable {
             itemsSkipped: skipped,
             itemsFailed: failed,
             bytesCopied: bytesCopied,
-            itemsProtected: index.count
+            itemsProtected: index.count,
+            itemsMirrored: mirrored
         )
+    }
+
+    private func performRetentionPurge(deletedRoot: String, runDate: Date, retention: Retention) async {
+        do {
+            let folderNames = try await destination.deletedFolderNames(rootRelPath: deletedRoot)
+            for folderName in RetentionPolicy.foldersToPurge(
+                folderNames: folderNames,
+                runDate: runDate,
+                retention: retention
+            ) {
+                if cancelFlag.isCancelled { return }
+                do {
+                    try await destination.purgeDeletedFolder(relPath: destinationRelPath("Deleted/" + folderName))
+                } catch {
+                    await state.recordError(BackupFileError(
+                        path: "Deleted/" + folderName,
+                        reason: "Retention purge failed: \(error.localizedDescription)"
+                    ))
+                }
+            }
+        } catch {
+            await state.recordError(BackupFileError(
+                path: "Deleted/",
+                reason: "Retention purge failed: \(error.localizedDescription)"
+            ))
+        }
     }
 
     private struct ScannedFile: Sendable {

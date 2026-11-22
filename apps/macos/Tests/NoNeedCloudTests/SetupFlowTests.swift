@@ -114,6 +114,22 @@ struct SetupFlowTests {
         #expect(plan?.schedule == .manual)
     }
 
+    @Test func makePlanCapturesMirroringSelections() {
+        let flow = SetupFlow()
+        flow.addSourceFolder(URL(fileURLWithPath: "/tmp/src"))
+        flow.destinationURL = URL(fileURLWithPath: "/tmp/dest")
+        flow.mirrorEnabled = true
+        flow.mirrorRetention = .untilNextBackup
+
+        let plan = flow.makePlan()
+        #expect(plan?.mirrorOptions == MirrorOptions(enabled: true, retention: .untilNextBackup))
+
+        let offFlow = SetupFlow()
+        offFlow.addSourceFolder(URL(fileURLWithPath: "/tmp/src"))
+        offFlow.destinationURL = URL(fileURLWithPath: "/tmp/dest")
+        #expect(offFlow.makePlan()?.mirrorOptions == .disabled)
+    }
+
     @Test func iCloudDriveToggleAloneAllowsAdvancingAndIsCapturedInPlan() {
         let flow = SetupFlow()
         flow.includeICloudDrive = true
