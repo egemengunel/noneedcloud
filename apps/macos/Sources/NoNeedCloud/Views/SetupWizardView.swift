@@ -74,9 +74,7 @@ struct SourcesStep: View {
             Toggle("Include iCloud Photos", isOn: $flow.includePhotos)
 
             if flow.includePhotos {
-                Text("Photos copying is a placeholder in this build.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                photoOptionsSection
             }
 
             HStack {
@@ -110,6 +108,24 @@ struct SourcesStep: View {
             }
         }
         .padding(20)
+    }
+
+    private var photoOptionsSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Toggle("Photos Only", isOn: $flow.photosOnly)
+            Toggle("Videos Only", isOn: $flow.videosOnly)
+            Toggle("Include Edited Versions and Extra Components", isOn: $flow.includeEdits)
+            Toggle("Include Shared Albums", isOn: $flow.includeSharedAlbums)
+            Toggle("Limit to Date Range", isOn: $flow.usePhotoDateRange)
+            if flow.usePhotoDateRange {
+                DatePicker("From", selection: $flow.photoDateRangeStart, displayedComponents: .date)
+                DatePicker("To", selection: $flow.photoDateRangeEnd, in: flow.photoDateRangeStart..., displayedComponents: .date)
+                Text("The System Photo Library is backed up at original quality, organized by date. iCloud assets are fetched on demand, one at a time.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.leading, 20)
     }
 
     private func addFolder() {

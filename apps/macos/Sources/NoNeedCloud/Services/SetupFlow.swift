@@ -16,11 +16,18 @@ final class SetupFlow: ObservableObject {
     @Published private(set) var step: Step = .sources
     @Published var sourceFolderURLs: [URL] = []
     @Published var includePhotos = false
+    @Published var photosOnly = false
+    @Published var videosOnly = false
+    @Published var includeEdits = true
+    @Published var includeSharedAlbums = false
+    @Published var usePhotoDateRange = false
+    @Published var photoDateRangeStart = Date.now
+    @Published var photoDateRangeEnd = Date.now
     @Published var destinationURL: URL?
 
     var canContinue: Bool {
         switch step {
-        case .sources: includePhotos || !sourceFolderURLs.isEmpty
+        case .sources: (includePhotos || !sourceFolderURLs.isEmpty) && !(photosOnly && videosOnly)
         case .destination: destinationURL != nil
         case .startBackup: false
         }
@@ -55,7 +62,15 @@ final class SetupFlow: ObservableObject {
             name: name,
             sourceFolderURLs: sourceFolderURLs,
             includePhotos: includePhotos,
-            photoOptions: PhotoOptions(fullTimeline: true),
+            photoOptions: PhotoOptions(
+                fullTimeline: !(photosOnly || videosOnly),
+                photosOnly: photosOnly,
+                videosOnly: videosOnly,
+                includeEdits: includeEdits,
+                includeSharedAlbums: includeSharedAlbums,
+                dateRangeStart: usePhotoDateRange ? photoDateRangeStart : nil,
+                dateRangeEnd: usePhotoDateRange ? photoDateRangeEnd : nil
+            ),
             destinationURL: destinationURL
         )
     }

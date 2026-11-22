@@ -28,6 +28,8 @@ struct AtAGlanceView: View {
 
                     if let engine = model.activeEngine {
                         BackupProgressCard(state: engine.state, onStop: { model.stopBackup() })
+                    } else if let photoRunner = model.activePhotoRunner {
+                        BackupProgressCard(state: photoRunner.state, onStop: { model.stopBackup() })
                     } else if let plan = model.plans.first {
                         Button("Start Backup") { model.startBackup(plan) }
                             .controlSize(.large)

@@ -1,9 +1,5 @@
 import Foundation
 
-struct PhotoOptions: Codable, Equatable, Sendable {
-    var fullTimeline: Bool
-}
-
 struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
     var id = UUID()
     var name: String

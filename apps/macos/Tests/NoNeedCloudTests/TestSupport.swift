@@ -18,14 +18,15 @@ enum TestSupport {
     static func makePlan(
         name: String = "Test Plan",
         sources: [URL] = [URL(fileURLWithPath: "/tmp/sources")],
-        includePhotos: Bool = true,
+        includePhotos: Bool = false,
+        photoOptions: PhotoOptions = PhotoOptions(),
         destination: URL = URL(fileURLWithPath: "/tmp/dest")
     ) -> BackupPlan {
         BackupPlan(
             name: name,
             sourceFolderURLs: sources,
             includePhotos: includePhotos,
-            photoOptions: PhotoOptions(fullTimeline: true),
+            photoOptions: photoOptions,
             destinationURL: destination
         )
     }
