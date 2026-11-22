@@ -66,7 +66,7 @@ struct AppModelTests {
 
         #expect(results.count == 1)
         #expect(results[0].outcome == .completed)
-        #expect(results[0].filesCopied == 2)
+        #expect(results[0].itemsCopied == 2)
         #expect(model.lastBackupDate != nil)
         #expect(model.itemsProtected == 2)
         #expect(model.activeEngine == nil)
@@ -88,8 +88,8 @@ struct AppModelTests {
         _ = await model.backup(plan)
         let second = await model.backup(plan)
 
-        #expect(second[0].filesCopied == 0)
-        #expect(second[0].filesSkipped == 1)
+        #expect(second[0].itemsCopied == 0)
+        #expect(second[0].itemsSkipped == 1)
         #expect(model.itemsProtected == 1)
     }
 }

@@ -10,12 +10,13 @@ struct CopyRunResult: Equatable, Sendable {
     enum Outcome: Equatable, Sendable {
         case completed
         case cancelled
+        case failed
     }
 
     var outcome: Outcome
-    var filesCopied: Int
-    var filesSkipped: Int
-    var filesFailed: Int
+    var itemsCopied: Int
+    var itemsSkipped: Int
+    var itemsFailed: Int
     var bytesCopied: Int64
     var itemsProtected: Int
 }
@@ -23,13 +24,13 @@ struct CopyRunResult: Equatable, Sendable {
 @MainActor
 final class CopyEngineState: ObservableObject {
     @Published private(set) var isRunning = false
-    @Published private(set) var wasCancelled = false
     @Published private(set) var percent: Double = 0
     @Published private(set) var currentFile: String?
     @Published private(set) var itemsCopied = 0
     @Published private(set) var itemsSkipped = 0
     @Published private(set) var itemsTotal = 0
     @Published private(set) var bytesCopied: Int64 = 0
+    @Published private(set) var bytesSkipped: Int64 = 0
     @Published private(set) var bytesTotal: Int64 = 0
     @Published private(set) var startedAt: Date?
     @Published private(set) var errors: [BackupFileError] = []
@@ -44,18 +45,19 @@ final class CopyEngineState: ObservableObject {
 
     func begin(itemsTotal: Int, bytesTotal: Int64, startedAt: Date) {
         isRunning = true
-        wasCancelled = false
         self.itemsTotal = itemsTotal
         self.bytesTotal = bytesTotal
         self.startedAt = startedAt
     }
 
-    func report(currentFile: String, itemsCopied: Int, itemsSkipped: Int, bytesCopied: Int64) {
+    func report(currentFile: String, itemsCopied: Int, itemsSkipped: Int, bytesCopied: Int64, bytesSkipped: Int64) {
         self.currentFile = currentFile
         self.itemsCopied = itemsCopied
         self.itemsSkipped = itemsSkipped
         self.bytesCopied = bytesCopied
-        percent = bytesTotal > 0 ? Double(bytesCopied) / Double(bytesTotal) : 0
+        self.bytesSkipped = bytesSkipped
+        let processed = bytesCopied + bytesSkipped
+        percent = bytesTotal > 0 ? Double(processed) / Double(bytesTotal) : 0
     }
 
     func recordError(_ error: BackupFileError) {
@@ -64,7 +66,6 @@ final class CopyEngineState: ObservableObject {
 
     func finish(cancelled: Bool) {
         isRunning = false
-        wasCancelled = cancelled
         currentFile = nil
     }
 }
@@ -116,6 +117,7 @@ final class CopyEngine: Sendable {
         var skipped = 0
         var failed = 0
         var bytesCopied: Int64 = 0
+        var bytesSkipped: Int64 = 0
         var lastPublish = Date.distantPast
 
         func publishIfDue(currentFile: String, force: Bool = false) async {
@@ -126,11 +128,36 @@ final class CopyEngine: Sendable {
                 currentFile: currentFile,
                 itemsCopied: copied,
                 itemsSkipped: skipped,
-                bytesCopied: bytesCopied
+                bytesCopied: bytesCopied,
+                bytesSkipped: bytesSkipped
             )
         }
 
-        let scan = Self.scanTree(at: sourceURL)
+        func sourceFailureResult(reason: String) async -> CopyRunResult {
+            failed += 1
+            await MainActor.run {
+                state.begin(itemsTotal: 0, bytesTotal: 0, startedAt: startedAt)
+                state.recordError(BackupFileError(path: sourceURL.path, reason: reason))
+                state.finish(cancelled: false)
+            }
+            return CopyRunResult(
+                outcome: .failed,
+                itemsCopied: copied,
+                itemsSkipped: skipped,
+                itemsFailed: failed,
+                bytesCopied: bytesCopied,
+                itemsProtected: index.count
+            )
+        }
+
+        if let reason = Self.sourceAccessibilityError(at: sourceURL) {
+            return await sourceFailureResult(reason: reason)
+        }
+
+        guard let scan = Self.scanTree(at: sourceURL) else {
+            return await sourceFailureResult(reason: "Source directory could not be read.")
+        }
+
         await MainActor.run {
             state.begin(itemsTotal: scan.files.count, bytesTotal: scan.totalBytes, startedAt: startedAt)
         }
@@ -148,18 +175,21 @@ final class CopyEngine: Sendable {
             }
         }
 
+        var lastFile = ""
         for file in scan.files {
             if cancelFlag.isCancelled { break }
             if perFileDelayNanos > 0 {
                 try? await Task.sleep(nanoseconds: perFileDelayNanos)
                 if cancelFlag.isCancelled { break }
             }
+            lastFile = file.relativePath
             let destinationFile = destinationURL.appendingPathComponent(file.relativePath)
             if let known = index.entry(for: file.relativePath),
                known.size == file.size,
                known.mtime == file.mtime.timeIntervalSince1970 {
                 skipped += 1
-                await publishIfDue(currentFile: file.relativePath, force: true)
+                bytesSkipped += file.size
+                await publishIfDue(currentFile: file.relativePath)
                 continue
             }
             do {
@@ -178,24 +208,29 @@ final class CopyEngine: Sendable {
                     try? index.save()
                 }
             } catch CopyError.cancelled {
-                try? FileManager.default.removeItem(at: destinationFile)
+                if !FileManager.default.fileExists(atPath: destinationFile.path) {
+                    index.remove(file.relativePath)
+                }
                 try? index.save()
                 await state.finish(cancelled: true)
                 return CopyRunResult(
                     outcome: .cancelled,
-                    filesCopied: copied,
-                    filesSkipped: skipped,
-                    filesFailed: failed,
+                    itemsCopied: copied,
+                    itemsSkipped: skipped,
+                    itemsFailed: failed,
                     bytesCopied: bytesCopied,
                     itemsProtected: index.count
                 )
             } catch {
-                try? FileManager.default.removeItem(at: destinationFile)
+                if !FileManager.default.fileExists(atPath: destinationFile.path) {
+                    index.remove(file.relativePath)
+                }
                 failed += 1
                 await state.recordError(BackupFileError(path: file.relativePath, reason: error.localizedDescription))
             }
         }
 
+        await publishIfDue(currentFile: lastFile, force: true)
         try? index.save()
         let cancelled = cancelFlag.isCancelled
         await MainActor.run {
@@ -203,16 +238,26 @@ final class CopyEngine: Sendable {
         }
         return CopyRunResult(
             outcome: cancelled ? .cancelled : .completed,
-            filesCopied: copied,
-            filesSkipped: skipped,
-            filesFailed: failed,
+            itemsCopied: copied,
+            itemsSkipped: skipped,
+            itemsFailed: failed,
             bytesCopied: bytesCopied,
             itemsProtected: index.count
         )
     }
 
-    private enum CopyError: Error {
+    private enum CopyError: LocalizedError {
         case cancelled
+        case temporaryFileCreationFailed(path: String)
+
+        var errorDescription: String? {
+            switch self {
+            case .cancelled:
+                return "Copy cancelled."
+            case .temporaryFileCreationFailed(let path):
+                return "Could not create temporary copy file at \(path)."
+            }
+        }
     }
 
     private struct ScannedFile: Sendable {
@@ -227,7 +272,22 @@ final class CopyEngine: Sendable {
         var totalBytes: Int64
     }
 
-    private static func scanTree(at sourceURL: URL) -> ScanResult {
+    private static func sourceAccessibilityError(at sourceURL: URL) -> String? {
+        let fileManager = FileManager.default
+        var isDirectory: ObjCBool = false
+        guard fileManager.fileExists(atPath: sourceURL.path, isDirectory: &isDirectory) else {
+            return "Source directory does not exist."
+        }
+        guard isDirectory.boolValue else {
+            return "Source path is not a directory."
+        }
+        guard fileManager.isReadableFile(atPath: sourceURL.path) else {
+            return "Source directory is not readable."
+        }
+        return nil
+    }
+
+    private static func scanTree(at sourceURL: URL) -> ScanResult? {
         let fileManager = FileManager.default
         var directories: [String] = []
         var files: [ScannedFile] = []
@@ -236,7 +296,7 @@ final class CopyEngine: Sendable {
             at: sourceURL,
             includingPropertiesForKeys: [.isDirectoryKey, .fileSizeKey, .contentModificationDateKey]
         ) else {
-            return ScanResult(directories: [], files: [], totalBytes: 0)
+            return nil
         }
         let rootPath = sourceURL.resolvingSymlinksInPath().path
         for case let url as URL in enumerator {
@@ -279,13 +339,26 @@ final class CopyEngine: Sendable {
         )
         let input = try FileHandle(forReadingFrom: source)
         defer { try? input.close() }
-        FileManager.default.createFile(atPath: destination.path, contents: nil)
-        let output = try FileHandle(forWritingTo: destination)
-        defer { try? output.close() }
-        while true {
-            if cancelFlag.isCancelled { throw CopyError.cancelled }
-            guard let chunk = try input.read(upToCount: chunkSize), !chunk.isEmpty else { break }
-            try output.write(contentsOf: chunk)
+        let temporaryURL = URL(fileURLWithPath: destination.path + ".tmp")
+        do {
+            guard FileManager.default.createFile(atPath: temporaryURL.path, contents: nil) else {
+                throw CopyError.temporaryFileCreationFailed(path: temporaryURL.path)
+            }
+            let output = try FileHandle(forWritingTo: temporaryURL)
+            defer { try? output.close() }
+            while true {
+                if cancelFlag.isCancelled { throw CopyError.cancelled }
+                guard let chunk = try input.read(upToCount: chunkSize), !chunk.isEmpty else { break }
+                try output.write(contentsOf: chunk)
+            }
+            if FileManager.default.fileExists(atPath: destination.path) {
+                _ = try FileManager.default.replaceItemAt(destination, withItemAt: temporaryURL)
+            } else {
+                try FileManager.default.moveItem(at: temporaryURL, to: destination)
+            }
+        } catch {
+            try? FileManager.default.removeItem(at: temporaryURL)
+            throw error
         }
         try FileManager.default.setAttributes(
             [.modificationDate: sourceModificationDate],

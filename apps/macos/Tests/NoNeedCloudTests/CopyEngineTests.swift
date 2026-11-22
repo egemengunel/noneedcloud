@@ -63,8 +63,8 @@ struct CopyEngineTests {
         let result = await engine.run()
 
         #expect(result.outcome == .completed)
-        #expect(result.filesCopied == 4)
-        #expect(result.filesSkipped == 0)
+        #expect(result.itemsCopied == 4)
+        #expect(result.itemsSkipped == 0)
         for (relativePath, content) in files {
             #expect(try readData(relativePath, in: destination) == content)
         }
@@ -87,7 +87,7 @@ struct CopyEngineTests {
 
         let first = makeEngine(source: source, destination: destination, stateDirectory: root)
         let firstResult = await first.run()
-        #expect(firstResult.filesCopied == 3)
+        #expect(firstResult.itemsCopied == 3)
 
         let untouchedMtimes = [
             "d/b.txt": try modificationDate("d/b.txt", in: destination),
@@ -102,9 +102,9 @@ struct CopyEngineTests {
         let second = makeEngine(source: source, destination: destination, stateDirectory: root)
         let secondResult = await second.run()
 
-        #expect(secondResult.filesCopied == 2)
-        #expect(secondResult.filesSkipped == 2)
-        #expect(secondResult.filesFailed == 0)
+        #expect(secondResult.itemsCopied == 2)
+        #expect(secondResult.itemsSkipped == 2)
+        #expect(secondResult.itemsFailed == 0)
         #expect(try readData("a.txt", in: destination) == Data("changed".utf8))
         #expect(try readData("d/new.txt", in: destination) == Data("brand new".utf8))
         #expect(try modificationDate("d/b.txt", in: destination) == untouchedMtimes["d/b.txt"]!)
@@ -124,14 +124,14 @@ struct CopyEngineTests {
 
         let first = makeEngine(source: source, destination: destination, stateDirectory: root)
         let firstResult = await first.run()
-        #expect(firstResult.filesCopied == 2)
+        #expect(firstResult.itemsCopied == 2)
         #expect(firstResult.itemsProtected == 2)
 
         let restarted = makeEngine(source: source, destination: destination, stateDirectory: root)
         let secondResult = await restarted.run()
         #expect(secondResult.outcome == .completed)
-        #expect(secondResult.filesCopied == 0)
-        #expect(secondResult.filesSkipped == 2)
+        #expect(secondResult.itemsCopied == 0)
+        #expect(secondResult.itemsSkipped == 2)
         #expect(secondResult.itemsProtected == 2)
     }
 
@@ -168,7 +168,7 @@ struct CopyEngineTests {
         for relativePath in destinationFiles {
             #expect(try readData(relativePath, in: destination) == chunk)
         }
-        #expect(result.filesCopied + result.filesFailed == destinationFiles.count)
+        #expect(result.itemsCopied + result.itemsFailed == destinationFiles.count)
     }
 
     @Test func sourceTreeIsUnchangedAfterRuns() async throws {
@@ -223,14 +223,91 @@ struct CopyEngineTests {
         let result = await engine.run()
 
         #expect(result.outcome == .completed)
-        #expect(result.filesCopied == 2)
-        #expect(result.filesFailed == 1)
+        #expect(result.itemsCopied == 2)
+        #expect(result.itemsFailed == 1)
         let errors = await engine.state.errors
         #expect(errors.count == 1)
         #expect(errors.first?.path == "locked.txt")
         #expect(try readData("ok-before.txt", in: destination) == Data("before".utf8))
         #expect(try readData("ok-after.txt", in: destination) == Data("after".utf8))
         #expect(!FileManager.default.fileExists(atPath: destination.appendingPathComponent("locked.txt").path))
+    }
+
+    @Test func failedReCopyOfChangedFilePreservesPreviousVersionAndIndex() async throws {
+        let root = TestSupport.makeTempDirectory()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("Source", isDirectory: true)
+        let destination = root.appendingPathComponent("Dest", isDirectory: true)
+        try makeFile("important.txt", Data("one".utf8), in: source)
+
+        let first = makeEngine(source: source, destination: destination, stateDirectory: root)
+        let firstResult = await first.run()
+        #expect(firstResult.itemsCopied == 1)
+
+        let newTime = Date(timeIntervalSinceNow: 60)
+        try Data("changed-content".utf8).write(to: source.appendingPathComponent("important.txt"))
+        try setModificationDate(newTime, on: "important.txt", in: source)
+
+        let temporaryPath = destination.appendingPathComponent("important.txt.tmp").path
+        try FileManager.default.createDirectory(atPath: temporaryPath, withIntermediateDirectories: true)
+
+        let second = makeEngine(source: source, destination: destination, stateDirectory: root)
+        let secondResult = await second.run()
+
+        #expect(secondResult.outcome == .completed)
+        #expect(secondResult.itemsCopied == 0)
+        #expect(secondResult.itemsFailed == 1)
+        #expect(try readData("important.txt", in: destination) == Data("one".utf8))
+        #expect(!FileManager.default.fileExists(atPath: temporaryPath))
+        let errors = await second.state.errors
+        #expect(errors.first?.path == "important.txt")
+
+        let index = IncrementalIndex(url: IncrementalIndex.indexFileURL(stateDirectory: root, source: source))
+        #expect(index.entry(for: "important.txt")?.size == Int64("one".utf8.count))
+
+        let third = makeEngine(source: source, destination: destination, stateDirectory: root)
+        let thirdResult = await third.run()
+        #expect(thirdResult.itemsCopied == 1)
+        #expect(thirdResult.itemsSkipped == 0)
+        #expect(try readData("important.txt", in: destination) == Data("changed-content".utf8))
+    }
+
+    @Test func missingSourceDirectoryFailsRunInsteadOfReportingSuccess() async throws {
+        let root = TestSupport.makeTempDirectory()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("Missing", isDirectory: true)
+        let destination = root.appendingPathComponent("Dest", isDirectory: true)
+
+        let engine = makeEngine(source: source, destination: destination, stateDirectory: root)
+        let result = await engine.run()
+
+        #expect(result.outcome != .completed)
+        #expect(result.itemsFailed > 0)
+        #expect(result.itemsCopied == 0)
+        #expect(await !engine.state.isRunning)
+        let errors = await engine.state.errors
+        #expect(errors.count == 1)
+        #expect(!FileManager.default.fileExists(atPath: destination.path))
+    }
+
+    @Test func incrementalPassReportsProgressForSkippedBytes() async throws {
+        let root = TestSupport.makeTempDirectory()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("Source", isDirectory: true)
+        let destination = root.appendingPathComponent("Dest", isDirectory: true)
+        try makeTree([
+            "a.txt": Data("alpha".utf8),
+            "b.txt": Data("beta".utf8),
+        ], in: source)
+
+        let first = makeEngine(source: source, destination: destination, stateDirectory: root)
+        _ = await first.run()
+
+        let second = makeEngine(source: source, destination: destination, stateDirectory: root)
+        let secondResult = await second.run()
+        #expect(secondResult.itemsSkipped == 2)
+        let percent = await second.state.percent
+        #expect(percent > 0.99)
     }
 
     @Test func cancelledRunPersistsProgressForNextRun() async throws {
@@ -263,8 +340,8 @@ struct CopyEngineTests {
         let resumed = makeEngine(source: source, destination: destination, stateDirectory: root)
         let resumedResult = await resumed.run()
         #expect(resumedResult.outcome == .completed)
-        #expect(resumedResult.filesCopied == 30 - cancelledResult.filesCopied)
-        #expect(resumedResult.filesSkipped == cancelledResult.filesCopied)
+        #expect(resumedResult.itemsCopied == 30 - cancelledResult.itemsCopied)
+        #expect(resumedResult.itemsSkipped == cancelledResult.itemsCopied)
     }
 }
 
