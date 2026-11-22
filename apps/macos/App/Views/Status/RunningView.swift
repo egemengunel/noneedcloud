@@ -176,21 +176,35 @@ private struct CurrentFile: View {
     let item: BackupProgress.CurrentItem?
     let destinationName: String
 
+    private var fileName: String {
+        item.map { ($0.displayPath as NSString).lastPathComponent } ?? " "
+    }
+
+    private var stageText: String {
+        item.map { Formatting.stage($0.stage, kind: $0.kind, destination: destinationName) } ?? " "
+    }
+
     var body: some View {
         HStack(spacing: 11) {
             Image(systemName: item?.kind == .file ? "doc" : "photo")
                 .font(.system(size: 17))
                 .foregroundStyle(.white)
                 .frame(width: 24)
+                .contentTransition(.symbolEffect(.replace))
             VStack(alignment: .leading, spacing: 5) {
-                Text(item.map { ($0.displayPath as NSString).lastPathComponent } ?? " ")
+                // Each new file fades in as the previous one fades out.
+                Text(fileName)
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(.white)
-                Text(item.map { Formatting.stage($0.stage, kind: $0.kind, destination: destinationName) } ?? " ")
+                    .contentTransition(.opacity)
+                Text(stageText)
                     .font(.system(size: 13))
                     .foregroundStyle(Theme.lightBlue)
+                    .contentTransition(.opacity)
             }
             .lineLimit(1)
+            .animation(.easeInOut(duration: 0.18), value: fileName)
+            .animation(.easeInOut(duration: 0.18), value: stageText)
             Spacer(minLength: 0)
         }
         .padding(.horizontal, 12)
@@ -210,6 +224,7 @@ private struct StagesCard: View {
             SectionTitle("Stages", size: 17)
             StepperList(items: items, spacing: 21, markerSize: 29)
                 .padding(.top, 25)
+                .animation(.easeInOut(duration: 0.25), value: currentIndex)
             Spacer(minLength: 8)
             Text("Check, download and write repeat for every item.")
                 .font(.system(size: 12, weight: .medium))
