@@ -12,12 +12,20 @@ struct NoNeedCloudApp: App {
     }
 
     var body: some Scene {
-        WindowGroup("NoNeedCloud") {
+        WindowGroup("NoNeedCloud", id: "main") {
             RootView(model: model)
                 .frame(minWidth: 620, minHeight: 440)
                 .task { scheduleRunner?.start() }
         }
         .windowResizability(.contentMinSize)
+
+        MenuBarExtra {
+            MenuBarView(model: model)
+                .task { scheduleRunner?.start() }
+        } label: {
+            MenuBarIcon(model: model)
+        }
+        .menuBarExtraStyle(.window)
     }
 }
 
