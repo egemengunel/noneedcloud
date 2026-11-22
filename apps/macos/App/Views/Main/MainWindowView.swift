@@ -5,16 +5,37 @@ import SwiftUI
 /// The one main window. Shows the welcome screen on first launch, then the
 /// screen for the current `MainScreenState` (Figma scenarios 01–04).
 struct MainWindowView: View {
+    /// What the window shows at each launch: loading screen → onboarding → the app.
+    enum LaunchPhase { case loading, onboarding, app }
+
     let model: AppModel
-    @AppStorage("hasSeenWelcome") private var hasSeenWelcome = false
+    /// Every launch starts at `.loading`; nothing is persisted, so onboarding shows each time.
+    @State private var phase: LaunchPhase
     @State private var activeSheet: SetupSheet?
 
-    private var showsWelcome: Bool { !hasSeenWelcome && model.lastCompletedRun == nil }
+    init(model: AppModel, startingAt phase: LaunchPhase = .loading) {
+        self.model = model
+        _phase = State(initialValue: phase)
+    }
+
+    private var showsWelcome: Bool { phase != .app }
 
     var body: some View {
         Group {
-            if showsWelcome {
-                WelcomeView { withAnimation(.smooth(duration: 0.35)) { hasSeenWelcome = true } }
+            if phase == .loading {
+                LaunchView()
+                    .transition(.opacity)
+                    .task {
+                        // Show the loading screen at least briefly, and until health is known.
+                        async let health: Void = model.refreshHealth()
+                        try? await Task.sleep(for: .seconds(1.6))
+                        await health
+                        withAnimation(.smooth(duration: 0.45)) { phase = .onboarding }
+                    }
+            } else if phase == .onboarding {
+                WelcomeView(isReturning: model.lastCompletedRun != nil) {
+                    withAnimation(.smooth(duration: 0.35)) { phase = .app }
+                }
                     .transition(.opacity)
             } else {
                 content
@@ -37,7 +58,7 @@ struct MainWindowView: View {
         }
         .animation(.smooth(duration: 0.25), value: model.screenState)
         .onReceive(NotificationCenter.default.publisher(for: .showWelcome)) { _ in
-            withAnimation { hasSeenWelcome = false }
+            withAnimation { phase = .onboarding }
         }
     }
 

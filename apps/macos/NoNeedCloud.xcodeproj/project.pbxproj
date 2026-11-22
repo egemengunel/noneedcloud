@@ -20,6 +20,7 @@
 		44FD0E7A7C2D92029F0B5014 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A083CA08DBD27BA66BADF385 /* Theme.swift */; };
 		5133D691603F3CFFFA8D8AD9 /* PhotosAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2B0291D8AB68E874FC6CF2 /* PhotosAccess.swift */; };
 		55716F5EC0C9E8D12043F7D5 /* MainWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2D35B6D3DFC58C71080C8A /* MainWindowView.swift */; };
+		59070849627CFACC2986354F /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9C3D11B636B04C9A2A38AF /* LaunchView.swift */; };
 		5A7816E51E7DBA4FFEAD8DB2 /* RunningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D366E4FBD9F00EC3BD6CBC /* RunningView.swift */; };
 		5DCED0B3DC6B4A7845E7ADFC /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E7CBA9686864A420852DE2 /* HistoryView.swift */; };
 		5E158F87D5E3E3400A55DC6E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = EEF44787527AD1831E164121 /* Localizable.xcstrings */; };
@@ -57,6 +58,7 @@
 		C8631DB4006B85EA7A8B2306 /* SetupFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFlowView.swift; sourceTree = "<group>"; };
 		CD2B0291D8AB68E874FC6CF2 /* PhotosAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosAccess.swift; sourceTree = "<group>"; };
 		D5FB703D07CCA6591C7E1CAD /* NoNeedCloud.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NoNeedCloud.entitlements; sourceTree = "<group>"; };
+		EA9C3D11B636B04C9A2A38AF /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
 		EEF44787527AD1831E164121 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		F631BBFC43363B90833B2835 /* ProtectedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtectedView.swift; sourceTree = "<group>"; };
 		FA17A56FA094F1078512A15A /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 		2B479C1AD9F0916F2EFB7899 /* Welcome */ = {
 			isa = PBXGroup;
 			children = (
+				EA9C3D11B636B04C9A2A38AF /* LaunchView.swift */,
 				601752050A6DEA1D381B5373 /* WelcomeView.swift */,
 			);
 			path = Welcome;
@@ -313,6 +316,7 @@
 				9168325946564BDD659915F6 /* FolderPicker.swift in Sources */,
 				8225685EF5D78E7251ACB011 /* Formatting.swift in Sources */,
 				5DCED0B3DC6B4A7845E7ADFC /* HistoryView.swift in Sources */,
+				59070849627CFACC2986354F /* LaunchView.swift in Sources */,
 				55716F5EC0C9E8D12043F7D5 /* MainWindowView.swift in Sources */,
 				0E596762132013888127E106 /* NoNeedCloudApp.swift in Sources */,
 				5133D691603F3CFFFA8D8AD9 /* PhotosAccess.swift in Sources */,

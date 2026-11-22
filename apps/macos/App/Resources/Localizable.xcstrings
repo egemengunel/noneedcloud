@@ -535,6 +535,16 @@
         }
       }
     },
+    "Checking your backup…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedeğin kontrol ediliyor…"
+          }
+        }
+      }
+    },
     "Choose": {
       "localizations": {
         "tr": {
@@ -731,6 +741,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bağlı"
+          }
+        }
+      }
+    },
+    "Continue": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Devam et"
           }
         }
       }

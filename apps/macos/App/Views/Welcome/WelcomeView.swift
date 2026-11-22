@@ -4,6 +4,8 @@ import SwiftUI
 /// First-launch screen in the brand style of the Figma cover
 /// ("NoNeedCloud · Başlangıç ve senaryolar"): navy field, light-blue cloud.
 struct WelcomeView: View {
+    /// Returning users see "Continue" instead of "Get Started".
+    var isReturning = false
     let onContinue: () -> Void
     @State private var appeared = false
 
@@ -58,7 +60,7 @@ struct WelcomeView: View {
                     }
                     .padding(.top, 38)
 
-                    Button("Get Started", action: onContinue)
+                    Button(isReturning ? "Continue" : "Get Started", action: onContinue)
                         .buttonStyle(PillButtonStyle(kind: .primary, large: true))
                         .keyboardShortcut(.defaultAction)
                         .padding(.top, 40)
@@ -83,12 +85,14 @@ private struct WelcomePoint: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 14) {
-            Image(systemName: systemImage)
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(Theme.lightBlue)
-                .frame(width: 38, height: 38)
-                .background(Theme.navy2, in: RoundedRectangle(cornerRadius: 11))
-                .overlay(RoundedRectangle(cornerRadius: 11).strokeBorder(Theme.navyLine))
+            ZStack {
+                RoundedRectangle(cornerRadius: 11).fill(Theme.navy2)
+                RoundedRectangle(cornerRadius: 11).strokeBorder(Theme.navyLine)
+                Image(systemName: systemImage)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(Theme.lightBlue)
+            }
+            .frame(width: 38, height: 38)
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
                     .font(.system(size: 15, weight: .semibold))
