@@ -1,13 +1,13 @@
 import Combine
 import Foundation
 
-struct BackupFileError: Equatable, Sendable {
+struct BackupFileError: Codable, Equatable, Sendable {
     var path: String
     var reason: String
 }
 
 struct CopyRunResult: Equatable, Sendable {
-    enum Outcome: Equatable, Sendable {
+    enum Outcome: Codable, Equatable, Sendable {
         case completed
         case cancelled
         case failed

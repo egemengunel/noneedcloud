@@ -4,48 +4,76 @@ struct AtAGlanceView: View {
     @ObservedObject var model: AppModel
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                Text("At a Glance")
-                    .font(.largeTitle)
-                    .bold()
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    Text("At a Glance")
+                        .font(.largeTitle)
+                        .bold()
 
-                HStack(spacing: 12) {
-                    StatTile(
-                        title: "Items Protected",
-                        value: "\(model.itemsProtected)",
-                        detail: model.itemsProtected > 0 ? "In your latest backup" : "Nothing backed up yet"
-                    )
-                    StatTile(
-                        title: "Last Backup",
-                        value: lastBackupText,
-                        detail: model.lastBackupDate == nil ? "No backup has run" : "Completed successfully"
-                    )
-                }
+                    HStack(spacing: 12) {
+                        StatTile(
+                            title: "Items Protected",
+                            value: "\(model.itemsProtected)",
+                            detail: model.itemsProtected > 0 ? "In your latest backup" : "Nothing backed up yet"
+                        )
+                        StatTile(
+                            title: "Last Backup",
+                            value: lastBackupText,
+                            detail: model.lastBackupDate == nil ? "No backup has run" : "Completed successfully"
+                        )
+                    }
 
-                if let engine = model.activeEngine {
-                    BackupProgressCard(state: engine.state, onStop: { model.stopBackup() })
-                } else if let plan = model.plans.first {
-                    Button("Start Backup") { model.startBackup(plan) }
-                        .controlSize(.large)
-                }
+                    LastRunCard(record: model.history.last)
 
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Backup Plans")
-                        .font(.headline)
-                    if model.plans.isEmpty {
-                        Text("No backup plans yet.")
-                            .foregroundStyle(.secondary)
-                    } else {
-                        ForEach(model.plans) { plan in
-                            PlanSummaryCard(plan: plan)
+                    if let engine = model.activeEngine {
+                        BackupProgressCard(state: engine.state, onStop: { model.stopBackup() })
+                    } else if let plan = model.plans.first {
+                        Button("Start Backup") { model.startBackup(plan) }
+                            .controlSize(.large)
+                    }
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Missed Items")
+                            .font(.headline)
+                        MissedItemsView(items: missedItemsForPlans)
+                    }
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Backup Plans")
+                            .font(.headline)
+                        if model.plans.isEmpty {
+                            Text("No backup plans yet.")
+                                .foregroundStyle(.secondary)
+                        } else {
+                            ForEach(model.plans) { plan in
+                                PlanSummaryCard(plan: plan)
+                            }
                         }
                     }
+
+                    NavigationLink {
+                        BackupHistoryView(model: model)
+                    } label: {
+                        HStack {
+                            Text("Backup History")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .buttonStyle(.plain)
                 }
+                .padding(28)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(28)
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
+    }
+
+    private var missedItemsForPlans: [BackupFileError] {
+        guard let plan = model.plans.first else { return [] }
+        return model.missedItems(for: plan.id)
     }
 
     private var lastBackupText: String {
