@@ -20,6 +20,7 @@
 		5DCED0B3DC6B4A7845E7ADFC /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E7CBA9686864A420852DE2 /* HistoryView.swift */; };
 		8225685EF5D78E7251ACB011 /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D85D36EDE5C9A59305C110 /* Formatting.swift */; };
 		9168325946564BDD659915F6 /* FolderPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C75BC82650C21A423C1C74 /* FolderPicker.swift */; };
+		D2CCF22336B37A356F4CB965 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = FA17A56FA094F1078512A15A /* AppIcon.icon */; };
 		DA18EAC42B7C7F5833271E3C /* YourSetupSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEDA26AA9A43513F589EE3B /* YourSetupSection.swift */; };
 		E6AC50133917B9C456F70240 /* DestinationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420FBCF9EF4162D4ED37C305 /* DestinationSheet.swift */; };
 /* End PBXBuildFile section */
@@ -42,6 +43,7 @@
 		AE5D1F4F9B038E7E76E6BA9B /* NoNeedCloud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NoNeedCloud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD2B0291D8AB68E874FC6CF2 /* PhotosAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosAccess.swift; sourceTree = "<group>"; };
 		D5FB703D07CCA6591C7E1CAD /* NoNeedCloud.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NoNeedCloud.entitlements; sourceTree = "<group>"; };
+		FA17A56FA094F1078512A15A /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		FD8CA0E182941921443DD84D /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -60,6 +62,7 @@
 		06D08B227C687679E11376FD /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FA17A56FA094F1078512A15A /* AppIcon.icon */,
 				17AEF947035BC37AC7FBAC5E /* Assets.xcassets */,
 			);
 			path = Resources;
@@ -226,6 +229,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2CCF22336B37A356F4CB965 /* AppIcon.icon in Resources */,
 				43D506BC6586AEE8680221F5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

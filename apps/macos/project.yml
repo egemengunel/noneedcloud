@@ -23,6 +23,12 @@ targets:
       Release: Config/Signing.xcconfig
     sources:
       - path: App
+        excludes:
+          - "Resources/AppIcon.icon"
+      # Icon Composer file; Xcode compiles it into the app icon (AppIcon).
+      - path: App/Resources/AppIcon.icon
+        type: file
+        buildPhase: resources
     dependencies:
       - package: NoNeedCloudCore
     settings:
