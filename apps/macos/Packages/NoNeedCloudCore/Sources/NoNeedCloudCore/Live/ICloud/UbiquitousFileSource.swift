@@ -43,6 +43,9 @@ final class ICloudDriveSource: UbiquitousFileSource {
     }
 
     func isDataless(_ url: URL) throws -> Bool {
+        // URL caches resource values, so polling would never see the download finish.
+        var url = url
+        url.removeAllCachedResourceValues()
         let values = try url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
         guard let status = values.ubiquitousItemDownloadingStatus else { return false }
         return status == .notDownloaded

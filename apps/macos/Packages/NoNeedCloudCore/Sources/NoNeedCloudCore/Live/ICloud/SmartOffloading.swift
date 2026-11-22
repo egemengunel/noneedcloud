@@ -1,4 +1,5 @@
 import Foundation
+import os
 
 enum SmartOffloadOutcome: Sendable {
     case copied
@@ -19,15 +20,16 @@ enum SmartOffload {
         do {
             try await source.fetch(fileURL, isCancelled: isCancelled)
         } catch {
+            await evict(fileURL, source: source)
             return .fetchFailed(error)
         }
         do {
             try await copy()
         } catch {
-            try? await source.evict(fileURL)
+            await evict(fileURL, source: source)
             return .copyFailed(error)
         }
-        try? await source.evict(fileURL)
+        await evict(fileURL, source: source)
         return .copied
     }
 
@@ -37,6 +39,16 @@ enum SmartOffload {
             return .copied
         } catch {
             return .copyFailed(error)
+        }
+    }
+
+    private static let logger = Logger(subsystem: "com.noneedcloud.mac", category: "SmartOffload")
+
+    private static func evict(_ url: URL, source: any UbiquitousFileSource) async {
+        do {
+            try await source.evict(url)
+        } catch {
+            logger.error("Couldn't free \(url.lastPathComponent, privacy: .public): \(String(describing: error), privacy: .public)")
         }
     }
 

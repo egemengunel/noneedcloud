@@ -93,7 +93,7 @@ struct SmartOffloadingTests {
         #expect(log.events == ["copy:file.txt"])
     }
 
-    @Test func fetchFailureRecordsOutcomeAndSkipsCopyAndEvict() async throws {
+    @Test func fetchFailureRecordsOutcomeSkipsCopyAndEvicts() async throws {
         let log = EventLog()
         let fileURL = URL(fileURLWithPath: "/icloud/file.txt")
         let source = MockUbiquitousSource(log: log, datalessPaths: [fileURL.path], fetchError: MockUbiquitousSource.FetchFailed())
@@ -106,7 +106,7 @@ struct SmartOffloadingTests {
             Issue.record("Expected .fetchFailed, got \(outcome)")
             return
         }
-        #expect(log.events == ["fetch:file.txt"])
+        #expect(log.events == ["fetch:file.txt", "evict:file.txt"])
     }
 
     @Test func copyFailureAfterFetchStillEvicts() async throws {
@@ -232,7 +232,7 @@ struct SmartOffloadingTests {
         #expect(!engine.state.errors[0].reason.isEmpty)
         #expect(try Data(contentsOf: destination.appendingPathComponent("good.txt")) == Data("fine".utf8))
         #expect(!FileManager.default.fileExists(atPath: destination.appendingPathComponent("bad.txt").path))
-        #expect(log.events == ["fetch:bad.txt"])
+        #expect(log.events == ["fetch:bad.txt", "evict:bad.txt"])
     }
 }
 
