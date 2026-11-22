@@ -135,11 +135,9 @@ final class CopyEngine: Sendable {
 
         func sourceFailureResult(reason: String) async -> CopyRunResult {
             failed += 1
-            await MainActor.run {
-                state.begin(itemsTotal: 0, bytesTotal: 0, startedAt: startedAt)
-                state.recordError(BackupFileError(path: sourceURL.path, reason: reason))
-                state.finish(cancelled: false)
-            }
+            await state.begin(itemsTotal: 0, bytesTotal: 0, startedAt: startedAt)
+            await state.recordError(BackupFileError(path: sourceURL.path, reason: reason))
+            await state.finish(cancelled: false)
             return CopyRunResult(
                 outcome: .failed,
                 itemsCopied: copied,
@@ -158,9 +156,7 @@ final class CopyEngine: Sendable {
             return await sourceFailureResult(reason: "Source directory could not be read.")
         }
 
-        await MainActor.run {
-            state.begin(itemsTotal: scan.files.count, bytesTotal: scan.totalBytes, startedAt: startedAt)
-        }
+        await state.begin(itemsTotal: scan.files.count, bytesTotal: scan.totalBytes, startedAt: startedAt)
 
         for relativeDirectory in scan.directories {
             let destinationDirectory = destinationURL.appendingPathComponent(relativeDirectory)
@@ -233,9 +229,7 @@ final class CopyEngine: Sendable {
         await publishIfDue(currentFile: lastFile, force: true)
         try? index.save()
         let cancelled = cancelFlag.isCancelled
-        await MainActor.run {
-            state.finish(cancelled: cancelled)
-        }
+        await state.finish(cancelled: cancelled)
         return CopyRunResult(
             outcome: cancelled ? .cancelled : .completed,
             itemsCopied: copied,

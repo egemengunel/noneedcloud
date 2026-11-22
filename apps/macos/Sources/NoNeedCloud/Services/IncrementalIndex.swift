@@ -58,7 +58,6 @@ final class IncrementalIndex: @unchecked Sendable {
         let digest = SHA256.hash(data: Data(source.path(percentEncoded: false).utf8))
         let fingerprint = digest.prefix(6).map { String(format: "%02x", $0) }.joined()
         return stateDirectory
-            .appendingPathComponent("RunState", isDirectory: true)
             .appendingPathComponent("index-\(sanitized)-\(fingerprint).json")
     }
 }

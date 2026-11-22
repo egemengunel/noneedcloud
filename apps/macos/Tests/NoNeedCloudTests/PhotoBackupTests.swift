@@ -24,6 +24,7 @@ final class MockPhotoLibrarySource: PhotoLibrarySource, @unchecked Sendable {
     private(set) var mutationCount = 0
     private(set) var factorySharesSeen = false
     var failExport = false
+    var failComponents: Set<PhotoComponentKind> = []
 
     init(assets: [PhotoAsset] = []) {
         self.assets = assets
@@ -61,7 +62,7 @@ final class MockPhotoLibrarySource: PhotoLibrarySource, @unchecked Sendable {
     func export(component: PhotoComponent, of asset: PhotoAsset, to destination: URL) async throws -> Int64 {
         record("start \(asset.localIdentifier) \(component.kind.rawValue)")
         await Task.yield()
-        if failExport {
+        if failExport || failComponents.contains(component.kind) {
             throw PhotoSourceError.componentUnavailable(component.filename)
         }
         let data = lock.withLock { dataByAsset[asset.localIdentifier]?[component] }
@@ -499,7 +500,7 @@ struct PhotoBackupCoordinatorTests {
         #expect(onSource.events.contains("enumerate shared=true"))
     }
 
-    @Test func assetsAreProcessedOneAtATTimeInOrder() async throws {
+    @Test func assetsAreProcessedOneAtATimeInOrder() async throws {
         let root = TestSupport.makeTempDirectory()
         defer { try? FileManager.default.removeItem(at: root) }
         let assets = (0..<3).map { index in
@@ -573,6 +574,36 @@ struct PhotoBackupCoordinatorTests {
         #expect(retry.itemsCopied == 1)
         #expect(retry.itemsProtected == 1)
         #expect(try readData("Photos/2024/07/15/A.jpg", in: destination) == Data("data".utf8))
+    }
+
+    @Test func partialExportFailureLeavesNoOrphanAndRetryUsesCanonicalName() async throws {
+        let root = TestSupport.makeTempDirectory()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let asset = PhotoTestFixtures.asset(id: "a", filename: "A.jpg", creation: PhotoTestClock.date(2024, 7, 15), hasEdits: true)
+        let original = PhotoTestFixtures.component(.original, "A.jpg", size: 4)
+        let edited = PhotoTestFixtures.component(.edited, "A_edited.heic", size: 5)
+        let source = MockPhotoLibrarySource(assets: [asset])
+        source.addData(assetId: "a", component: original, Data("orig".utf8))
+        source.addData(assetId: "a", component: edited, Data("edit".utf8))
+        let destination = root.appendingPathComponent("Dest", isDirectory: true)
+        let coordinator = makeCoordinator(source: source, destination: destination, stateURL: root.appendingPathComponent("photo.json"))
+        let dayFolder = destination.appendingPathComponent("Photos/2024/07/15", isDirectory: true)
+
+        source.failComponents = [.edited]
+        let first = await coordinator.run()
+        #expect(first.itemsCopied == 0)
+        #expect(first.itemsFailed == 1)
+        let filesAfterFirst = (try? FileManager.default.contentsOfDirectory(atPath: dayFolder.path)) ?? []
+        #expect(filesAfterFirst.isEmpty)
+
+        source.failComponents = []
+        let second = await coordinator.run()
+        #expect(second.outcome == .completed)
+        #expect(second.itemsCopied == 1)
+        #expect(try readData("A.jpg", in: dayFolder) == Data("orig".utf8))
+        #expect(try readData("A_edited.heic", in: dayFolder) == Data("edit".utf8))
+        let filesAfterSecond = (try? FileManager.default.contentsOfDirectory(atPath: dayFolder.path).sorted()) ?? []
+        #expect(filesAfterSecond == ["A.jpg", "A_edited.heic"])
     }
 
     @Test func stopBeforeRunProducesCancelledResult() async throws {

@@ -63,9 +63,7 @@ final class PhotoBackupCoordinator: @unchecked Sendable {
         func finish(outcome: CopyRunResult.Outcome) async -> CopyRunResult {
             try? index.save()
             let cancelled = outcome == .cancelled
-            await MainActor.run {
-                state.finish(cancelled: cancelled)
-            }
+            await state.finish(cancelled: cancelled)
             return CopyRunResult(
                 outcome: outcome,
                 itemsCopied: copied,
@@ -76,17 +74,13 @@ final class PhotoBackupCoordinator: @unchecked Sendable {
             )
         }
 
-        await MainActor.run {
-            state.begin(itemsTotal: 0, bytesTotal: 0, startedAt: startedAt)
-        }
+        await state.begin(itemsTotal: 0, bytesTotal: 0, startedAt: startedAt)
 
         let enumerated: [PhotoAsset]
         do {
             enumerated = try await source.enumerateAssets(includingShared: options.includeSharedAlbums)
         } catch {
-            await MainActor.run {
-                state.recordError(BackupFileError(path: destinationRoot.path, reason: error.localizedDescription))
-            }
+            await state.recordError(BackupFileError(path: destinationRoot.path, reason: error.localizedDescription))
             failed += 1
             return await finish(outcome: .failed)
         }
@@ -106,18 +100,14 @@ final class PhotoBackupCoordinator: @unchecked Sendable {
                 planned.append(PlannedAsset(asset: asset, components: components))
             } catch {
                 failed += 1
-                await MainActor.run {
-                    state.recordError(BackupFileError(path: asset.filename, reason: error.localizedDescription))
-                }
+                await state.recordError(BackupFileError(path: asset.filename, reason: error.localizedDescription))
             }
         }
 
         let totalBytes = planned.reduce(Int64(0)) {
             $0 + $1.components.reduce(Int64(0)) { $0 + ($1.byteSize ?? 0) }
         }
-        await MainActor.run {
-            state.begin(itemsTotal: planned.count, bytesTotal: totalBytes, startedAt: startedAt)
-        }
+        await state.begin(itemsTotal: planned.count, bytesTotal: totalBytes, startedAt: startedAt)
 
         var usedNames: [String: Set<String>] = [:]
 
@@ -164,10 +154,15 @@ final class PhotoBackupCoordinator: @unchecked Sendable {
                 } catch {
                     assetFailed = true
                     failed += 1
-                    await MainActor.run {
-                        state.recordError(BackupFileError(path: "\(folderPath)/\(component.filename)", reason: error.localizedDescription))
-                    }
+                    await state.recordError(BackupFileError(path: "\(folderPath)/\(component.filename)", reason: error.localizedDescription))
                     break
+                }
+            }
+            if assetFailed || cancelFlag.isCancelled {
+                for relativePath in assignedPaths.values {
+                    try? FileManager.default.removeItem(
+                        at: destinationRoot.appendingPathComponent(relativePath)
+                    )
                 }
             }
             if cancelFlag.isCancelled { break }

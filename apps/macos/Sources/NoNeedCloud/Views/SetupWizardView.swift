@@ -120,10 +120,10 @@ struct SourcesStep: View {
             if flow.usePhotoDateRange {
                 DatePicker("From", selection: $flow.photoDateRangeStart, displayedComponents: .date)
                 DatePicker("To", selection: $flow.photoDateRangeEnd, in: flow.photoDateRangeStart..., displayedComponents: .date)
-                Text("The System Photo Library is backed up at original quality, organized by date. iCloud assets are fetched on demand, one at a time.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             }
+            Text("The System Photo Library is backed up at original quality, organized by date. iCloud assets are fetched on demand, one at a time.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
         .padding(.leading, 20)
     }

@@ -17,7 +17,8 @@ final class PhotosFrameworkSource: PhotoLibrarySource, @unchecked Sendable {
                     }
                 }
         }
-        return assets
+        var seenIdentifiers = Set<String>()
+        return assets.filter { seenIdentifiers.insert($0.localIdentifier).inserted }
     }
 
     func components(for asset: PhotoAsset) async throws -> [PhotoComponent] {
