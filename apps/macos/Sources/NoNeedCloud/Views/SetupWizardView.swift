@@ -2,7 +2,7 @@ import SwiftUI
 
 struct SetupWizardView: View {
     @StateObject private var flow = SetupFlow()
-    let onFinish: (BackupPlan) -> Void
+    let onStartBackup: (BackupPlan) -> Void
 
     var body: some View {
         VStack(spacing: 0) {
@@ -33,7 +33,7 @@ struct SetupWizardView: View {
         switch flow.step {
         case .sources: SourcesStep(flow: flow)
         case .destination: DestinationStep(flow: flow)
-        case .startBackup: StartBackupStep(flow: flow, onFinish: onFinish)
+        case .startBackup: StartBackupStep(flow: flow, onStartBackup: onStartBackup)
         }
     }
 
@@ -147,7 +147,7 @@ struct DestinationStep: View {
 
 struct StartBackupStep: View {
     @ObservedObject var flow: SetupFlow
-    let onFinish: (BackupPlan) -> Void
+    let onStartBackup: (BackupPlan) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -158,24 +158,19 @@ struct StartBackupStep: View {
             }
 
             Button {
+                if let plan = flow.makePlan() {
+                    onStartBackup(plan)
+                }
             } label: {
                 Label("Start Your First Backup", systemImage: "arrow.down.circle.fill")
                     .font(.title3)
             }
             .controlSize(.large)
-            .disabled(true)
+            .disabled(flow.makePlan() == nil)
 
-            Text("Coming in the next build.")
+            Text("Your backup runs right away, then only changed files are copied next time.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
-
-            Button("Finish Setup") {
-                if let plan = flow.makePlan() {
-                    onFinish(plan)
-                }
-            }
-            .buttonStyle(.borderedProminent)
-            .keyboardShortcut(.defaultAction)
         }
         .padding(20)
     }

@@ -1,4 +1,3 @@
-import AppKit
 import SwiftUI
 
 struct AtAGlanceView: View {
@@ -14,14 +13,21 @@ struct AtAGlanceView: View {
                 HStack(spacing: 12) {
                     StatTile(
                         title: "Items Protected",
-                        value: "0",
-                        detail: "Nothing backed up yet"
+                        value: "\(model.itemsProtected)",
+                        detail: model.itemsProtected > 0 ? "In your latest backup" : "Nothing backed up yet"
                     )
                     StatTile(
                         title: "Last Backup",
-                        value: "Never",
-                        detail: "No backup has run"
+                        value: lastBackupText,
+                        detail: model.lastBackupDate == nil ? "No backup has run" : "Completed successfully"
                     )
+                }
+
+                if let engine = model.activeEngine {
+                    BackupProgressCard(state: engine.state, onStop: { model.stopBackup() })
+                } else if let plan = model.plans.first {
+                    Button("Start Backup") { model.startBackup(plan) }
+                        .controlSize(.large)
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
@@ -40,6 +46,75 @@ struct AtAGlanceView: View {
             .padding(28)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+    }
+
+    private var lastBackupText: String {
+        guard let lastBackupDate = model.lastBackupDate else { return "Never" }
+        return lastBackupDate.formatted(date: .abbreviated, time: .shortened)
+    }
+}
+struct BackupProgressCard: View {
+    @ObservedObject var state: CopyEngineState
+    let onStop: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text("Backup in Progress")
+                    .font(.headline)
+                Spacer()
+                Button("Stop", role: .destructive, action: onStop)
+                    .disabled(!state.isRunning)
+            }
+
+            ProgressView(value: state.percent) {
+                Text(percentText)
+                    .monospacedDigit()
+            }
+
+            if let currentFile = state.currentFile {
+                Text(currentFile)
+                    .font(.caption)
+                    .lineLimit(1)
+                    .truncationMode(.head)
+                    .textSelection(.enabled)
+            }
+
+            HStack(spacing: 16) {
+                LabeledContent("Copied") { Text("\(state.itemsCopied)") }
+                LabeledContent("Skipped") { Text("\(state.itemsSkipped)") }
+                LabeledContent("Total") { Text("\(state.itemsTotal)") }
+            }
+            .font(.callout)
+
+            HStack(spacing: 16) {
+                LabeledContent("Bytes") { Text(state.bytesCopied.formatted(.byteCount(style: .memory))) }
+                TimelineView(.periodic(from: .now, by: 1)) { _ in
+                    LabeledContent("Elapsed") { Text(elapsedText) }
+                }
+                LabeledContent("Started") {
+                    Text(state.startedAt?.formatted(date: .omitted, time: .standard) ?? "—")
+                }
+            }
+            .font(.callout)
+
+            if !state.errors.isEmpty {
+                Text("\(state.errors.count) item(s) skipped due to errors.")
+                    .font(.caption)
+                    .foregroundStyle(.orange)
+            }
+        }
+        .padding(16)
+        .background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 10))
+    }
+
+    private var percentText: String {
+        "\(Int((state.percent * 100).rounded()))%"
+    }
+
+    private var elapsedText: String {
+        Duration.seconds(state.elapsed)
+            .formatted(.units(allowed: [.hours, .minutes, .seconds], width: .abbreviated))
     }
 }
 

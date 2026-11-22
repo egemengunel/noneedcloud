@@ -22,7 +22,10 @@ struct RootView: View {
 
     var body: some View {
         if model.isSetupNeeded {
-            SetupWizardView { model.finishSetup($0) }
+            SetupWizardView { plan in
+                model.finishSetup(plan)
+                model.startBackup(plan)
+            }
         } else {
             AtAGlanceView(model: model)
         }
