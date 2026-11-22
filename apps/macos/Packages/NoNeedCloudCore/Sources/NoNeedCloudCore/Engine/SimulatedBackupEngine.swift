@@ -32,7 +32,14 @@ public struct SimulatedBackupEngine: BackupEngine {
         var path: String
         var kind: BackupProgress.SourceKind
         var bytes: Int64
+        var location: String
     }
+
+    static let sampleReasons = [
+        "The iCloud download stopped partway.",
+        "Writing to the destination was interrupted.",
+        "Permission is needed to read this file.",
+    ]
 
     func workList(for plan: BackupPlan) -> [WorkItem] {
         var items: [WorkItem] = []
@@ -42,7 +49,7 @@ public struct SimulatedBackupEngine: BackupEngine {
                 let isVideo = plan.photos.includeVideos && i % 9 == 0
                 let name = isVideo ? "IMG_\(4000 + i).MOV" : "IMG_\(4000 + i).HEIC"
                 let path = String(format: "Photos/%04d/%02d/%02d/", year, month, day) + name
-                items.append(WorkItem(path: path, kind: .photo, bytes: isVideo ? 48_000_000 : 3_200_000))
+                items.append(WorkItem(path: path, kind: .photo, bytes: isVideo ? 48_000_000 : 3_200_000, location: "iCloud Photos"))
             }
         }
         if plan.files.isEnabled {
@@ -51,7 +58,8 @@ public struct SimulatedBackupEngine: BackupEngine {
                     items.append(WorkItem(
                         path: "\(folder.displayName)/Document \(i + 1).pdf",
                         kind: .file,
-                        bytes: 420_000
+                        bytes: 420_000,
+                        location: folder.displayName
                     ))
                 }
             }
@@ -100,6 +108,11 @@ public struct SimulatedBackupEngine: BackupEngine {
 
             if let failEvery, (index + 1) % failEvery == 0 {
                 progress.failedItems += 1
+                progress.missedItems.append(MissedItem(
+                    name: (item.path as NSString).lastPathComponent,
+                    location: item.location,
+                    reason: Self.sampleReasons[(progress.failedItems - 1) % Self.sampleReasons.count]
+                ))
             } else {
                 progress.copiedItems += 1
                 progress.bytesWritten += item.bytes

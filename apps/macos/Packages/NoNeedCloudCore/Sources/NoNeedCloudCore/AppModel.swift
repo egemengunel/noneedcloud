@@ -128,7 +128,7 @@ public final class AppModel {
         return true
     }
 
-    public func startBackup() {
+    public func startBackup(trigger: BackupRun.Trigger = .manual) {
         guard canStartBackup else { return }
         let plan = self.plan
         let startedAt = now()
@@ -161,7 +161,7 @@ public final class AppModel {
                 outcome = Task.isCancelled ? .cancelled : .failed
                 failureReason = Task.isCancelled ? nil : error.localizedDescription
             }
-            finishRun(plan: plan, progress: latest, outcome: outcome, failureReason: failureReason)
+            finishRun(plan: plan, progress: latest, outcome: outcome, trigger: trigger, failureReason: failureReason)
         }
     }
 
@@ -174,7 +174,13 @@ public final class AppModel {
         await runTask?.value
     }
 
-    private func finishRun(plan: BackupPlan, progress: BackupProgress, outcome: BackupRun.Outcome, failureReason: String?) {
+    private func finishRun(
+        plan: BackupPlan,
+        progress: BackupProgress,
+        outcome: BackupRun.Outcome,
+        trigger: BackupRun.Trigger,
+        failureReason: String?
+    ) {
         let previous = lastCompletedRun
         let completed = outcome == .succeeded || outcome == .completedWithErrors
         let run = BackupRun(
@@ -182,13 +188,16 @@ public final class AppModel {
             startedAt: progress.startedAt,
             finishedAt: now(),
             outcome: outcome,
+            trigger: trigger,
             failureReason: failureReason,
             // An interrupted run only proves what it reached; keep the larger known total.
             protectedPhotos: completed ? progress.processedPhotos : max(progress.processedPhotos, previous?.protectedPhotos ?? 0),
             protectedFiles: completed ? progress.processedFiles : max(progress.processedFiles, previous?.protectedFiles ?? 0),
+            processedItems: progress.processedItems,
             copiedItems: progress.copiedItems,
             failedItems: progress.failedItems,
-            bytesWritten: progress.bytesWritten
+            bytesWritten: progress.bytesWritten,
+            missedItems: progress.missedItems
         )
         runs.append(run)
         self.progress = nil

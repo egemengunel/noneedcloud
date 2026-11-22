@@ -37,6 +37,8 @@ public struct BackupProgress: Equatable, Sendable {
     public var processedPhotos: Int
     public var processedFiles: Int
     public var bytesWritten: Int64
+    /// Files that couldn't be copied so far in this run.
+    public var missedItems: [MissedItem]
     public var currentItem: CurrentItem?
     public var startedAt: Date
     public var estimatedRemaining: TimeInterval?
@@ -50,6 +52,7 @@ public struct BackupProgress: Equatable, Sendable {
         processedPhotos: Int = 0,
         processedFiles: Int = 0,
         bytesWritten: Int64 = 0,
+        missedItems: [MissedItem] = [],
         currentItem: CurrentItem? = nil,
         startedAt: Date,
         estimatedRemaining: TimeInterval? = nil
@@ -62,6 +65,7 @@ public struct BackupProgress: Equatable, Sendable {
         self.processedPhotos = processedPhotos
         self.processedFiles = processedFiles
         self.bytesWritten = bytesWritten
+        self.missedItems = missedItems
         self.currentItem = currentItem
         self.startedAt = startedAt
         self.estimatedRemaining = estimatedRemaining
