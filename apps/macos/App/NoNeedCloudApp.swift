@@ -18,9 +18,12 @@ struct NoNeedCloudApp: App {
         }
     )
 
+    @State private var router = AppRouter()
+
     var body: some Scene {
         Window("NoNeedCloud", id: WindowID.main) {
             MainWindowView(model: model)
+                .environment(router)
                 .frame(minWidth: 960, minHeight: 600)
                 .task {
                     #if DEBUG
@@ -43,16 +46,9 @@ struct NoNeedCloudApp: App {
                 }
             }
             CommandGroup(after: .windowArrangement) {
-                OpenHistoryButton()
+                OpenHistoryButton(router: router)
             }
         }
-
-        Window("Backup History", id: WindowID.history) {
-            HistoryView(model: model)
-                .frame(minWidth: 960, minHeight: 600)
-        }
-        .defaultSize(width: 1120, height: 710)
-        .windowToolbarStyle(.unified)
 
         Settings {
             SettingsView(model: model)
@@ -62,14 +58,14 @@ struct NoNeedCloudApp: App {
 
 enum WindowID {
     static let main = "main"
-    static let history = "history"
 }
 
 private struct OpenHistoryButton: View {
+    let router: AppRouter
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
-        Button("Backup History") { openWindow(id: WindowID.history) }
+        Button("Backup History") { router.showMainWindow(history: true, openWindow: openWindow) }
             .keyboardShortcut("y", modifiers: [.command])
     }
 }

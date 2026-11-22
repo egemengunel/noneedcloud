@@ -27,6 +27,7 @@
 		8225685EF5D78E7251ACB011 /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D85D36EDE5C9A59305C110 /* Formatting.swift */; };
 		9168325946564BDD659915F6 /* FolderPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C75BC82650C21A423C1C74 /* FolderPicker.swift */; };
 		9E3999DF6B087FC1C4995019 /* AttentionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F37761E66705831266FA580 /* AttentionView.swift */; };
+		AC15EA60912293B93EE30E86 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AAFB303E8CAC5C37B76C247 /* AppRouter.swift */; };
 		CB2A75C1DD11C90DEAC58B0D /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F650A67DBF1559C8EFC1994 /* PreviewData.swift */; };
 		CB6F5E2F817EC8004D319F6F /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601752050A6DEA1D381B5373 /* WelcomeView.swift */; };
 		D2CCF22336B37A356F4CB965 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = FA17A56FA094F1078512A15A /* AppIcon.icon */; };
@@ -49,6 +50,7 @@
 		601752050A6DEA1D381B5373 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		71C75BC82650C21A423C1C74 /* FolderPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderPicker.swift; sourceTree = "<group>"; };
 		77007923CBCF052DBEEDC2F3 /* PhotosSettingsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosSettingsSheet.swift; sourceTree = "<group>"; };
+		8AAFB303E8CAC5C37B76C247 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		91491D9FBDE28D4E92D15C43 /* SchedulePopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulePopover.swift; sourceTree = "<group>"; };
 		9AD7D207C5371ECC0901CAE3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		9F37761E66705831266FA580 /* AttentionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttentionView.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 		47131B652463BC120D15362C /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				8AAFB303E8CAC5C37B76C247 /* AppRouter.swift */,
 				71C75BC82650C21A423C1C74 /* FolderPicker.swift */,
 				11D85D36EDE5C9A59305C110 /* Formatting.swift */,
 				CD2B0291D8AB68E874FC6CF2 /* PhotosAccess.swift */,
@@ -310,6 +313,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC15EA60912293B93EE30E86 /* AppRouter.swift in Sources */,
 				9E3999DF6B087FC1C4995019 /* AttentionView.swift in Sources */,
 				27B840A94D8B5A5956857678 /* Components.swift in Sources */,
 				E6AC50133917B9C456F70240 /* DestinationSheet.swift in Sources */,

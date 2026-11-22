@@ -9,6 +9,7 @@ struct MainWindowView: View {
     enum LaunchPhase { case loading, onboarding, app }
 
     let model: AppModel
+    @Environment(AppRouter.self) private var router
     /// Every launch starts at `.loading`; nothing is persisted, so onboarding shows each time.
     @State private var phase: LaunchPhase
     @State private var activeSheet: SetupSheet?
@@ -39,6 +40,11 @@ struct MainWindowView: View {
                 }
                 .ignoresSafeArea()
                 .transition(.opacity)
+            } else if router.showsHistory {
+                HistoryView(model: model) {
+                    withAnimation(.smooth(duration: 0.3)) { router.showsHistory = false }
+                }
+                .transition(.opacity)
             } else {
                 content
                     .padding(.horizontal, 27)
@@ -61,6 +67,7 @@ struct MainWindowView: View {
             }
         }
         .animation(.smooth(duration: 0.25), value: model.screenState)
+        .animation(.smooth(duration: 0.3), value: router.showsHistory)
         .onReceive(NotificationCenter.default.publisher(for: .showWelcome)) { _ in
             withAnimation { phase = .onboarding }
         }
@@ -85,9 +92,11 @@ struct MainWindowView: View {
 
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
-        AppTitleToolbarItem(onDark: showsWelcome)
+        if !router.showsHistory || showsWelcome {
+            AppTitleToolbarItem(onDark: showsWelcome)
+        }
 
-        if !showsWelcome {
+        if !showsWelcome && !router.showsHistory {
             TrailingToolbarSpacer()
             ToolbarItemGroup(placement: .automatic) {
                 if model.screenState.setupStep != nil {
@@ -128,10 +137,13 @@ struct AppTitleToolbarItem: ToolbarContent {
         if title == "NoNeedCloud" {
             // The main window shows the wordmark as its logo.
             Wordmark(color: onDark ? .white : Theme.ink, height: 20)
+                // Optical alignment: sit level with the traffic lights.
+                .offset(y: -2)
                 .padding(.horizontal, 4)
         } else {
             HStack(spacing: 10) {
                 BrandCloud(color: Theme.ink, width: 24)
+                    .offset(y: -1)
                 Text(verbatim: title)
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(Theme.ink)
@@ -207,11 +219,11 @@ struct SetupActions {
 }
 
 private struct HistoryToolbarButton: View {
-    @Environment(\.openWindow) private var openWindow
+    @Environment(AppRouter.self) private var router
 
     var body: some View {
         Button {
-            openWindow(id: WindowID.history)
+            withAnimation(.smooth(duration: 0.3)) { router.showsHistory = true }
         } label: {
             Label("History", systemImage: "clock")
                 .labelStyle(.titleAndIcon)

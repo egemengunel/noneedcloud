@@ -190,6 +190,7 @@ private struct SnapshotScreen: View {
             }
         }
         .environment(\.colorScheme, .light)
+        .environment(AppRouter())
         // A snapshot is one frame: render entrance animations at their end state.
         .transaction { $0.animation = nil }
     }
@@ -197,9 +198,9 @@ private struct SnapshotScreen: View {
 
 #Preview("Launch") { LaunchView().frame(width: 1000, height: 588) }
 #Preview("Welcome") { WelcomeView {}.frame(width: 1000, height: 588) }
-#Preview("Setup · Sources") { MainWindowView(model: PreviewData.model("setup1"), startingAt: .app).frame(width: 1000, height: 650) }
-#Preview("Setup · Destination") { MainWindowView(model: PreviewData.model("setup2"), startingAt: .app).frame(width: 1000, height: 650) }
-#Preview("Protected") { MainWindowView(model: PreviewData.model("protected"), startingAt: .app).frame(width: 1000, height: 650) }
-#Preview("History") { HistoryView(model: PreviewData.model("history")).frame(width: 1120, height: 650) }
-#Preview("Needs attention") { MainWindowView(model: PreviewData.model("attention"), startingAt: .app).frame(width: 1000, height: 650) }
+#Preview("Setup · Sources") { MainWindowView(model: PreviewData.model("setup1"), startingAt: .app).frame(width: 1000, height: 650).environment(AppRouter()) }
+#Preview("Setup · Destination") { MainWindowView(model: PreviewData.model("setup2"), startingAt: .app).frame(width: 1000, height: 650).environment(AppRouter()) }
+#Preview("Protected") { MainWindowView(model: PreviewData.model("protected"), startingAt: .app).frame(width: 1000, height: 650).environment(AppRouter()) }
+#Preview("History") { HistoryView(model: PreviewData.model("history")).frame(width: 1120, height: 650).environment(AppRouter()) }
+#Preview("Needs attention") { MainWindowView(model: PreviewData.model("attention"), startingAt: .app).frame(width: 1000, height: 650).environment(AppRouter()) }
 #endif

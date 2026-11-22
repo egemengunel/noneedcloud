@@ -6,6 +6,8 @@ import SwiftUI
 /// and missed files on the right.
 struct HistoryView: View {
     let model: AppModel
+    /// Returns to the backup status screen.
+    var onBack: () -> Void = {}
     @State private var filter: RunHistory.Filter = .all
     @State private var search = ""
     @State private var selectedID: BackupRun.ID?
@@ -30,13 +32,18 @@ struct HistoryView: View {
                 )
             } else {
                 HStack(spacing: 0) {
-                    RunList(days: days, filter: $filter, selectedID: selectedRun?.id) { selectedID = $0 }
+                    RunList(days: days, filter: $filter, selectedID: selectedRun?.id) { id in
+                        withAnimation(.easeInOut(duration: 0.22)) { selectedID = id }
+                    }
                         .frame(width: 330)
                         .padding(12)
                     Rectangle().fill(Theme.lightLine).frame(width: 1)
                     Group {
                         if let run = selectedRun {
+                            // Switching runs cross-fades the detail.
                             RunDetail(model: model, run: run)
+                                .id(run.id)
+                                .transition(.opacity)
                         } else {
                             ContentUnavailableView.search(text: search)
                         }
@@ -46,10 +53,20 @@ struct HistoryView: View {
             }
         }
         .background(Theme.window)
-        .toolbar { AppTitleToolbarItem(title: String(localized: "Backup History")) }
+        .toolbar {
+            ToolbarItem(placement: .navigation) {
+                Button(action: onBack) {
+                    Label("Back", systemImage: "chevron.left")
+                }
+                .help("Back to backup status")
+                .keyboardShortcut("[", modifiers: .command)
+            }
+            AppTitleToolbarItem(title: String(localized: "Backup History"))
+        }
         .toolbar(removing: .title)
         .searchable(text: $search, placement: .toolbar, prompt: Text("Search history"))
         .navigationTitle(Text("Backup History"))
+        .onExitCommand(perform: onBack)
     }
 }
 

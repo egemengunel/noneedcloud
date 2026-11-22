@@ -8,7 +8,7 @@ struct AttentionView: View {
     let model: AppModel
     let issue: AttentionIssue
     let actions: SetupActions
-    @Environment(\.openWindow) private var openWindow
+    @Environment(AppRouter.self) private var router
 
     private var destinationName: String {
         Formatting.destinationName(model.plan)
@@ -177,7 +177,7 @@ struct AttentionView: View {
                 title: String(localized: "See what happened"),
                 subtitle: String(localized: "Backup history lists every run and missed item."),
                 showsChevron: true,
-                action: { openWindow(id: WindowID.history) }
+                action: { router.showsHistory = true }
             )
         }
     }
