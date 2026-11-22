@@ -142,4 +142,33 @@ struct AppModelTests {
         #expect(model.addedSinceFirstRun == 35)
         #expect(model.protectedSince == store.runs[0].finishedAt)
     }
+
+    @Test func throttledUpdateIsShownWhenEngineGoesQuiet() async throws {
+        let store = MemoryStore()
+        store.plans = [TestSupport.makePlan()]
+        let model = AppModel(store: store, engine: StallingEngine(), minimumUpdateInterval: 0.1)
+
+        model.startBackup()
+        try await Task.sleep(for: .milliseconds(400))
+        #expect(model.progress?.processedItems == 5)
+        model.stopBackup()
+        await model.waitForCurrentRun()
+    }
+}
+
+/// Emits a burst of updates, then stalls (like a slow iCloud download).
+private struct StallingEngine: BackupEngine {
+    func run(_ plan: BackupPlan) -> AsyncThrowingStream<BackupProgress, any Error> {
+        AsyncThrowingStream { continuation in
+            let task = Task {
+                let start = Date()
+                for processed in 1...5 {
+                    continuation.yield(BackupProgress(phase: .copying, totalItems: 10, processedItems: processed, startedAt: start))
+                }
+                try? await Task.sleep(for: .seconds(10))
+                continuation.finish()
+            }
+            continuation.onTermination = { _ in task.cancel() }
+        }
+    }
 }

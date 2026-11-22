@@ -14,6 +14,8 @@ public final class AppModel {
     @ObservationIgnored private let now: @Sendable () -> Date
     @ObservationIgnored private let minimumUpdateInterval: TimeInterval
     @ObservationIgnored private var runTask: Task<Void, Never>?
+    /// Shows the newest throttled update once the engine goes quiet.
+    @ObservationIgnored private var trailingUpdate: Task<Void, Never>?
     @ObservationIgnored private let loginItem: LoginItemControl?
     /// Anchor for the first scheduled run when the plan has never run.
     @ObservationIgnored private let launchedAt: Date
@@ -185,11 +187,22 @@ public final class AppModel {
                 for try await update in engine.run(plan) {
                     latest = update
                     let time = now()
-                    if update.phase != progress?.phase || time.timeIntervalSince(lastApplied) >= minimumUpdateInterval {
+                    let wait = minimumUpdateInterval - time.timeIntervalSince(lastApplied)
+                    trailingUpdate?.cancel()
+                    trailingUpdate = nil
+                    if update.phase != progress?.phase || wait <= 0 {
                         progress = update
                         lastApplied = time
+                    } else {
+                        trailingUpdate = Task { [weak self] in
+                            try? await Task.sleep(for: .seconds(wait))
+                            guard !Task.isCancelled, let self, self.isRunning else { return }
+                            self.progress = update
+                        }
                     }
                 }
+                trailingUpdate?.cancel()
+                trailingUpdate = nil
                 if Task.isCancelled || latest.phase != .finished {
                     outcome = .cancelled
                 } else {

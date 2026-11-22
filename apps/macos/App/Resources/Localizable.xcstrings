@@ -2869,12 +2869,12 @@
         }
       }
     },
-    "You can stop the backup without deleting existing copies.  ·  Preview build: simulated, no files are copied.": {
+    "You can stop the backup without deleting existing copies.": {
       "localizations": {
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mevcut kopyaları silmeden yedeklemeyi durdurabilirsin.  ·  Önizleme sürümü: simülasyon, dosya kopyalanmaz."
+            "value": "Mevcut kopyaları silmeden yedeklemeyi durdurabilirsin."
           }
         }
       }
