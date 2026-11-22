@@ -63,6 +63,32 @@ enum PreviewData {
         ]
     }
 
+    /// The five runs from the Figma history frame.
+    static func historyRuns(for plan: BackupPlan) -> [BackupRun] {
+        let cal = Calendar.current
+        func at(_ daysAgo: Int, _ h: Int, _ m: Int) -> Date {
+            cal.date(byAdding: .day, value: -daysAgo, to: cal.date(bySettingHour: h, minute: m, second: 0, of: .now)!)!
+        }
+        let missed = [
+            MissedItem(name: "IMG_2841.HEIC", location: "iCloud Photos", reason: "The iCloud download stopped partway."),
+            MissedItem(name: "Family archive.mov", location: "iCloud Photos", reason: "Writing to the destination was interrupted."),
+            MissedItem(name: "Old contract.pdf", location: "iCloud Drive / Documents", reason: "Permission is needed to read this file."),
+        ]
+        return [
+            BackupRun(planID: plan.id, startedAt: at(2, 23, 2), finishedAt: at(2, 23, 20), outcome: .succeeded, trigger: .scheduled,
+                      protectedPhotos: 24_100, protectedFiles: 3_150, processedItems: 27_250, copiedItems: 310, bytesWritten: 4_000_000_000),
+            BackupRun(planID: plan.id, startedAt: at(1, 16, 44), finishedAt: at(1, 16, 52), outcome: .cancelled,
+                      protectedPhotos: 24_100, protectedFiles: 3_150, processedItems: 9_000, copiedItems: 120, bytesWritten: 900_000_000),
+            BackupRun(planID: plan.id, startedAt: at(1, 22, 51), finishedAt: at(1, 23, 5), outcome: .succeeded, trigger: .scheduled,
+                      protectedPhotos: 24_500, protectedFiles: 3_190, processedItems: 27_380, copiedItems: 402, bytesWritten: 6_000_000_000),
+            BackupRun(planID: plan.id, startedAt: at(0, 9, 18), finishedAt: at(0, 9, 30), outcome: .succeeded,
+                      protectedPhotos: 24_700, protectedFiles: 3_200, processedItems: 27_420, copiedItems: 96, bytesWritten: 1_200_000_000),
+            BackupRun(planID: plan.id, startedAt: at(0, 9, 41), finishedAt: at(0, 10, 16), outcome: .completedWithErrors,
+                      protectedPhotos: 24_860, protectedFiles: 3_214, processedItems: 27_462, copiedItems: 2_498, failedItems: 3,
+                      bytesWritten: 33_000_000_000, missedItems: missed),
+        ]
+    }
+
     static func model(_ state: String) -> AppModel {
         let today918 = Calendar.current.date(bySettingHour: 9, minute: 18, second: 0, of: .now)!
         switch state {
@@ -85,6 +111,9 @@ enum PreviewData {
                 startedAt: Date().addingTimeInterval(-19 * 60), estimatedRemaining: 14 * 60
             )
             return AppModel(store: Store(plans: [plan], runs: runs(for: plan, lastFinished: today918)), engine: FrozenEngine(progress: progress))
+        case "history":
+            let plan = plan()
+            return AppModel(store: Store(plans: [plan], runs: historyRuns(for: plan)), engine: SimulatedBackupEngine())
         default: // protected
             let plan = plan()
             return AppModel(store: Store(plans: [plan], runs: runs(for: plan, lastFinished: today918)), engine: SimulatedBackupEngine())
@@ -101,15 +130,16 @@ enum SnapshotRenderer {
         Task { @MainActor in
             let outDir = URL(fileURLWithPath: dir, isDirectory: true)
             try? FileManager.default.createDirectory(at: outDir, withIntermediateDirectories: true)
-            for state in ["launch", "welcome", "setup1", "setup2", "setup3", "protected", "running", "attention"] {
+            for state in ["launch", "welcome", "setup1", "setup2", "setup3", "protected", "running", "attention", "history"] {
                 let model = PreviewData.model(state)
                 await model.refreshHealth()
                 if state == "running" {
                     model.startBackup()
                     try? await Task.sleep(for: .milliseconds(300))
                 }
+                let size = state == "history" ? CGSize(width: 1120, height: 648) : CGSize(width: 1000, height: 588)
                 let root = SnapshotScreen(model: model, state: state)
-                    .frame(width: 1000, height: 588)
+                    .frame(width: size.width, height: size.height)
                 let renderer = ImageRenderer(content: root)
                 renderer.scale = 2
                 if let image = renderer.nsImage,
@@ -132,7 +162,9 @@ private struct SnapshotScreen: View {
     var body: some View {
         let actions = SetupActions(model: model, showSheet: { _ in })
         Group {
-            if state == "launch" {
+            if state == "history" {
+                HistoryView(model: model)
+            } else if state == "launch" {
                 LaunchView()
             } else if state == "welcome" {
                 WelcomeView {}
@@ -168,5 +200,6 @@ private struct SnapshotScreen: View {
 #Preview("Setup · Sources") { MainWindowView(model: PreviewData.model("setup1"), startingAt: .app).frame(width: 1000, height: 650) }
 #Preview("Setup · Destination") { MainWindowView(model: PreviewData.model("setup2"), startingAt: .app).frame(width: 1000, height: 650) }
 #Preview("Protected") { MainWindowView(model: PreviewData.model("protected"), startingAt: .app).frame(width: 1000, height: 650) }
+#Preview("History") { HistoryView(model: PreviewData.model("history")).frame(width: 1120, height: 650) }
 #Preview("Needs attention") { MainWindowView(model: PreviewData.model("attention"), startingAt: .app).frame(width: 1000, height: 650) }
 #endif
