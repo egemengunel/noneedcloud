@@ -6,10 +6,12 @@ enum FolderPicker {
     @MainActor
     static func chooseFolders(
         message: String,
-        prompt: String = "Choose",
-        allowsMultiple: Bool = true
+        prompt: String = String(localized: "Choose"),
+        allowsMultiple: Bool = true,
+        startingAt directory: URL? = nil
     ) -> [FolderReference] {
         let panel = NSOpenPanel()
+        panel.directoryURL = directory
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
         panel.allowsMultipleSelection = allowsMultiple
@@ -29,11 +31,15 @@ enum FolderPicker {
     }
 
     @MainActor
-    static func chooseDestination() -> FolderReference? {
+    static func chooseDestination(
+        startingAt directory: URL? = URL(fileURLWithPath: "/Volumes"),
+        message: String = String(localized: "Choose a folder on a drive you own. NoNeedCloud keeps your backup inside it.")
+    ) -> FolderReference? {
         chooseFolders(
-            message: "Choose a folder on a drive you own. NoNeedCloud keeps your backup inside it.",
-            prompt: "Use as Destination",
-            allowsMultiple: false
+            message: message,
+            prompt: String(localized: "Use as Destination"),
+            allowsMultiple: false,
+            startingAt: directory
         ).first
     }
 }

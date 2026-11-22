@@ -2,28 +2,32 @@ import AppKit
 import NoNeedCloudCore
 import SwiftUI
 
-/// The whole app in one window (UX spec §1–3): header, a status area that
-/// changes with state, the always-visible "Your setup" list, and one primary
-/// button that never moves.
+/// The one main window. Shows the welcome screen on first launch, then the
+/// screen for the current `MainScreenState` (Figma scenarios 01–04).
 struct MainWindowView: View {
     let model: AppModel
+    @AppStorage("hasSeenWelcome") private var hasSeenWelcome = false
     @State private var activeSheet: SetupSheet?
 
+    private var showsWelcome: Bool { !hasSeenWelcome && model.lastCompletedRun == nil }
+
     var body: some View {
-        VStack(spacing: 0) {
-            HeaderView()
-            ScrollView {
-                VStack(alignment: .leading, spacing: 28) {
-                    StatusArea(model: model, actions: actions)
-                    YourSetupSection(model: model, actions: actions)
-                }
-                .padding(.horizontal, 28)
-                .padding(.vertical, 20)
-                .frame(maxWidth: .infinity, alignment: .leading)
+        Group {
+            if showsWelcome {
+                WelcomeView { withAnimation(.smooth(duration: 0.35)) { hasSeenWelcome = true } }
+                    .transition(.opacity)
+            } else {
+                content
+                    .padding(.horizontal, 27)
+                    .padding(.top, 23)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    .background(Theme.window)
+                    .transition(.opacity)
             }
-            Divider()
-            PrimaryButtonBar(model: model)
         }
+        .toolbar { toolbarContent }
+        .toolbar(removing: .title)
+        .toolbarBackground(showsWelcome ? Theme.navy : Theme.window, for: .windowToolbar)
         .sheet(item: $activeSheet) { sheet in
             switch sheet {
             case .photos: PhotosSettingsSheet(model: model, actions: actions)
@@ -32,6 +36,53 @@ struct MainWindowView: View {
             }
         }
         .animation(.smooth(duration: 0.25), value: model.screenState)
+        .onReceive(NotificationCenter.default.publisher(for: .showWelcome)) { _ in
+            withAnimation { hasSeenWelcome = false }
+        }
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        switch model.screenState {
+        case let .setup(reached):
+            SetupFlowView(model: model, reached: reached, actions: actions)
+                .padding(.horizontal, -4)
+        case .running:
+            if let progress = model.progress {
+                RunningView(model: model, progress: progress)
+            }
+        case .protected:
+            ProtectedView(model: model, actions: actions)
+        case let .needsAttention(issue):
+            AttentionView(model: model, issue: issue, actions: actions)
+        }
+    }
+
+    @ToolbarContentBuilder
+    private var toolbarContent: some ToolbarContent {
+        ToolbarItem(placement: .navigation) {
+            HStack(spacing: 10) {
+                BrandCloud(color: showsWelcome ? Theme.lightBlue : Theme.ink, width: 24)
+                Text("NoNeedCloud")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(showsWelcome ? .white : Theme.ink)
+            }
+            .padding(.horizontal, 4)
+        }
+
+        if !showsWelcome {
+            ToolbarItemGroup(placement: .primaryAction) {
+                if model.screenState.setupStep != nil {
+                    AboutSetupButton()
+                } else {
+                    HistoryToolbarButton()
+                    SettingsLink {
+                        Label("Settings", systemImage: "gearshape")
+                    }
+                    .help("Settings")
+                }
+            }
+        }
     }
 
     private var actions: SetupActions {
@@ -39,12 +90,16 @@ struct MainWindowView: View {
     }
 }
 
+extension Notification.Name {
+    static let showWelcome = Notification.Name("NoNeedCloud.showWelcome")
+}
+
 enum SetupSheet: String, Identifiable {
     case photos, folders, destination
     var id: String { rawValue }
 }
 
-/// The setup actions shared by the status cards and the "Your setup" rows.
+/// The setup actions shared by the setup flow and the status screens.
 @MainActor
 struct SetupActions {
     let model: AppModel
@@ -69,7 +124,7 @@ struct SetupActions {
     }
 
     func chooseFolders() {
-        let folders = FolderPicker.chooseFolders(message: "Choose the folders you want to protect.", prompt: "Add")
+        let folders = FolderPicker.chooseFolders(message: String(localized: "Choose the folders you want to protect."), prompt: String(localized: "Add"))
         if !folders.isEmpty { model.addFolders(folders) }
     }
 
@@ -78,67 +133,50 @@ struct SetupActions {
             model.setDestination(destination)
         }
     }
-}
 
-private struct HeaderView: View {
-    @Environment(\.openWindow) private var openWindow
-
-    var body: some View {
-        HStack(spacing: 10) {
-            Image(nsImage: NSApplication.shared.applicationIconImage)
-                .resizable()
-                .frame(width: 34, height: 34)
-                .accessibilityHidden(true)
-            Text("NoNeedCloud")
-                .font(.title2.weight(.semibold))
-            Spacer()
-            Button {
-                openWindow(id: WindowID.history)
-            } label: {
-                Label("History", systemImage: "clock.arrow.circlepath")
-            }
-            .help("Show backup history")
+    /// Network shares must be mounted first (Finder → Go → Connect to Server, ⌘K).
+    func chooseNetworkDestination() {
+        if let destination = FolderPicker.chooseDestination(
+            startingAt: URL(fileURLWithPath: "/Volumes"),
+            message: String(localized: "Choose a folder on your network drive. If it isn't listed, connect to it in Finder first (Go → Connect to Server).")
+        ) {
+            model.setDestination(destination)
         }
-        .padding(.horizontal, 28)
-        .padding(.top, 18)
-        .padding(.bottom, 8)
     }
 }
 
-private struct PrimaryButtonBar: View {
-    let model: AppModel
+private struct HistoryToolbarButton: View {
+    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
-        HStack {
-            if let error = model.saveError {
-                Label("Couldn't save your settings: \(error)", systemImage: "exclamationmark.triangle")
-                    .font(.caption)
-                    .foregroundStyle(.orange)
-                    .lineLimit(2)
-            }
-            Spacer()
-            if model.isRunning {
-                Button(role: .cancel) {
-                    model.stopBackup()
-                } label: {
-                    Label("Stop", systemImage: "stop.fill")
-                        .frame(minWidth: 140)
-                }
-                .keyboardShortcut(".", modifiers: .command)
-            } else {
-                Button {
-                    model.startBackup()
-                } label: {
-                    Label("Start Backup", systemImage: "arrow.down.to.line")
-                        .frame(minWidth: 140)
-                }
-                .buttonStyle(.borderedProminent)
-                .keyboardShortcut(.defaultAction)
-                .disabled(!model.canStartBackup)
-            }
+        Button {
+            openWindow(id: WindowID.history)
+        } label: {
+            Label("History", systemImage: "clock")
+                .labelStyle(.titleAndIcon)
         }
-        .controlSize(.large)
-        .padding(.horizontal, 28)
-        .padding(.vertical, 16)
+        .help("Show backup history")
+    }
+}
+
+private struct AboutSetupButton: View {
+    @State private var showing = false
+
+    var body: some View {
+        Button { showing.toggle() } label: {
+            Label("About Setup", systemImage: "info.circle")
+        }
+        .help("About setup")
+        .popover(isPresented: $showing, arrowEdge: .bottom) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Three steps to your first backup")
+                    .font(.headline)
+                Text("Pick what to protect, choose where to keep it, then review and start. You can change everything later.")
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(16)
+            .frame(width: 280)
+        }
     }
 }

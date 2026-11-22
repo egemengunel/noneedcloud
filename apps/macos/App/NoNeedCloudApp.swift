@@ -9,9 +9,11 @@ struct NoNeedCloudApp: App {
         // The real copy engine replaces this in M2.
         engine: SimulatedBackupEngine(),
         healthCheck: { plan in
-            HealthSnapshot(
-                destinationAvailable: plan.destination.map(DestinationHealth.isAvailable) ?? true,
-                photosAccessGranted: PhotosAccess.isGranted
+            let details = plan.destination.flatMap(DestinationHealth.inspect)
+            return HealthSnapshot(
+                destinationAvailable: plan.destination == nil || details != nil,
+                photosAccessGranted: PhotosAccess.isGranted,
+                destination: details
             )
         }
     )
@@ -19,15 +21,22 @@ struct NoNeedCloudApp: App {
     var body: some Scene {
         Window("NoNeedCloud", id: WindowID.main) {
             MainWindowView(model: model)
-                .frame(minWidth: 640, idealWidth: 720, minHeight: 640, idealHeight: 700)
+                .frame(minWidth: 960, minHeight: 600)
                 .task { await model.refreshHealth() }
                 .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
                     Task { await model.refreshHealth() }
                 }
         }
+        .defaultSize(width: 1000, height: 650)
         .windowResizability(.contentMinSize)
+        .windowToolbarStyle(.unified)
         .commands {
             CommandGroup(replacing: .newItem) {}
+            CommandGroup(after: .appInfo) {
+                Button("Show Welcome Screen") {
+                    NotificationCenter.default.post(name: .showWelcome, object: nil)
+                }
+            }
             CommandGroup(after: .windowArrangement) {
                 OpenHistoryButton()
             }
@@ -38,6 +47,10 @@ struct NoNeedCloudApp: App {
                 .frame(minWidth: 520, minHeight: 360)
         }
         .defaultSize(width: 620, height: 460)
+
+        Settings {
+            SettingsView(model: model)
+        }
     }
 }
 
