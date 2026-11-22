@@ -25,7 +25,7 @@ cat > "$APP/Contents/Info.plist" <<'EOF'
 	<key>CFBundleExecutable</key>
 	<string>NoNeedCloud</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.parachuteclone.app</string>
+	<string>com.noneedcloud.app</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
