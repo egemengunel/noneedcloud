@@ -1,0 +1,2448 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%@  ·  %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@  ·  %2$@"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@  ·  %2$@"
+          }
+        }
+      }
+    },
+    "%@  →  %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@  →  %2$@"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@  →  %2$@"
+          }
+        }
+      }
+    },
+    "%@ / %@ items processed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ / %2$@ items processed"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ / %2$@ öğe işlendi"
+          }
+        }
+      }
+    },
+    "%@ and %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ and %2$@"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ ve %2$@"
+          }
+        }
+      }
+    },
+    "%@ connected": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ bağlı"
+          }
+        }
+      }
+    },
+    "%@ free": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ boş"
+          }
+        }
+      }
+    },
+    "%@ items": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ öğe"
+          }
+        }
+      }
+    },
+    "%@ items left": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ öğe kaldı"
+          }
+        }
+      }
+    },
+    "%lld": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
+          }
+        }
+      }
+    },
+    "%lld folders": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld klasör"
+          }
+        }
+      }
+    },
+    "1 item": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 öğe"
+          }
+        }
+      }
+    },
+    "About %@ left": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yaklaşık %@ kaldı"
+          }
+        }
+      }
+    },
+    "About Setup": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kurulum hakkında"
+          }
+        }
+      }
+    },
+    "About setup": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kurulum hakkında"
+          }
+        }
+      }
+    },
+    "Access is off in System Settings": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sistem Ayarları'nda erişim kapalı"
+          }
+        }
+      }
+    },
+    "Add": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ekle"
+          }
+        }
+      }
+    },
+    "Add Destination": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hedef ekle"
+          }
+        }
+      }
+    },
+    "Add Folder": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klasör ekle"
+          }
+        }
+      }
+    },
+    "Add Folder…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klasör ekle…"
+          }
+        }
+      }
+    },
+    "Add Network Location": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ağ konumu ekle"
+          }
+        }
+      }
+    },
+    "Amazon S3 or Compatible…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Amazon S3 veya uyumlu…"
+          }
+        }
+      }
+    },
+    "An external disk or a NAS. Open your backup in Finder any time.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Harici disk veya NAS. Yedeğini istediğin zaman Finder'da aç."
+          }
+        }
+      }
+    },
+    "Archive status": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arşiv durumu"
+          }
+        }
+      }
+    },
+    "At": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saat"
+          }
+        }
+      }
+    },
+    "Available once mirroring runs": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yansıtma çalıştığında kullanılabilir"
+          }
+        }
+      }
+    },
+    "Back": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geri"
+          }
+        }
+      }
+    },
+    "Back Up Now": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şimdi yedekle"
+          }
+        }
+      }
+    },
+    "Back up": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedekle"
+          }
+        }
+      }
+    },
+    "Back up Photos": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğrafları yedekle"
+          }
+        }
+      }
+    },
+    "Back up iCloud Photos and files to storage you own.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud fotoğraflarını ve dosyalarını kendi depolamana yedekle."
+          }
+        }
+      }
+    },
+    "Back up these folders": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu klasörleri yedekle"
+          }
+        }
+      }
+    },
+    "Backing up": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedekleme sürüyor"
+          }
+        }
+      }
+    },
+    "Backup History": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedekleme geçmişi"
+          }
+        }
+      }
+    },
+    "Backup copies are kept on the storage you choose.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedek kopyaları seçtiğin depolamada saklanır."
+          }
+        }
+      }
+    },
+    "Backup history lists every run and missed item.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geçmiş her çalıştırmayı ve atlanan öğeleri listeler."
+          }
+        }
+      }
+    },
+    "Backup plan": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedekleme planı"
+          }
+        }
+      }
+    },
+    "Backup progress": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedekleme ilerlemesi"
+          }
+        }
+      }
+    },
+    "Backup up to date": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedek güncel"
+          }
+        }
+      }
+    },
+    "Backups are plain files and folders you can open in Finder.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedekler Finder'da açabileceğin sıradan dosya ve klasörlerdir."
+          }
+        }
+      }
+    },
+    "Backups wait until the destination is connected again.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedekleme hedef yeniden bağlanana kadar bekliyor."
+          }
+        }
+      }
+    },
+    "Before you start": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Başlamadan önce"
+          }
+        }
+      }
+    },
+    "Building the list of items…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Öğe listesi hazırlanıyor…"
+          }
+        }
+      }
+    },
+    "By default your backup only grows. With mirroring, items you delete are moved to a Deleted folder.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Varsayılan olarak yedeğin yalnızca büyür. Yansıtma açıkken sildiğin öğeler Silinenler klasörüne taşınır."
+          }
+        }
+      }
+    },
+    "Can't reach %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ konumuna ulaşılamadı"
+          }
+        }
+      }
+    },
+    "Change Destination": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hedefi değiştir"
+          }
+        }
+      }
+    },
+    "Check": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kontrol et"
+          }
+        }
+      }
+    },
+    "Check Connection": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağlantıyı denetle"
+          }
+        }
+      }
+    },
+    "Check the network drive's power and network cable.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ağ diskinin güç ve ağ bağlantısını kontrol et."
+          }
+        }
+      }
+    },
+    "Check what's copied where, then start.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neyin nereye kopyalanacağını kontrol et, sonra başlat."
+          }
+        }
+      }
+    },
+    "Check your network connection": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ağ bağlantını kontrol et"
+          }
+        }
+      }
+    },
+    "Check, download and write repeat for every item.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kontrol, indirme ve yazma her öğede tekrarlanır."
+          }
+        }
+      }
+    },
+    "Choose": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seç"
+          }
+        }
+      }
+    },
+    "Choose Destination": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hedef seç"
+          }
+        }
+      }
+    },
+    "Choose Full Access so originals can be copied.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Orijinallerin kopyalanabilmesi için Tam Erişim'i seç."
+          }
+        }
+      }
+    },
+    "Choose a backup destination": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedek hedefini seç"
+          }
+        }
+      }
+    },
+    "Choose a folder on a drive you own. NoNeedCloud keeps your backup inside it.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sahip olduğun bir diskte klasör seç. NoNeedCloud yedeğini bu klasörde saklar."
+          }
+        }
+      }
+    },
+    "Choose a folder on your network drive. If it isn't listed, connect to it in Finder first (Go → Connect to Server).": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ağ diskinde bir klasör seç. Listede yoksa önce Finder'da bağlan (Git → Sunucuya Bağlan)."
+          }
+        }
+      }
+    },
+    "Choose storage": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Depolama seç"
+          }
+        }
+      }
+    },
+    "Choose the folders you want to protect.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Korumak istediğin klasörleri seç."
+          }
+        }
+      }
+    },
+    "Choose what to copy from your Photos library. Originals are always copied at full quality.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraflar arşivinden neyin kopyalanacağını seç. Orijinaller her zaman tam kalitede kopyalanır."
+          }
+        }
+      }
+    },
+    "Choose what to protect": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neyi koruyacağını seç"
+          }
+        }
+      }
+    },
+    "Coming later": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yakında"
+          }
+        }
+      }
+    },
+    "Compare with files at the destination": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hedefteki dosyalarla karşılaştır"
+          }
+        }
+      }
+    },
+    "Comparing with %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ ile karşılaştırılıyor"
+          }
+        }
+      }
+    },
+    "Completed": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tamamlandı"
+          }
+        }
+      }
+    },
+    "Completed, some missed": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tamamlandı, bazıları atlandı"
+          }
+        }
+      }
+    },
+    "Connect %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ diskini bağla"
+          }
+        }
+      }
+    },
+    "Connect this Mac to the same network as %@.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac'i %@ ile aynı ağa bağla."
+          }
+        }
+      }
+    },
+    "Connect to a NAS over SMB": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SMB ile bir NAS'a bağlan"
+          }
+        }
+      }
+    },
+    "Connect to the server in Finder": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finder'da sunucuya bağlan"
+          }
+        }
+      }
+    },
+    "Connected": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağlı"
+          }
+        }
+      }
+    },
+    "Copied": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kopyalanan"
+          }
+        }
+      }
+    },
+    "Copies in the archive": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arşivdeki kopyalar"
+          }
+        }
+      }
+    },
+    "Copies in the archive are available again once the destination reconnects.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arşivdeki kopyalar hedef yeniden bağlandığında erişilebilir."
+          }
+        }
+      }
+    },
+    "Copy the file to %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dosyayı %@ konumuna kopyala"
+          }
+        }
+      }
+    },
+    "Copying to %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ konumuna kopyalanıyor"
+          }
+        }
+      }
+    },
+    "Daily at %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Her gün %@"
+          }
+        }
+      }
+    },
+    "Data written": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yazılan veri"
+          }
+        }
+      }
+    },
+    "Delete a photo on one device and it's gone from all of them.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir aygıtta fotoğrafı silersen hepsinden gider."
+          }
+        }
+      }
+    },
+    "Deleted folder: empty": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silinenler klasörü: boş"
+          }
+        }
+      }
+    },
+    "Deleted items": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silinen öğeler"
+          }
+        }
+      }
+    },
+    "Destination": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hedef"
+          }
+        }
+      }
+    },
+    "Destinations": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hedefler"
+          }
+        }
+      }
+    },
+    "Done": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bitti"
+          }
+        }
+      }
+    },
+    "Download": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İndir"
+          }
+        }
+      }
+    },
+    "Downloading from iCloud": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud'dan indiriliyor"
+          }
+        }
+      }
+    },
+    "Duration": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Süre"
+          }
+        }
+      }
+    },
+    "Edited versions alongside originals": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Orijinallerin yanında düzenlenmiş sürümler"
+          }
+        }
+      }
+    },
+    "Elapsed": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geçen süre"
+          }
+        }
+      }
+    },
+    "Empty Now": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şimdi boşalt"
+          }
+        }
+      }
+    },
+    "Estimating time left…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalan süre hesaplanıyor…"
+          }
+        }
+      }
+    },
+    "Every %@ at %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Every %1$@ at %2$@"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Her %1$@ %2$@"
+          }
+        }
+      }
+    },
+    "Every day": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Her gün"
+          }
+        }
+      }
+    },
+    "Every hour": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Her saat"
+          }
+        }
+      }
+    },
+    "Every month": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Her ay"
+          }
+        }
+      }
+    },
+    "Every week": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Her hafta"
+          }
+        }
+      }
+    },
+    "External Disk": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Harici disk"
+          }
+        }
+      }
+    },
+    "External disk": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Harici disk"
+          }
+        }
+      }
+    },
+    "Failed": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Başarısız"
+          }
+        }
+      }
+    },
+    "Fetch the original from iCloud": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud'dan orijinali getir"
+          }
+        }
+      }
+    },
+    "Files": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dosya"
+          }
+        }
+      }
+    },
+    "Finder asks for the drive's password when it's connected.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disk bağlandığında Finder parolasını sorar."
+          }
+        }
+      }
+    },
+    "First Backup": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İlk yedek"
+          }
+        }
+      }
+    },
+    "First Setup": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İlk kurulum"
+          }
+        }
+      }
+    },
+    "First successful backup": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İlk başarılı yedek"
+          }
+        }
+      }
+    },
+    "Fix the connection": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağlantıyı onar"
+          }
+        }
+      }
+    },
+    "Folder": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klasör"
+          }
+        }
+      }
+    },
+    "Folder on a Drive or NAS…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disk veya NAS'ta klasör…"
+          }
+        }
+      }
+    },
+    "Folders": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klasörler"
+          }
+        }
+      }
+    },
+    "Folders to back up, such as iCloud Drive, Desktop & Documents, or an app's iCloud folder.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedeklenecek klasörler: iCloud Drive, Masaüstü ve Belgeler ya da bir uygulamanın iCloud klasörü."
+          }
+        }
+      }
+    },
+    "Freeing up space on this Mac": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu Mac'te yer açılıyor"
+          }
+        }
+      }
+    },
+    "Get Started": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Başla"
+          }
+        }
+      }
+    },
+    "Get back on track": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeniden yola koyul"
+          }
+        }
+      }
+    },
+    "Google Drive…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Google Drive…"
+          }
+        }
+      }
+    },
+    "History": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geçmiş"
+          }
+        }
+      }
+    },
+    "In this run": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu çalıştırmada"
+          }
+        }
+      }
+    },
+    "Include": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dahil et"
+          }
+        }
+      }
+    },
+    "Keep for 30 days": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30 gün sakla"
+          }
+        }
+      }
+    },
+    "Keep for 90 days": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "90 gün sakla"
+          }
+        }
+      }
+    },
+    "Keep forever": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Süresiz sakla"
+          }
+        }
+      }
+    },
+    "Keep your Mac awake": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac'ini uyanık tut"
+          }
+        }
+      }
+    },
+    "Keep your Mac awake and plugged in.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac'ini uyanık ve prize takılı tut."
+          }
+        }
+      }
+    },
+    "Last backup %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son yedek %@"
+          }
+        }
+      }
+    },
+    "Last successful backup": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son başarılı yedek"
+          }
+        }
+      }
+    },
+    "Last successful backup %@.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son başarılı yedek %@."
+          }
+        }
+      }
+    },
+    "Less than a minute left": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir dakikadan az kaldı"
+          }
+        }
+      }
+    },
+    "Library": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arşiv"
+          }
+        }
+      }
+    },
+    "Looking for new and changed items": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeni ve değişen öğeler aranıyor"
+          }
+        }
+      }
+    },
+    "Make sure %@ is on": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ açık olduğundan emin ol"
+          }
+        }
+      }
+    },
+    "Make sure the destination is available and has free space.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hedefin erişilebilir olduğundan ve boş alanı olduğundan emin ol."
+          }
+        }
+      }
+    },
+    "Making the file available": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dosya hazırlanıyor"
+          }
+        }
+      }
+    },
+    "Manual": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elle"
+          }
+        }
+      }
+    },
+    "Manually": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elle"
+          }
+        }
+      }
+    },
+    "Mirror deletions": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silinenleri yansıt"
+          }
+        }
+      }
+    },
+    "Mirroring": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yansıtma"
+          }
+        }
+      }
+    },
+    "Missed": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Atlanan"
+          }
+        }
+      }
+    },
+    "Monthly on day %lld at %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Monthly on day %1$lld at %2$@"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Her ayın %1$lld. günü %2$@"
+          }
+        }
+      }
+    },
+    "Needs attention": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Müdahale gerekiyor"
+          }
+        }
+      }
+    },
+    "Network storage": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ağ depolaması"
+          }
+        }
+      }
+    },
+    "New copies": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeni kopya"
+          }
+        }
+      }
+    },
+    "Next backup": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sonraki yedek"
+          }
+        }
+      }
+    },
+    "No backup in %lld days": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld gündür yedek alınmadı"
+          }
+        }
+      }
+    },
+    "No backups yet": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Henüz yedek yok"
+          }
+        }
+      }
+    },
+    "No destination yet.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Henüz hedef yok."
+          }
+        }
+      }
+    },
+    "No folders yet. Add iCloud Drive or any folder you want to protect.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Henüz klasör yok. iCloud Drive'ı veya korumak istediğin herhangi bir klasörü ekle."
+          }
+        }
+      }
+    },
+    "NoNeedCloud": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NoNeedCloud"
+          }
+        }
+      }
+    },
+    "NoNeedCloud can't read your Photos library, so photos aren't being backed up.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NoNeedCloud Fotoğraflar arşivini okuyamıyor, bu yüzden fotoğraflar yedeklenmiyor."
+          }
+        }
+      }
+    },
+    "NoNeedCloud doesn't have access to Photos.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NoNeedCloud'un Fotoğraflar'a erişimi yok."
+          }
+        }
+      }
+    },
+    "NoNeedCloud keeps an independent copy of what you pick.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NoNeedCloud seçtiklerinin bağımsız bir kopyasını tutar."
+          }
+        }
+      }
+    },
+    "NoNeedCloud only reads. Everything happens on this Mac.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NoNeedCloud yalnızca okur. Her şey bu Mac'te olur."
+          }
+        }
+      }
+    },
+    "None yet": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Henüz yok"
+          }
+        }
+      }
+    },
+    "Not connected": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bağlı değil"
+          }
+        }
+      }
+    },
+    "Nothing in iCloud is ever changed": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud'daki hiçbir şey değiştirilmez"
+          }
+        }
+      }
+    },
+    "Nothing in iCloud is ever changed. NoNeedCloud only reads.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud'daki hiçbir şey değiştirilmez. NoNeedCloud yalnızca okur."
+          }
+        }
+      }
+    },
+    "Nothing selected": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hiçbir şey seçilmedi"
+          }
+        }
+      }
+    },
+    "On": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gün"
+          }
+        }
+      }
+    },
+    "On day": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayın günü"
+          }
+        }
+      }
+    },
+    "On this Mac": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu Mac'te"
+          }
+        }
+      }
+    },
+    "OneDrive…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OneDrive…"
+          }
+        }
+      }
+    },
+    "Open Privacy & Security": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gizlilik ve Güvenlik'i aç"
+          }
+        }
+      }
+    },
+    "Open Privacy Settings": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gizlilik ayarlarını aç"
+          }
+        }
+      }
+    },
+    "Open Settings": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayarları aç"
+          }
+        }
+      }
+    },
+    "Open Volumes in Finder": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diskleri Finder'da aç"
+          }
+        }
+      }
+    },
+    "Options…": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seçenekler…"
+          }
+        }
+      }
+    },
+    "Originals, edits and Live Photos": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Orijinaller, düzenlemeler ve Live Photos"
+          }
+        }
+      }
+    },
+    "Other destinations": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diğer hedefler"
+          }
+        }
+      }
+    },
+    "Photos": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraflar"
+          }
+        }
+      }
+    },
+    "Photos & videos": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraf ve video"
+          }
+        }
+      }
+    },
+    "Photos access is off": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraflar erişimi kapalı"
+          }
+        }
+      }
+    },
+    "Pick separate storage for your originals.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Orijinaller için ayrı bir depolama alanı seç."
+          }
+        }
+      }
+    },
+    "Pick what to protect, choose where to keep it, then review and start. You can change everything later.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neyi koruyacağını ve nerede saklayacağını seç, sonra gözden geçirip başlat. Her şeyi daha sonra değiştirebilirsin."
+          }
+        }
+      }
+    },
+    "Plain files on a drive you own": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kendi diskinde sıradan dosyalar"
+          }
+        }
+      }
+    },
+    "Plug it in so long backups aren't interrupted.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uzun yedeklemeler kesilmesin diye prize tak."
+          }
+        }
+      }
+    },
+    "Plug the drive into this Mac and wait for it to appear in Finder.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diski bu Mac'e tak ve Finder'da görünmesini bekle."
+          }
+        }
+      }
+    },
+    "Protected": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Korunuyor"
+          }
+        }
+      }
+    },
+    "Read only": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salt okunur"
+          }
+        }
+      }
+    },
+    "Remove": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaldır"
+          }
+        }
+      }
+    },
+    "Remove All": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tümünü kaldır"
+          }
+        }
+      }
+    },
+    "Remove at next backup": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sonraki yedekte kaldır"
+          }
+        }
+      }
+    },
+    "Reopen the network location.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ağ konumunu yeniden aç."
+          }
+        }
+      }
+    },
+    "Reset to Defaults": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Varsayılanlara dön"
+          }
+        }
+      }
+    },
+    "Result": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sonuç"
+          }
+        }
+      }
+    },
+    "Review First Backup": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İlk yedeği gözden geçir"
+          }
+        }
+      }
+    },
+    "Review and start": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Onayla ve başlat"
+          }
+        }
+      }
+    },
+    "Review your first backup": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İlk yedeğini gözden geçir"
+          }
+        }
+      }
+    },
+    "Run a backup to bring your copy up to date.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kopyanı güncellemek için bir yedekleme başlat."
+          }
+        }
+      }
+    },
+    "Runs appear here after your first backup.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çalıştırmalar ilk yedekten sonra burada görünür."
+          }
+        }
+      }
+    },
+    "Scan": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tara"
+          }
+        }
+      }
+    },
+    "Scanning your sources": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaynaklar taranıyor"
+          }
+        }
+      }
+    },
+    "Schedule": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zamanlama"
+          }
+        }
+      }
+    },
+    "Scheduled backups run once the scheduler ships. For now, start backups manually.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zamanlanmış yedekler zamanlayıcı geldiğinde çalışacak. Şimdilik yedeklemeyi elle başlat."
+          }
+        }
+      }
+    },
+    "See what happened": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ne olduğuna bak"
+          }
+        }
+      }
+    },
+    "See which drives are connected.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hangi disklerin bağlı olduğunu gör."
+          }
+        }
+      }
+    },
+    "Settings": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayarlar"
+          }
+        }
+      }
+    },
+    "Shared Albums": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paylaşılan Albümler"
+          }
+        }
+      }
+    },
+    "Show Welcome Screen": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Karşılama ekranını göster"
+          }
+        }
+      }
+    },
+    "Show backup history": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedekleme geçmişini göster"
+          }
+        }
+      }
+    },
+    "Since %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ yılından beri"
+          }
+        }
+      }
+    },
+    "Source folders": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaynak klasörler"
+          }
+        }
+      }
+    },
+    "Sources": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaynaklar"
+          }
+        }
+      }
+    },
+    "Sources scanned": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaynaklar tarandı"
+          }
+        }
+      }
+    },
+    "Stages": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İşlem aşamaları"
+          }
+        }
+      }
+    },
+    "Start First Backup": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İlk yedeği başlat"
+          }
+        }
+      }
+    },
+    "Start NoNeedCloud at login": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Girişte NoNeedCloud'u başlat"
+          }
+        }
+      }
+    },
+    "Started": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Başladı"
+          }
+        }
+      }
+    },
+    "Started at %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Başlangıç: %@"
+          }
+        }
+      }
+    },
+    "Stop": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Durdur"
+          }
+        }
+      }
+    },
+    "Stopped": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Durduruldu"
+          }
+        }
+      }
+    },
+    "System Settings → Privacy & Security → Photos": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sistem Ayarları → Gizlilik ve Güvenlik → Fotoğraflar"
+          }
+        }
+      }
+    },
+    "The first backup copies everything and can take a while.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İlk yedek her şeyi kopyalar ve biraz sürebilir."
+          }
+        }
+      }
+    },
+    "The last backup didn't finish": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son yedekleme tamamlanmadı"
+          }
+        }
+      }
+    },
+    "This Mac": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu Mac"
+          }
+        }
+      }
+    },
+    "Three steps to your first backup": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İlk yedeğe üç adım"
+          }
+        }
+      }
+    },
+    "Tip: drives formatted as APFS or exFAT work best. FAT32 drives can't store files larger than 4 GB.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İpucu: APFS veya exFAT biçimli diskler en iyisidir. FAT32 diskler 4 GB'tan büyük dosyaları saklayamaz."
+          }
+        }
+      }
+    },
+    "Today, %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bugün, %@"
+          }
+        }
+      }
+    },
+    "Tomorrow, %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yarın, %@"
+          }
+        }
+      }
+    },
+    "Tonight, %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu gece, %@"
+          }
+        }
+      }
+    },
+    "Total size": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toplam boyut"
+          }
+        }
+      }
+    },
+    "Try Again": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeniden dene"
+          }
+        }
+      }
+    },
+    "Turn Off Photos Backup": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraf yedeğini kapat"
+          }
+        }
+      }
+    },
+    "Turn access back on": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erişimi yeniden aç"
+          }
+        }
+      }
+    },
+    "Turn on NoNeedCloud": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NoNeedCloud'u aç"
+          }
+        }
+      }
+    },
+    "USB or Thunderbolt": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "USB veya Thunderbolt"
+          }
+        }
+      }
+    },
+    "Unlock it if it's encrypted": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Şifreliyse kilidini aç"
+          }
+        }
+      }
+    },
+    "Use as Destination": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hedef olarak kullan"
+          }
+        }
+      }
+    },
+    "Videos": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Videolar"
+          }
+        }
+      }
+    },
+    "WELCOME": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "HOŞ GELDİN"
+          }
+        }
+      }
+    },
+    "When you delete something from Photos or a source folder, NoNeedCloud moves its copy to a Deleted folder at the destination instead of keeping it in the backup.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fotoğraflar'dan veya bir kaynak klasörden bir şey sildiğinde NoNeedCloud kopyasını yedekte tutmak yerine hedefteki Silinenler klasörüne taşır."
+          }
+        }
+      }
+    },
+    "Where your backup is kept. It's stored as plain files and folders you can open in Finder.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedeğinin saklandığı yer. Finder'da açabileceğin sıradan dosya ve klasörler olarak saklanır."
+          }
+        }
+      }
+    },
+    "Write": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yaz"
+          }
+        }
+      }
+    },
+    "Write access": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yazma erişimi var"
+          }
+        }
+      }
+    },
+    "Yesterday, %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dün, %@"
+          }
+        }
+      }
+    },
+    "You can stop any time. The next run picks up where it left off.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İstediğin zaman durdurabilirsin. Sonraki çalıştırma kaldığı yerden devam eder."
+          }
+        }
+      }
+    },
+    "You can stop the backup without deleting existing copies.  ·  Preview build: simulated, no files are copied.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mevcut kopyaları silmeden yedeklemeyi durdurabilirsin.  ·  Önizleme sürümü: simülasyon, dosya kopyalanmaz."
+          }
+        }
+      }
+    },
+    "iCloud Drive, Desktop & Documents or any folder": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud Drive, Masaüstü ve Belgeler veya herhangi bir klasör"
+          }
+        }
+      }
+    },
+    "iCloud syncs. It doesn't back up.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud eşitler, yedeklemez."
+          }
+        }
+      }
+    },
+    "just now": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "az önce"
+          }
+        }
+      }
+    },
+    "on %@ at %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "on %1$@ at %2$@"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@, %2$@"
+          }
+        }
+      }
+    },
+    "today at %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bugün %@"
+          }
+        }
+      }
+    },
+    "yesterday at %@": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "dün %@"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

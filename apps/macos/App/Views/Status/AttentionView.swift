@@ -17,7 +17,7 @@ struct AttentionView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             banner
-            SectionTitle(stepsTitle, size: 20)
+            SectionTitle(LocalizedStringKey(stepsTitle), size: 20)
                 .padding(.top, 25)
                 .padding(.bottom, 8)
             HStack(alignment: .top, spacing: 20) {

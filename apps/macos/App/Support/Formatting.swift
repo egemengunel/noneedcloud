@@ -8,7 +8,7 @@ enum Formatting {
     }
 
     static func items(_ value: Int) -> String {
-        value == 1 ? "1 item" : "\(count(value)) items"
+        value == 1 ? String(localized: "1 item") : String(localized: "\(count(value)) items")
     }
 
     static func bytes(_ value: Int64) -> String {
@@ -16,7 +16,7 @@ enum Formatting {
     }
 
     static func relative(_ date: Date, now: Date = .now) -> String {
-        if now.timeIntervalSince(date) < 60 { return "just now" }
+        if now.timeIntervalSince(date) < 60 { return String(localized: "just now") }
         return date.formatted(.relative(presentation: .named, unitsStyle: .wide))
     }
 
@@ -133,13 +133,13 @@ enum Formatting {
     static func schedule(_ schedule: ScheduleSettings) -> String {
         let time = timeOfDay(schedule.timeOfDayMinutes)
         switch schedule.frequency {
-        case .off: return "Off"
-        case .hourly: return "Every hour"
-        case .daily: return "Daily at \(time)"
+        case .off: return String(localized: "Manual")
+        case .hourly: return String(localized: "Every hour")
+        case .daily: return String(localized: "Daily at \(time)")
         case .weekly:
             let day = Calendar.current.weekdaySymbols[(schedule.weekday - 1).clamped(to: 0...6)]
-            return "\(day)s at \(time)"
-        case .monthly: return "Monthly on day \(schedule.dayOfMonth) at \(time)"
+            return String(localized: "Every \(day) at \(time)")
+        case .monthly: return String(localized: "Monthly on day \(schedule.dayOfMonth) at \(time)")
         }
     }
 
@@ -150,10 +150,10 @@ enum Formatting {
 
     static func retention(_ retention: MirroringSettings.Retention) -> String {
         switch retention {
-        case .forever: "Keep forever"
-        case .ninetyDays: "Keep for 90 days"
-        case .thirtyDays: "Keep for 30 days"
-        case .untilNextBackup: "Remove at next backup"
+        case .forever: String(localized: "Keep forever")
+        case .ninetyDays: String(localized: "Keep for 90 days")
+        case .thirtyDays: String(localized: "Keep for 30 days")
+        case .untilNextBackup: String(localized: "Remove at next backup")
         }
     }
 

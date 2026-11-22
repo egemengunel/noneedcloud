@@ -206,10 +206,10 @@ struct StatusPill: View {
 }
 
 struct SectionTitle: View {
-    let text: String
+    let text: LocalizedStringKey
     var size: CGFloat = 18
 
-    init(_ text: String, size: CGFloat = 18) {
+    init(_ text: LocalizedStringKey, size: CGFloat = 18) {
         self.text = text
         self.size = size
     }

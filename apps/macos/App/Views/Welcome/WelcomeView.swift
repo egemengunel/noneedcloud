@@ -29,7 +29,7 @@ struct WelcomeView: View {
                         .font(.system(size: 11, weight: .semibold))
                         .tracking(1.6)
                         .foregroundStyle(Theme.lightBlue.opacity(0.85))
-                    Text("NoNeedCloud")
+                    Text(verbatim: "NoNeedCloud")
                         .font(.system(size: 64, weight: .bold))
                         .tracking(-2.4)
                         .foregroundStyle(.white)
@@ -78,8 +78,8 @@ struct WelcomeView: View {
 
 private struct WelcomePoint: View {
     let systemImage: String
-    let title: String
-    let detail: String
+    let title: LocalizedStringKey
+    let detail: LocalizedStringKey
 
     var body: some View {
         HStack(alignment: .top, spacing: 14) {

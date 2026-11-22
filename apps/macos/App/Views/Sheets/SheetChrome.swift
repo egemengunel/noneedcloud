@@ -3,8 +3,8 @@ import SwiftUI
 /// Sheet layout convention (UX spec §2): title, content, footer with the
 /// secondary/reset action on the left and Done on the right.
 struct SheetChrome<Content: View, Secondary: View>: View {
-    let title: String
-    let subtitle: String
+    let title: LocalizedStringKey
+    let subtitle: LocalizedStringKey
     @ViewBuilder let content: Content
     @ViewBuilder let secondary: Secondary
     @Environment(\.dismiss) private var dismiss

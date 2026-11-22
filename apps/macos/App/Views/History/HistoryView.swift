@@ -44,10 +44,10 @@ struct HistoryView: View {
 
     private func title(_ outcome: BackupRun.Outcome) -> String {
         switch outcome {
-        case .succeeded: "Completed"
-        case .completedWithErrors: "Completed, some missed"
-        case .failed: "Failed"
-        case .cancelled: "Stopped"
+        case .succeeded: String(localized: "Completed")
+        case .completedWithErrors: String(localized: "Completed, some missed")
+        case .failed: String(localized: "Failed")
+        case .cancelled: String(localized: "Stopped")
         }
     }
 

@@ -22,6 +22,7 @@
 		55716F5EC0C9E8D12043F7D5 /* MainWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2D35B6D3DFC58C71080C8A /* MainWindowView.swift */; };
 		5A7816E51E7DBA4FFEAD8DB2 /* RunningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D366E4FBD9F00EC3BD6CBC /* RunningView.swift */; };
 		5DCED0B3DC6B4A7845E7ADFC /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E7CBA9686864A420852DE2 /* HistoryView.swift */; };
+		5E158F87D5E3E3400A55DC6E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = EEF44787527AD1831E164121 /* Localizable.xcstrings */; };
 		8225685EF5D78E7251ACB011 /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D85D36EDE5C9A59305C110 /* Formatting.swift */; };
 		9168325946564BDD659915F6 /* FolderPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C75BC82650C21A423C1C74 /* FolderPicker.swift */; };
 		9E3999DF6B087FC1C4995019 /* AttentionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F37761E66705831266FA580 /* AttentionView.swift */; };
@@ -56,6 +57,7 @@
 		C8631DB4006B85EA7A8B2306 /* SetupFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupFlowView.swift; sourceTree = "<group>"; };
 		CD2B0291D8AB68E874FC6CF2 /* PhotosAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosAccess.swift; sourceTree = "<group>"; };
 		D5FB703D07CCA6591C7E1CAD /* NoNeedCloud.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NoNeedCloud.entitlements; sourceTree = "<group>"; };
+		EEF44787527AD1831E164121 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		F631BBFC43363B90833B2835 /* ProtectedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtectedView.swift; sourceTree = "<group>"; };
 		FA17A56FA094F1078512A15A /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		FD8CA0E182941921443DD84D /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 			children = (
 				FA17A56FA094F1078512A15A /* AppIcon.icon */,
 				17AEF947035BC37AC7FBAC5E /* Assets.xcassets */,
+				EEF44787527AD1831E164121 /* Localizable.xcstrings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -269,6 +272,7 @@
 			knownRegions = (
 				Base,
 				en,
+				tr,
 			);
 			mainGroup = 6D6685A58DF1AF95B91CFB66;
 			minimizedProjectReferenceProxies = 1;
@@ -292,6 +296,7 @@
 			files = (
 				D2CCF22336B37A356F4CB965 /* AppIcon.icon in Resources */,
 				43D506BC6586AEE8680221F5 /* Assets.xcassets in Resources */,
+				5E158F87D5E3E3400A55DC6E /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,9 +353,11 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_NAME = NoNeedCloud;
 				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Release;
 		};
@@ -374,9 +381,11 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_NAME = NoNeedCloud;
 				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Debug;
 		};

@@ -63,7 +63,7 @@ struct MainWindowView: View {
         ToolbarItem(placement: .navigation) {
             HStack(spacing: 10) {
                 BrandCloud(color: showsWelcome ? Theme.lightBlue : Theme.ink, width: 24)
-                Text("NoNeedCloud")
+                Text(verbatim: "NoNeedCloud")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(showsWelcome ? .white : Theme.ink)
             }
