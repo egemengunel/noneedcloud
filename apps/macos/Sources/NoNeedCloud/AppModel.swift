@@ -63,6 +63,7 @@ final class AppModel: ObservableObject {
     }
 
     func deletePlan(_ planId: UUID) {
+        guard !runningPlanIds.contains(planId) else { return }
         plans.removeAll { $0.id == planId }
         try? store.savePlans(plans)
     }

@@ -79,7 +79,7 @@ struct ScheduleTests {
         #expect(Schedule.manual.summary == "Manual")
         #expect(Schedule.hourly.summary == "Every hour")
         #expect(Schedule.daily(hour: 9, minute: 0).summary.contains("09:00"))
-        #expect(Schedule.weekly(weekday: 2, hour: 9, minute: 0).summary.contains("Monday"))
+        #expect(Schedule.weekly(weekday: 2, hour: 9, minute: 0).summary.contains(Calendar.current.weekdaySymbols[1]))
         #expect(Schedule.monthly(day: 31, hour: 9, minute: 0).summary.contains("31"))
     }
 

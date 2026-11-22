@@ -58,7 +58,7 @@ enum ScheduleCalculator {
             guard let monthStart = calendar.dateInterval(of: .month, for: probe)?.start else { return nil }
             var components = calendar.dateComponents([.year, .month], from: monthStart)
             let daysInMonth = calendar.range(of: .day, in: .month, for: monthStart)?.count
-            guard let year = components.year, let month = components.month, let daysInMonth else { return nil }
+            guard let daysInMonth else { return nil }
             components.day = min(day, daysInMonth)
             components.hour = hour
             components.minute = minute

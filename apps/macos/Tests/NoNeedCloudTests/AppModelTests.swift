@@ -260,6 +260,30 @@ struct AppModelTests {
         }
     }
 
+    @Test @MainActor func deletingRunningPlanIsANoOpUntilRunCompletes() async throws {
+        let root = TestSupport.makeTempDirectory()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let source = root.appendingPathComponent("Source", isDirectory: true)
+        let destination = root.appendingPathComponent("Dest", isDirectory: true)
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        try Data("one".utf8).write(to: source.appendingPathComponent("a.txt"))
+        let store = JSONPlanStore(directory: root.appendingPathComponent("State", isDirectory: true))
+        let model = AppModel(store: store, runStateDirectory: root.appendingPathComponent("RunState", isDirectory: true))
+        let plan = TestSupport.makePlan(name: "In Flight", sources: [source], destination: destination)
+
+        model.addPlan(plan)
+        model.startBackup(plan)
+        #expect(model.isPlanRunning(plan.id))
+
+        model.deletePlan(plan.id)
+        #expect(model.plans.count == 1)
+
+        await waitForPlanIdle(model, plan.id)
+        #expect(!model.isPlanRunning(plan.id))
+        model.deletePlan(plan.id)
+        #expect(model.plans.isEmpty)
+    }
+
     @Test @MainActor func updatingUnknownPlanIsIgnored() throws {
         try TestSupport.withTempStore { store, _ in
             let model = AppModel(store: store)

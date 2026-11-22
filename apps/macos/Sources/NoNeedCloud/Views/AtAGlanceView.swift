@@ -149,6 +149,7 @@ struct AtAGlanceView: View {
                     PlanSummaryCard(
                         plan: plan,
                         lastRecord: model.history.last { $0.planId == plan.id },
+                        isRunning: model.isPlanRunning(plan.id),
                         isSelected: plan.id == selectedPlan?.id,
                         onEdit: { editorTarget = PlanEditorTarget(plan: plan) },
                         onDelete: { planPendingDelete = plan }
@@ -280,6 +281,7 @@ struct StatTile: View {
 struct PlanSummaryCard: View {
     let plan: BackupPlan
     let lastRecord: BackupRunRecord?
+    let isRunning: Bool
     let isSelected: Bool
     let onEdit: () -> Void
     let onDelete: () -> Void
@@ -312,7 +314,8 @@ struct PlanSummaryCard: View {
                     Image(systemName: "trash")
                 }
                 .buttonStyle(.borderless)
-                .help("Delete Plan")
+                .disabled(isRunning)
+                .help(isRunning ? "Stop the backup before deleting this plan" : "Delete Plan")
             }
             LabeledContent("Sources") { Text(sourcesSummary) }
             LabeledContent("Destination") {
