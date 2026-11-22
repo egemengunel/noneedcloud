@@ -65,7 +65,7 @@ struct ProtectedView: View {
     }
 
     private var destinationName: String {
-        model.plan.destinationDetails?.volumeName ?? model.plan.destination?.displayName ?? ""
+        Formatting.destinationName(model.plan)
     }
 
     private var connectionText: String {
@@ -138,11 +138,13 @@ struct ProtectedView: View {
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(Theme.ink)
                         .padding(.top, 5)
-                    Text(model.nextScheduledRun.map { Formatting.nextRun($0) } ?? String(localized: "Manual"))
+                    Text(model.nextScheduledRun.map { Formatting.nextRun($0) } ?? String(localized: "Not scheduled"))
                         .font(.system(size: 20, weight: .bold))
                         .foregroundStyle(Theme.ink)
                         .padding(.top, 5)
-                    Text("\(Formatting.frequency(model.plan.schedule))  ·  \(String(localized: "On this Mac"))")
+                    Text(model.plan.schedule.frequency == .off
+                         ? String(localized: "Choose a schedule")
+                         : "\(Formatting.frequency(model.plan.schedule))  ·  \(String(localized: "On this Mac"))")
                         .font(.system(size: 13))
                         .foregroundStyle(Theme.muted)
                         .padding(.top, 11)

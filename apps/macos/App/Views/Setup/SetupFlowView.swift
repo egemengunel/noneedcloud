@@ -48,6 +48,9 @@ struct SetupFlowView: View {
         }
         .padding(.horizontal, 24)
         .animation(.smooth(duration: 0.2), value: step)
+        // Pin the step on screen so picking a folder or destination doesn't jump ahead;
+        // only Back / Continue move between steps.
+        .onAppear { if requested == nil { requested = reached } }
     }
 
     @ViewBuilder
@@ -103,7 +106,7 @@ private struct StepSidebar: View {
                   subtitle: model.plan.hasSources ? Formatting.sourcesSummary(model.plan) : String(localized: "Choose what to protect"),
                   state: state(.sources)),
             .init(id: 2, title: String(localized: "Destination"),
-                  subtitle: model.plan.destination.map { _ in model.plan.destinationDetails?.volumeName ?? model.plan.destination!.displayName }
+                  subtitle: model.plan.destination.map { _ in Formatting.destinationName(model.plan) }
                       ?? String(localized: "Choose storage"),
                   state: state(.destination)),
             .init(id: 3, title: String(localized: "First Backup"), subtitle: String(localized: "Review and start"),
@@ -242,7 +245,7 @@ private struct DestinationStepView: View {
 
             if let destination = model.plan.destination {
                 SelectedDestinationCard(
-                    name: model.plan.destinationDetails?.volumeName ?? destination.displayName,
+                    name: Formatting.destinationName(model.plan),
                     folder: destination.displayName,
                     details: model.plan.destinationDetails,
                     isAvailable: model.health.destinationAvailable
@@ -388,7 +391,7 @@ private struct ReviewStepView: View {
     }
 
     private var destinationSubtitle: String {
-        let name = model.plan.destinationDetails?.volumeName ?? model.plan.destination?.displayName ?? ""
+        let name = Formatting.destinationName(model.plan)
         return "\(name)  ·  \(Formatting.kind(model.plan.destinationDetails))"
     }
 }

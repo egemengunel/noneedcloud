@@ -7,7 +7,7 @@ struct RunningView: View {
     let progress: BackupProgress
 
     private var destinationName: String {
-        model.plan.destinationDetails?.volumeName ?? model.plan.destination?.displayName ?? ""
+        Formatting.destinationName(model.plan)
     }
 
     var body: some View {
@@ -93,7 +93,9 @@ private struct ProgressCard: View {
                 .tracking(-4.3)
                 .foregroundStyle(.white)
                 .monospacedDigit()
-                .contentTransition(.numericText())
+                // Digits roll as the percentage climbs.
+                .contentTransition(.numericText(value: Double(percent)))
+                .animation(.snappy(duration: 0.35), value: percent)
                 .frame(height: 108)
                 .padding(.top, 12)
             Text(remainingText)
@@ -119,6 +121,8 @@ private struct ProgressCard: View {
             .font(.system(size: 13, weight: .medium))
             .foregroundStyle(Theme.lightBlue)
             .monospacedDigit()
+            .contentTransition(.numericText(value: Double(progress.processedItems)))
+            .animation(.snappy(duration: 0.3), value: progress.processedItems)
             .padding(.top, 16)
             .padding(.horizontal, 4)
 
@@ -132,9 +136,14 @@ private struct ProgressCard: View {
         .environment(\.colorScheme, .dark)
     }
 
+    /// Whole percent, the value the numeric transition animates between.
+    private var percent: Int {
+        Int(((progress.fractionCompleted ?? 0) * 100).rounded(.down))
+    }
+
     private var percentText: String {
-        guard let fraction = progress.fractionCompleted else { return "–" }
-        return fraction.formatted(.percent.precision(.fractionLength(0)))
+        guard progress.fractionCompleted != nil else { return "–" }
+        return (Double(percent) / 100).formatted(.percent.precision(.fractionLength(0)))
     }
 
     private var remainingText: String {

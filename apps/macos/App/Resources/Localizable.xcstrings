@@ -105,6 +105,16 @@
         }
       }
     },
+    "%@ may have been moved, renamed or deleted.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ taşınmış, yeniden adlandırılmış veya silinmiş olabilir."
+          }
+        }
+      }
+    },
     "%lld": {
       "localizations": {
         "tr": {
@@ -605,6 +615,26 @@
         }
       }
     },
+    "Choose a schedule": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir zamanlama seç"
+          }
+        }
+      }
+    },
+    "Choose it again": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeniden seç"
+          }
+        }
+      }
+    },
     "Choose storage": {
       "localizations": {
         "tr": {
@@ -1057,6 +1087,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dosya"
+          }
+        }
+      }
+    },
+    "Find the folder": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klasörü bul"
           }
         }
       }
@@ -1577,6 +1617,16 @@
         }
       }
     },
+    "Not scheduled": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zamanlanmadı"
+          }
+        }
+      }
+    },
     "Nothing in iCloud is ever changed": {
       "localizations": {
         "tr": {
@@ -1753,6 +1803,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Orijinaller için ayrı bir depolama alanı seç."
+          }
+        }
+      }
+    },
+    "Pick the folder where your backup is kept.": {
+      "localizations": {
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedeğinin saklandığı klasörü seç."
           }
         }
       }

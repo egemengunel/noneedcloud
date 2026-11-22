@@ -24,6 +24,7 @@ struct MainWindowView: View {
         Group {
             if phase == .loading {
                 LaunchView()
+                    .ignoresSafeArea()
                     .transition(.opacity)
                     .task {
                         // Show the loading screen at least briefly, and until health is known.
@@ -36,7 +37,8 @@ struct MainWindowView: View {
                 WelcomeView(isReturning: model.lastCompletedRun != nil) {
                     withAnimation(.smooth(duration: 0.35)) { phase = .app }
                 }
-                    .transition(.opacity)
+                .ignoresSafeArea()
+                .transition(.opacity)
             } else {
                 content
                     .padding(.horizontal, 27)
@@ -48,7 +50,9 @@ struct MainWindowView: View {
         }
         .toolbar { toolbarContent }
         .toolbar(removing: .title)
-        .toolbarBackground(showsWelcome ? Theme.navy : Theme.window, for: .windowToolbar)
+        .toolbarBackground(Theme.window, for: .windowToolbar)
+        // Launch and onboarding art runs under a transparent toolbar.
+        .toolbarBackgroundVisibility(showsWelcome ? .hidden : .automatic, for: .windowToolbar)
         .sheet(item: $activeSheet) { sheet in
             switch sheet {
             case .photos: PhotosSettingsSheet(model: model, actions: actions)
@@ -81,18 +85,11 @@ struct MainWindowView: View {
 
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
-        ToolbarItem(placement: .navigation) {
-            HStack(spacing: 10) {
-                BrandCloud(color: showsWelcome ? Theme.lightBlue : Theme.ink, width: 24)
-                Text(verbatim: "NoNeedCloud")
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(showsWelcome ? .white : Theme.ink)
-            }
-            .padding(.horizontal, 4)
-        }
+        AppTitleToolbarItem(onDark: showsWelcome)
 
         if !showsWelcome {
-            ToolbarItemGroup(placement: .primaryAction) {
+            TrailingToolbarSpacer()
+            ToolbarItemGroup(placement: .automatic) {
                 if model.screenState.setupStep != nil {
                     AboutSetupButton()
                 } else {
@@ -108,6 +105,41 @@ struct MainWindowView: View {
 
     private var actions: SetupActions {
         SetupActions(model: model, showSheet: { activeSheet = $0 })
+    }
+}
+
+/// Brand cloud + name at the leading edge of the toolbar. On macOS 26 the
+/// item's glass capsule is hidden so it reads as a title, like the design.
+private struct AppTitleToolbarItem: ToolbarContent {
+    let onDark: Bool
+
+    var body: some ToolbarContent {
+        if #available(macOS 26.0, *) {
+            ToolbarItem(placement: .navigation) { title }
+                .sharedBackgroundVisibility(.hidden)
+        } else {
+            ToolbarItem(placement: .navigation) { title }
+        }
+    }
+
+    private var title: some View {
+        HStack(spacing: 10) {
+            BrandCloud(color: onDark ? Theme.lightBlue : Theme.ink, width: 24)
+            Text(verbatim: "NoNeedCloud")
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(onDark ? .white : Theme.ink)
+        }
+        .padding(.horizontal, 4)
+    }
+}
+
+/// Pushes the following items to the trailing edge on macOS 26, where
+/// toolbar items otherwise pack next to the title.
+private struct TrailingToolbarSpacer: ToolbarContent {
+    var body: some ToolbarContent {
+        if #available(macOS 26.0, *) {
+            ToolbarSpacer(.flexible)
+        }
     }
 }
 

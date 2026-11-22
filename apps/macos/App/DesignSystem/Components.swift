@@ -67,6 +67,7 @@ struct MetricTile: View {
                 .minimumScaleFactor(0.6)
                 .monospacedDigit()
                 .contentTransition(.numericText())
+                .animation(.snappy(duration: 0.3), value: value)
             Text(title)
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(Theme.ink)

@@ -60,6 +60,16 @@ enum Formatting {
         return folder.displayName
     }
 
+    /// A drive or NAS is named by its volume ("Home Archive"); a folder on this
+    /// Mac by the folder itself, since "Macintosh HD" says nothing.
+    static func destinationName(_ plan: BackupPlan) -> String {
+        guard let destination = plan.destination else { return "" }
+        guard let details = plan.destinationDetails, details.kind != .internalDisk else {
+            return destination.displayName
+        }
+        return details.volumeName
+    }
+
     static func isICloud(_ folder: FolderReference) -> Bool {
         folder.displayPath.contains("/Library/Mobile Documents")
     }

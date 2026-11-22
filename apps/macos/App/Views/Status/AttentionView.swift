@@ -11,7 +11,7 @@ struct AttentionView: View {
     @Environment(\.openWindow) private var openWindow
 
     private var destinationName: String {
-        model.plan.destinationDetails?.volumeName ?? model.plan.destination?.displayName ?? ""
+        Formatting.destinationName(model.plan)
     }
 
     var body: some View {
@@ -116,6 +116,19 @@ struct AttentionView: View {
                     subtitle: String(localized: "Check the network drive's power and network cable.")
                 )
                 reconnectRow
+            } else if model.plan.destinationDetails?.kind == .internalDisk || model.plan.destinationDetails == nil {
+                GroupListRow(
+                    systemImage: "folder.badge.questionmark", iconColor: Theme.amber,
+                    title: String(localized: "Find the folder"),
+                    subtitle: String(localized: "\(destinationName) may have been moved, renamed or deleted.")
+                )
+                GroupListRow(
+                    systemImage: "folder",
+                    title: String(localized: "Choose it again"),
+                    subtitle: String(localized: "Pick the folder where your backup is kept."),
+                    showsChevron: true,
+                    action: actions.chooseDestination
+                )
             } else {
                 GroupListRow(
                     systemImage: "cable.connector", iconColor: Theme.amber,
