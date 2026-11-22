@@ -41,6 +41,27 @@ struct DestinationModelTests {
         #expect(plan.destinationURL == URL(fileURLWithPath: "/tmp/dest"))
     }
 
+    @Test func malformedDestinationDataThrowsItsOwnErrorNotLegacyFallback() {
+        let json = """
+        {
+            "id": "6B29FC40-CA47-1067-B31D-00DD010662DA",
+            "name": "Broken",
+            "sources": [{"kind": "folder", "url": "file:///tmp/src"}],
+            "includePhotos": false,
+            "photoOptions": {},
+            "destination": {"kind": "bogus"}
+        }
+        """
+        do {
+            _ = try JSONDecoder().decode(BackupPlan.self, from: Data(json.utf8))
+            Issue.record("expected failure")
+        } catch {
+            let message = String(describing: error)
+            #expect(message.contains("bogus"))
+            #expect(!message.contains("destinationURL"))
+        }
+    }
+
     @Test func destinationRoundTripsForAllProviders() throws {
         let destinations: [Destination] = [
             .folder(URL(fileURLWithPath: "/tmp/dest")),
@@ -84,9 +105,11 @@ struct DestinationModelTests {
         #expect(s3.indexKey != Destination.s3(makeS3Config(bucket: "other")).indexKey)
         #expect(s3.indexKey != Destination.s3(makeS3Config(prefix: "")).indexKey)
 
-        #expect(Destination.onedrive(CloudTokenConfig(secretRef: "a")).indexKey == "onedrive")
-        #expect(Destination.onedrive(CloudTokenConfig(secretRef: "b")).indexKey == "onedrive")
-        #expect(Destination.gdrive(CloudTokenConfig(secretRef: "a")).indexKey == "gdrive")
+        #expect(Destination.onedrive(CloudTokenConfig(secretRef: "a")).indexKey == "onedrive/a")
+        #expect(Destination.onedrive(CloudTokenConfig(secretRef: "a")).indexKey != Destination.onedrive(CloudTokenConfig(secretRef: "b")).indexKey)
+        #expect(Destination.gdrive(CloudTokenConfig(secretRef: "a")).indexKey == "gdrive/a")
+        #expect(Destination.gdrive(CloudTokenConfig(secretRef: "a")).indexKey != Destination.gdrive(CloudTokenConfig(secretRef: "b")).indexKey)
+        #expect(Destination.onedrive(CloudTokenConfig(secretRef: "r")).indexKey != Destination.gdrive(CloudTokenConfig(secretRef: "r")).indexKey)
         #expect(Destination.s3(makeS3Config()).indexKey != Destination.onedrive(CloudTokenConfig(secretRef: "r")).indexKey)
     }
 
@@ -104,6 +127,46 @@ struct DestinationModelTests {
                 source: source
             )
         )
+    }
+
+    /// Two accounts of the same provider must never share incremental state:
+    /// a shared index would make the second account look fully backed-up.
+    @Test func cloudDestinationIndexFileURLsDifferPerAccount() {
+        let state = TestSupport.makeTempDirectory()
+        defer { try? FileManager.default.removeItem(at: state) }
+        let source = BackupSource.folder(URL(fileURLWithPath: "/tmp/src"))
+
+        let oneDriveAccountA = IncrementalIndex.indexFileURL(
+            stateDirectory: state,
+            destination: .onedrive(CloudTokenConfig(secretRef: "account-a")),
+            source: source
+        )
+        let oneDriveAccountB = IncrementalIndex.indexFileURL(
+            stateDirectory: state,
+            destination: .onedrive(CloudTokenConfig(secretRef: "account-b")),
+            source: source
+        )
+        #expect(oneDriveAccountA != oneDriveAccountB)
+        #expect(
+            oneDriveAccountA == IncrementalIndex.indexFileURL(
+                stateDirectory: state,
+                destination: .onedrive(CloudTokenConfig(secretRef: "account-a")),
+                source: source
+            )
+        )
+
+        let gdriveAccountA = IncrementalIndex.indexFileURL(
+            stateDirectory: state,
+            destination: .gdrive(CloudTokenConfig(secretRef: "account-a")),
+            source: source
+        )
+        let gdriveAccountB = IncrementalIndex.indexFileURL(
+            stateDirectory: state,
+            destination: .gdrive(CloudTokenConfig(secretRef: "account-b")),
+            source: source
+        )
+        #expect(gdriveAccountA != gdriveAccountB)
+        #expect(gdriveAccountA != oneDriveAccountA)
     }
 
     // MARK: - S3 mapping

@@ -51,9 +51,12 @@ final class GoogleDriveDestination: BackupDestination, @unchecked Sendable {
         let boundary = "noneedcloud-\(UUID().uuidString)"
         let bodyURL = try Self.writeMultipartBody(metadata: metadata, fileURL: fromFile, boundary: boundary)
         defer { try? FileManager.default.removeItem(at: bodyURL) }
+        guard let uploadURL = URL(string: "\(Self.uploadRoot)/files?uploadType=multipart") else {
+            throw DestinationError("Google Drive upload failed: could not build the upload URL for \"\(relPath)\".")
+        }
         let request = CloudHTTPRequest(
             method: "POST",
-            url: URL(string: "\(Self.uploadRoot)/files?uploadType=multipart")!,
+            url: uploadURL,
             headers: [
                 "Authorization": "Bearer \(token)",
                 "Content-Type": "multipart/related; boundary=\(boundary)",
@@ -136,14 +139,19 @@ final class GoogleDriveDestination: BackupDestination, @unchecked Sendable {
             .replacingOccurrences(of: "\\", with: "\\\\")
             .replacingOccurrences(of: "'", with: "\\'")
         let query = "name = '\(escapedName)' and '\(parentID)' in parents and mimeType = '\(Self.folderMIMEType)' and trashed = false"
-        var components = URLComponents(string: "\(Self.apiRoot)/files")!
+        guard var components = URLComponents(string: "\(Self.apiRoot)/files") else {
+            throw DestinationError("Google Drive folder lookup failed: could not build the query URL.")
+        }
         components.queryItems = [
             URLQueryItem(name: "q", value: query),
             URLQueryItem(name: "fields", value: "files(id)"),
         ]
+        guard let findURL = components.url else {
+            throw DestinationError("Google Drive folder lookup failed: could not build the query URL.")
+        }
         let findRequest = CloudHTTPRequest(
             method: "GET",
-            url: components.url!,
+            url: findURL,
             headers: ["Authorization": "Bearer \(token)"]
         )
         let findResponse = try await send(findRequest, context: "Google Drive folder lookup")
@@ -160,9 +168,12 @@ final class GoogleDriveDestination: BackupDestination, @unchecked Sendable {
         let body = try JSONSerialization.data(
             withJSONObject: ["name": name, "mimeType": Self.folderMIMEType, "parents": [parentID]]
         )
+        guard let createURL = URL(string: "\(Self.apiRoot)/files") else {
+            throw DestinationError("Google Drive folder creation failed for \"\(name)\": could not build the request URL.")
+        }
         let createRequest = CloudHTTPRequest(
             method: "POST",
-            url: URL(string: "\(Self.apiRoot)/files")!,
+            url: createURL,
             headers: [
                 "Authorization": "Bearer \(token)",
                 "Content-Type": "application/json",
@@ -181,7 +192,7 @@ final class GoogleDriveDestination: BackupDestination, @unchecked Sendable {
     }
 
     private func accessToken() throws -> String {
-        guard let data = keychain.load(account: config.secretRef),
+        guard let data = try keychain.load(account: config.secretRef),
               let token = String(data: data, encoding: .utf8), !token.isEmpty else {
             throw DestinationError(
                 "Google Drive access token is missing from the Keychain. Paste a fresh token for this destination."

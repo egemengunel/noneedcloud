@@ -215,13 +215,15 @@ struct CloudDestinationTests {
 
         let bodyFileURL = try #require(upload.bodyFileURL)
         #expect(!FileManager.default.fileExists(atPath: bodyFileURL.path), "multipart temp file must be removed")
-        let body = String(data: recordedBody(try #require(client.requests.last), in: client), encoding: .utf8)
+        let body = String(data: try recordedBody(try #require(client.requests.last), in: client), encoding: .utf8)
         #expect(body?.contains("\"name\":\"a.txt\"") == true)
         #expect(body?.contains("hello") == true)
     }
 
-    private func recordedBody(_ request: CloudHTTPRequest, in client: FakeHTTPClient) -> Data {
-        client.recordedBodies.last ?? Data()
+    private func recordedBody(_ request: CloudHTTPRequest, in client: FakeHTTPClient) throws -> Data {
+        #expect(client.recordedBodies.count == client.requests.count)
+        let index = try #require(client.requests.firstIndex { $0.method == request.method && $0.url == request.url })
+        return try #require(client.recordedBodies[index])
     }
 
     @Test func googleDriveReusesResolvedFoldersAcrossFiles() async throws {

@@ -3,8 +3,8 @@ import Security
 
 protocol KeychainStore: AnyObject, Sendable {
     func save(_ data: Data, account: String) throws
-    func load(account: String) -> Data?
-    func delete(account: String)
+    func load(account: String) throws -> Data?
+    func delete(account: String) throws
 }
 
 /// Secrets are stored under one generic-password item per credential
@@ -35,7 +35,7 @@ final class SecKeychainStore: KeychainStore {
         }
     }
 
-    func load(account: String) -> Data? {
+    func load(account: String) throws -> Data? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: Self.service,
@@ -45,17 +45,23 @@ final class SecKeychainStore: KeychainStore {
         ]
         var result: AnyObject?
         let status = SecItemCopyMatching(query as CFDictionary, &result)
-        guard status == errSecSuccess else { return nil }
-        return result as? Data
+        if status == errSecSuccess { return result as? Data }
+        guard status == errSecItemNotFound else {
+            throw DestinationError("Keychain read failed (OSStatus \(status)).")
+        }
+        return nil
     }
 
-    func delete(account: String) {
+    func delete(account: String) throws {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: Self.service,
             kSecAttrAccount as String: account,
         ]
-        SecItemDelete(query as CFDictionary)
+        let status = SecItemDelete(query as CFDictionary)
+        guard status == errSecSuccess || status == errSecItemNotFound else {
+            throw DestinationError("Keychain delete failed (OSStatus \(status)).")
+        }
     }
 }
 

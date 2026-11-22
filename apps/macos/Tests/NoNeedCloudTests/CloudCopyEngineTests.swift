@@ -159,13 +159,13 @@ struct CloudCopyEngineTests {
 struct KeychainStoreTests {
     @Test func mockRoundTripSaveLoadDelete() throws {
         let keychain = MockKeychainStore()
-        #expect(keychain.load(account: "ref-1") == nil)
+        try #expect(keychain.load(account: "ref-1") == nil)
         try keychain.save(Data("s3cr3t".utf8), account: "ref-1")
-        #expect(keychain.load(account: "ref-1") == Data("s3cr3t".utf8))
+        try #expect(keychain.load(account: "ref-1") == Data("s3cr3t".utf8))
         try keychain.save(Data("rotated".utf8), account: "ref-1")
-        #expect(keychain.load(account: "ref-1") == Data("rotated".utf8))
-        keychain.delete(account: "ref-1")
-        #expect(keychain.load(account: "ref-1") == nil)
+        try #expect(keychain.load(account: "ref-1") == Data("rotated".utf8))
+        try keychain.delete(account: "ref-1")
+        try #expect(keychain.load(account: "ref-1") == nil)
     }
 
     @Test func s3SecretPayloadJSONRoundTrip() throws {

@@ -37,8 +37,8 @@ enum Destination: Hashable, Sendable {
         switch self {
         case .folder(let url): url.path(percentEncoded: false)
         case .s3(let config): "s3://\(config.effectiveEndpoint.host ?? "")/\(config.bucket)/\(config.prefix)"
-        case .onedrive: "onedrive"
-        case .gdrive: "gdrive"
+        case .onedrive(let config): "onedrive/\(config.secretRef)"
+        case .gdrive(let config): "gdrive/\(config.secretRef)"
         }
     }
 

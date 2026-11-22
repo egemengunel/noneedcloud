@@ -148,7 +148,7 @@ final class S3Destination: BackupDestination {
     }
 
     private func credentials() throws -> (secretAccessKey: String, sessionToken: String?) {
-        guard let data = keychain.load(account: config.secretRef) else {
+        guard let data = try keychain.load(account: config.secretRef) else {
             throw DestinationError(
                 "S3 credentials are missing from the Keychain. Re-enter the secret access key for this destination."
             )

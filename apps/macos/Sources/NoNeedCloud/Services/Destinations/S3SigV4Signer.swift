@@ -44,14 +44,14 @@ struct S3SigV4Signer: Sendable {
             payloadHash: payloadHash,
             amzDate: amzDate
         )
-        let canonicalRequest = [
-            method.uppercased(),
-            canonicalURI,
-            canonicalQuery,
-            canonicalHeaders,
-            signedHeaders,
-            payloadHash,
-        ].joined(separator: "\n")
+        let canonicalRequest = Self.canonicalRequestBody(
+            method: method,
+            canonicalURI: canonicalURI,
+            canonicalQuery: canonicalQuery,
+            canonicalHeaders: canonicalHeaders,
+            signedHeaders: signedHeaders,
+            payloadHash: payloadHash
+        )
         let scope = "\(dateStamp)/\(region)/\(service)/aws4_request"
         let stringToSign = [
             "AWS4-HMAC-SHA256",
@@ -89,7 +89,25 @@ struct S3SigV4Signer: Sendable {
             payloadHash: payloadHash,
             amzDate: amzDate
         )
-        return [
+        return Self.canonicalRequestBody(
+            method: method,
+            canonicalURI: canonicalURI,
+            canonicalQuery: canonicalQuery,
+            canonicalHeaders: canonicalHeaders,
+            signedHeaders: signedHeaders,
+            payloadHash: payloadHash
+        )
+    }
+
+    private static func canonicalRequestBody(
+        method: String,
+        canonicalURI: String,
+        canonicalQuery: String,
+        canonicalHeaders: String,
+        signedHeaders: String,
+        payloadHash: String
+    ) -> String {
+        [
             method.uppercased(),
             canonicalURI,
             canonicalQuery,
@@ -120,12 +138,16 @@ struct S3SigV4Signer: Sendable {
         return (headers, canonical, keys.joined(separator: ";"))
     }
 
-    static func amzDateString(from date: Date) -> String {
+    private static let amzDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.timeZone = TimeZone(identifier: "UTC")
         formatter.dateFormat = "yyyyMMdd'T'HHmmss'Z'"
-        return formatter.string(from: date)
+        return formatter
+    }()
+
+    static func amzDateString(from date: Date) -> String {
+        amzDateFormatter.string(from: date)
     }
 
     static func sha256Hex(_ string: String) -> String {

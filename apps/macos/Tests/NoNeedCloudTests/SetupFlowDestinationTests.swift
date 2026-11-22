@@ -36,7 +36,7 @@ struct SetupFlowDestinationTests {
         #expect(config.usePathStyle)
         #expect(!config.secretRef.isEmpty)
 
-        let stored = try #require(keychain.load(account: config.secretRef))
+        let stored = try #require(try keychain.load(account: config.secretRef))
         let payload = try JSONDecoder().decode(S3SecretPayload.self, from: stored)
         #expect(payload.secretAccessKey == "s3cr3t")
         #expect(payload.sessionToken == nil)
@@ -63,7 +63,7 @@ struct SetupFlowDestinationTests {
             Issue.record("expected s3 destination")
             return
         }
-        let stored = try #require(keychain.load(account: s3config.secretRef))
+        let stored = try #require(try keychain.load(account: s3config.secretRef))
         let payload = try JSONDecoder().decode(S3SecretPayload.self, from: stored)
         #expect(payload.sessionToken == "SESSION-TOK")
     }
@@ -83,7 +83,7 @@ struct SetupFlowDestinationTests {
             return
         }
         #expect(!config.secretRef.isEmpty)
-        #expect(keychain.load(account: config.secretRef) == Data("od-token".utf8))
+        try #expect(keychain.load(account: config.secretRef) == Data("od-token".utf8))
     }
 
     @Test func googleDriveTokenCapturedInPlanAndKeychain() throws {
@@ -101,7 +101,7 @@ struct SetupFlowDestinationTests {
             return
         }
         #expect(!config.secretRef.isEmpty)
-        #expect(keychain.load(account: config.secretRef) == Data("gd-token".utf8))
+        try #expect(keychain.load(account: config.secretRef) == Data("gd-token".utf8))
     }
 
     @Test func editingCloudPlanKeepsExistingSecretRefWithoutRewritingKeychain() {
@@ -129,7 +129,7 @@ struct SetupFlowDestinationTests {
 
         let plan = flow.makePlan()
         #expect(plan?.destination == .onedrive(CloudTokenConfig(secretRef: "existing-ref")))
-        #expect(keychain.load(account: "existing-ref") == Data("fresh-token".utf8))
+        try #expect(keychain.load(account: "existing-ref") == Data("fresh-token".utf8))
     }
 
     @Test func folderProviderStillUsesDestinationURL() {

@@ -13,11 +13,11 @@ final class MockKeychainStore: KeychainStore, @unchecked Sendable {
         }
     }
 
-    func load(account: String) -> Data? {
+    func load(account: String) throws -> Data? {
         lock.withLock { items[account] }
     }
 
-    func delete(account: String) {
+    func delete(account: String) throws {
         lock.withLock { items[account] = nil }
     }
 }
@@ -25,6 +25,8 @@ final class MockKeychainStore: KeychainStore, @unchecked Sendable {
 final class FakeHTTPClient: HTTPClient, @unchecked Sendable {
     private let lock = NSLock()
     private(set) var requests: [CloudHTTPRequest] = []
+    /// One entry per request, in the same order as `requests`; `Data()` for
+    /// requests without a streamed file body.
     private(set) var recordedBodies: [Data] = []
     var responder: @Sendable (CloudHTTPRequest) throws -> CloudHTTPResponse
 
@@ -36,9 +38,8 @@ final class FakeHTTPClient: HTTPClient, @unchecked Sendable {
 
     func send(_ request: CloudHTTPRequest) async throws -> CloudHTTPResponse {
         lock.withLock { requests.append(request) }
-        if let bodyFileURL = request.bodyFileURL, let body = try? Data(contentsOf: bodyFileURL) {
-            lock.withLock { recordedBodies.append(body) }
-        }
+        let body = request.bodyFileURL.flatMap { try? Data(contentsOf: $0) } ?? Data()
+        lock.withLock { recordedBodies.append(body) }
         return try responder(request)
     }
 }

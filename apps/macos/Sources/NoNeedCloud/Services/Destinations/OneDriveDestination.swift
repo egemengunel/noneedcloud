@@ -37,11 +37,16 @@ final class OneDriveDestination: BackupDestination {
 
     func copyFile(relPath: String, fromFile: URL, sourceModificationDate: Date, isCancelled: @escaping @Sendable () -> Bool) async throws {
         let token = try accessToken()
-        var components = URLComponents(string: "\(Self.apiRoot)")!
+        guard var components = URLComponents(string: Self.apiRoot) else {
+            throw DestinationError("OneDrive upload failed: the Graph API URL is invalid.")
+        }
         components.percentEncodedPath = "/v1.0/me/drive/root:/\(Self.encodedObjectPath(relPath)):/content"
+        guard let url = components.url else {
+            throw DestinationError("OneDrive upload failed: could not build the upload URL for \"\(relPath)\".")
+        }
         let request = CloudHTTPRequest(
             method: "PUT",
-            url: components.url!,
+            url: url,
             headers: [
                 "Authorization": "Bearer \(token)",
                 "Content-Type": "application/octet-stream",
@@ -80,7 +85,7 @@ final class OneDriveDestination: BackupDestination {
     }()
 
     private func accessToken() throws -> String {
-        guard let data = keychain.load(account: config.secretRef),
+        guard let data = try keychain.load(account: config.secretRef),
               let token = String(data: data, encoding: .utf8), !token.isEmpty else {
             throw DestinationError(
                 "OneDrive access token is missing from the Keychain. Paste a fresh token for this destination."

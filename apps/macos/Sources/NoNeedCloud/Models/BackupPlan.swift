@@ -164,7 +164,7 @@ struct BackupPlan: Codable, Equatable, Identifiable, Sendable {
         }
         includePhotos = try container.decode(Bool.self, forKey: .includePhotos)
         photoOptions = try container.decode(PhotoOptions.self, forKey: .photoOptions)
-        if let decoded = try? container.decode(Destination.self, forKey: .destination) {
+        if let decoded = try container.decodeIfPresent(Destination.self, forKey: .destination) {
             destination = decoded
         } else {
             destination = .folder(try container.decode(URL.self, forKey: .legacyDestinationURL))
