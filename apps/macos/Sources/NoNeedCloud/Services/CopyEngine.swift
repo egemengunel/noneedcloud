@@ -92,17 +92,20 @@ final class CopyEngine: Sendable {
     private let stateURL: URL
     private let cancelFlag = CancellationFlag()
     private let perFileDelayNanos: UInt64
+    private let ubiquitousSource: (any UbiquitousFileSource)?
 
     init(
         sourceURL: URL,
         destinationURL: URL,
         stateURL: URL,
-        perFileDelayNanos: UInt64 = 0
+        perFileDelayNanos: UInt64 = 0,
+        ubiquitousSource: (any UbiquitousFileSource)? = nil
     ) {
         self.sourceURL = sourceURL
         self.destinationURL = destinationURL
         self.stateURL = stateURL
         self.perFileDelayNanos = perFileDelayNanos
+        self.ubiquitousSource = ubiquitousSource
         self.state = CopyEngineState()
     }
 
@@ -188,14 +191,18 @@ final class CopyEngine: Sendable {
                 await publishIfDue(currentFile: file.relativePath)
                 continue
             }
-            do {
+            let fileURL = sourceURL.appendingPathComponent(file.relativePath)
+            let offloadOutcome = await SmartOffload.run(for: fileURL, source: ubiquitousSource) {
                 try Self.copyFile(
-                    from: sourceURL.appendingPathComponent(file.relativePath),
+                    from: fileURL,
                     to: destinationFile,
                     sourceModificationDate: file.mtime,
                     chunkSize: Self.chunkSize,
                     cancelFlag: cancelFlag
                 )
+            }
+            switch offloadOutcome {
+            case .copied:
                 index.update(file.relativePath, size: file.size, mtime: file.mtime.timeIntervalSince1970)
                 copied += 1
                 bytesCopied += file.size
@@ -203,21 +210,25 @@ final class CopyEngine: Sendable {
                 if copied % 200 == 0 {
                     try? index.save()
                 }
-            } catch CopyError.cancelled {
-                if !FileManager.default.fileExists(atPath: destinationFile.path) {
-                    index.remove(file.relativePath)
+            case .fetchFailed(let error):
+                failed += 1
+                await state.recordError(BackupFileError(path: file.relativePath, reason: error.localizedDescription))
+            case .copyFailed(let error):
+                if let copyError = error as? CopyError, case .cancelled = copyError {
+                    if !FileManager.default.fileExists(atPath: destinationFile.path) {
+                        index.remove(file.relativePath)
+                    }
+                    try? index.save()
+                    await state.finish(cancelled: true)
+                    return CopyRunResult(
+                        outcome: .cancelled,
+                        itemsCopied: copied,
+                        itemsSkipped: skipped,
+                        itemsFailed: failed,
+                        bytesCopied: bytesCopied,
+                        itemsProtected: index.count
+                    )
                 }
-                try? index.save()
-                await state.finish(cancelled: true)
-                return CopyRunResult(
-                    outcome: .cancelled,
-                    itemsCopied: copied,
-                    itemsSkipped: skipped,
-                    itemsFailed: failed,
-                    bytesCopied: bytesCopied,
-                    itemsProtected: index.count
-                )
-            } catch {
                 if !FileManager.default.fileExists(atPath: destinationFile.path) {
                     index.remove(file.relativePath)
                 }

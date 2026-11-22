@@ -106,6 +106,20 @@ struct SourcesStep: View {
                 }
                 .listStyle(.inset)
             }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("iCloud Sources")
+                    .font(.headline)
+                Toggle("iCloud Drive", isOn: $flow.includeICloudDrive)
+                if flow.includeICloudDrive {
+                    Text("Includes Desktop and Documents when they sync with iCloud.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .padding(.leading, 20)
+                }
+                Toggle("Pages", isOn: $flow.includePages)
+                Toggle("Numbers", isOn: $flow.includeNumbers)
+            }
         }
         .padding(20)
     }
@@ -192,11 +206,7 @@ struct StartBackupStep: View {
     }
 
     private var sourcesSummary: String {
-        var parts: [String] = []
-        let count = flow.sourceFolderURLs.count
-        if count > 0 {
-            parts.append(count == 1 ? "1 folder" : "\(count) folders")
-        }
+        var parts = flow.plannedSources.map(\.displayName)
         if flow.includePhotos {
             parts.append("Photos")
         }

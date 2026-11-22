@@ -113,4 +113,57 @@ struct SetupFlowTests {
         #expect(plan?.destinationURL == destination)
         #expect(plan?.schedule == .manual)
     }
+
+    @Test func iCloudDriveToggleAloneAllowsAdvancingAndIsCapturedInPlan() {
+        let flow = SetupFlow()
+        flow.includeICloudDrive = true
+        #expect(flow.canContinue)
+        #expect(flow.next())
+        #expect(flow.step == .destination)
+        flow.destinationURL = URL(fileURLWithPath: "/tmp/dest")
+
+        let plan = flow.makePlan()
+        #expect(plan?.sources == [.icloudDrive])
+    }
+
+    @Test func appContainerTogglesAloneAllowAdvancing() {
+        let flow = SetupFlow()
+        flow.includePages = true
+        #expect(flow.canContinue)
+        flow.includePages = false
+        flow.includeNumbers = true
+        #expect(flow.canContinue)
+        flow.destinationURL = URL(fileURLWithPath: "/tmp/dest")
+
+        let plan = flow.makePlan()
+        #expect(plan?.sources == [.numbers])
+    }
+
+    @Test func iCloudTogglesCombineWithFoldersInStableOrder() {
+        let flow = SetupFlow()
+        let folder = URL(fileURLWithPath: "/tmp/src")
+        flow.addSourceFolder(folder)
+        flow.includeNumbers = true
+        flow.includeICloudDrive = true
+        flow.includePages = true
+
+        #expect(flow.plannedSources == [.folder(folder), .icloudDrive, .pages, .numbers])
+    }
+
+    @Test func turningEverySourceOffBlocksContinuationAndPlan() {
+        let flow = SetupFlow()
+        flow.includeICloudDrive = true
+        flow.includeICloudDrive = false
+        flow.destinationURL = URL(fileURLWithPath: "/tmp/dest")
+
+        #expect(!flow.canContinue)
+        #expect(flow.makePlan() == nil)
+    }
+
+    @Test func iCloudSourceNamesAppearInSummary() {
+        let flow = SetupFlow()
+        flow.includeICloudDrive = true
+        flow.includePages = true
+        #expect(flow.plannedSources.map(\.displayName) == ["iCloud Drive", "Pages"])
+    }
 }

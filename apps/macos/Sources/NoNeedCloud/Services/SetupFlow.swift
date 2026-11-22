@@ -15,6 +15,9 @@ final class SetupFlow: ObservableObject {
 
     @Published private(set) var step: Step = .sources
     @Published var sourceFolderURLs: [URL] = []
+    @Published var includeICloudDrive = false
+    @Published var includePages = false
+    @Published var includeNumbers = false
     @Published var includePhotos = false
     @Published var photosOnly = false
     @Published var videosOnly = false
@@ -25,9 +28,17 @@ final class SetupFlow: ObservableObject {
     @Published var photoDateRangeEnd = Date.now
     @Published var destinationURL: URL?
 
+    var plannedSources: [BackupSource] {
+        var sources = sourceFolderURLs.map(BackupSource.folder)
+        if includeICloudDrive { sources.append(.icloudDrive) }
+        if includePages { sources.append(.pages) }
+        if includeNumbers { sources.append(.numbers) }
+        return sources
+    }
+
     var canContinue: Bool {
         switch step {
-        case .sources: (includePhotos || !sourceFolderURLs.isEmpty) && !(photosOnly && videosOnly)
+        case .sources: (includePhotos || !plannedSources.isEmpty) && !(photosOnly && videosOnly)
         case .destination: destinationURL != nil
         case .startBackup: false
         }
@@ -57,10 +68,11 @@ final class SetupFlow: ObservableObject {
     }
 
     func makePlan(name: String = SetupFlow.defaultPlanName) -> BackupPlan? {
-        guard !sourceFolderURLs.isEmpty || includePhotos, let destinationURL else { return nil }
+        let sources = plannedSources
+        guard !sources.isEmpty || includePhotos, let destinationURL else { return nil }
         return BackupPlan(
             name: name,
-            sourceFolderURLs: sourceFolderURLs,
+            sources: sources,
             includePhotos: includePhotos,
             photoOptions: PhotoOptions(
                 fullTimeline: !(photosOnly || videosOnly),

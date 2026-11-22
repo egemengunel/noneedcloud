@@ -192,11 +192,7 @@ struct PlanSummaryCard: View {
     }
 
     private var sourcesSummary: String {
-        var parts: [String] = []
-        let count = plan.sourceFolderURLs.count
-        if count > 0 {
-            parts.append(count == 1 ? "1 folder" : "\(count) folders")
-        }
+        var parts = plan.sources.map(\.displayName)
         if plan.includePhotos {
             parts.append("Photos")
         }

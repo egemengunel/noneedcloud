@@ -46,7 +46,7 @@ final class AppModel: ObservableObject {
     }
 
     func startBackup(_ plan: BackupPlan) {
-        guard !isBackupRunning, !plan.sourceFolderURLs.isEmpty || plan.includePhotos else { return }
+        guard !isBackupRunning, !plan.sources.isEmpty || plan.includePhotos else { return }
         Task(priority: .background) { await backup(plan) }
     }
 
@@ -72,14 +72,19 @@ final class AppModel: ObservableObject {
         var results: [CopyRunResult] = []
         var runErrors: [BackupFileError] = []
         var protectedTotal = 0
-        for source in plan.sourceFolderURLs {
+        for source in plan.sources {
+            let ubiquitousSource: (any UbiquitousFileSource)? = switch source {
+            case .folder: nil
+            case .icloudDrive, .appContainer: ICloudDriveSource()
+            }
             let engine = CopyEngine(
-                sourceURL: source,
+                sourceURL: source.sourceURL,
                 destinationURL: plan.destinationURL.appendingPathComponent(
-                    source.lastPathComponent,
+                    source.displayName,
                     isDirectory: true
                 ),
-                stateURL: IncrementalIndex.indexFileURL(stateDirectory: runStateDirectory, source: source)
+                stateURL: IncrementalIndex.indexFileURL(stateDirectory: runStateDirectory, source: source),
+                ubiquitousSource: ubiquitousSource
             )
             activeEngine = engine
             let result = await engine.run()

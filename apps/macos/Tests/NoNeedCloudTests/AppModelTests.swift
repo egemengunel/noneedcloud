@@ -205,4 +205,29 @@ struct AppModelTests {
         #expect(second[0].itemsSkipped == 1)
         #expect(model.itemsProtected == 1)
     }
+
+    @Test @MainActor func failedSourceDoesNotStopRemainingSources() async throws {
+        let root = TestSupport.makeTempDirectory()
+        defer { try? FileManager.default.removeItem(at: root) }
+        let missing = root.appendingPathComponent("Missing", isDirectory: true)
+        let good = root.appendingPathComponent("Good", isDirectory: true)
+        let destination = root.appendingPathComponent("Dest", isDirectory: true)
+        try FileManager.default.createDirectory(at: good, withIntermediateDirectories: true)
+        try Data("kept".utf8).write(to: good.appendingPathComponent("a.txt"))
+        let store = JSONPlanStore(directory: root.appendingPathComponent("State", isDirectory: true))
+        let model = AppModel(store: store, runStateDirectory: root.appendingPathComponent("RunState", isDirectory: true))
+        let plan = TestSupport.makePlan(name: "Mixed", sources: [missing, good], destination: destination)
+
+        let results = await model.backup(plan)
+
+        #expect(results.count == 2)
+        #expect(results[0].outcome == .failed)
+        #expect(results[1].outcome == .completed)
+        #expect(results[1].itemsCopied == 1)
+        #expect(try Data(contentsOf: destination.appendingPathComponent("Good/a.txt")) == Data("kept".utf8))
+        #expect(model.history.count == 1)
+        #expect(model.history[0].outcome == .failed)
+        #expect(model.history[0].errors.contains { $0.path == missing.path })
+        #expect(model.lastBackupDate == nil)
+    }
 }

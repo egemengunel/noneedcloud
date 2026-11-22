@@ -52,10 +52,29 @@ final class IncrementalIndex: @unchecked Sendable {
     }
 
     static func indexFileURL(stateDirectory: URL, source: URL) -> URL {
-        let sanitized = source.lastPathComponent.map {
+        indexFileURL(
+            stateDirectory: stateDirectory,
+            sourceKey: source.path(percentEncoded: false),
+            name: source.lastPathComponent
+        )
+    }
+
+    static func indexFileURL(stateDirectory: URL, source: BackupSource) -> URL {
+        switch source {
+        case .folder(let url):
+            return indexFileURL(stateDirectory: stateDirectory, source: url)
+        case .icloudDrive:
+            return indexFileURL(stateDirectory: stateDirectory, sourceKey: "icloud-drive", name: "iCloud Drive")
+        case .appContainer(let bundleID, _):
+            return indexFileURL(stateDirectory: stateDirectory, sourceKey: bundleID, name: bundleID)
+        }
+    }
+
+    private static func indexFileURL(stateDirectory: URL, sourceKey: String, name: String) -> URL {
+        let sanitized = name.map {
             $0.isLetter || $0.isNumber ? $0 : "-"
         }.reduce(into: "") { $0.append($1) }
-        let digest = SHA256.hash(data: Data(source.path(percentEncoded: false).utf8))
+        let digest = SHA256.hash(data: Data(sourceKey.utf8))
         let fingerprint = digest.prefix(6).map { String(format: "%02x", $0) }.joined()
         return stateDirectory
             .appendingPathComponent("index-\(sanitized)-\(fingerprint).json")
