@@ -24,6 +24,16 @@ enum Theme {
     static let amberLine = Color.dynamic(light: 0xF2DEB8, dark: 0x5A4421)
     static let red = Color.dynamic(light: 0xA93435, dark: 0xF08A8A)
 
+    // Protected hero artwork (Yörünge / Bulut zemini).
+    static let heroOrbitOuter = Color.dynamic(light: 0xDFEAFE, dark: 0x1E3158)
+    static let heroOrbitInner = Color.dynamic(light: 0xE4EDFF, dark: 0x1B2C50)
+    static let heroCloudBase = Color.dynamic(light: 0xD5E4FF, dark: 0x243A66)
+
+    // Cover rings (Arka plan halkası), used by launch and onboarding.
+    static let coverRingOuter = Color(hex: 0x192745)
+    static let coverRingMiddle = Color(hex: 0x203256)
+    static let coverRingInner = Color(hex: 0x2A416D)
+
     // The live-progress card is navy in both appearances.
     static let navy = Color(hex: 0x131E35)
     static let navy2 = Color(hex: 0x1D2B47)
@@ -54,6 +64,29 @@ extension Color {
                 alpha: 1
             )
         })
+    }
+}
+
+/// The cover's three rings with the cloud on their centre, as in Figma
+/// "NoNeedCloud · Kapak": rings 625 / 494 / 382 pt, cloud 326 pt wide.
+/// The middle and inner ring share the cloud's centre; the outer ring sits
+/// 15.5 pt right and 7.5 pt up, as drawn. `scale` shrinks the whole mark.
+struct CoverRings: View {
+    var scale: CGFloat = 1
+    var cloudOffsetY: CGFloat = 0
+
+    var body: some View {
+        ZStack {
+            Circle().fill(Theme.coverRingOuter)
+                .frame(width: 625 * scale, height: 625 * scale)
+                .offset(x: 15.5 * scale, y: -7.5 * scale)
+            Circle().fill(Theme.coverRingMiddle).frame(width: 494 * scale, height: 494 * scale)
+            Circle().fill(Theme.coverRingInner).frame(width: 382 * scale, height: 382 * scale)
+            BrandCloud(color: Theme.lightBlue, width: 326 * scale)
+                .offset(y: -7.5 * scale + cloudOffsetY)
+        }
+        .frame(width: 640 * scale, height: 640 * scale)
+        .accessibilityHidden(true)
     }
 }
 

@@ -89,7 +89,6 @@ struct ProtectedView: View {
     private var hero: some View {
         ZStack(alignment: .topLeading) {
             HeroArtwork()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
             TimelineView(.periodic(from: .now, by: 30)) { context in
                 VStack(alignment: .leading, spacing: 0) {
                     StatusPill(text: String(localized: "Backup up to date"))
@@ -170,24 +169,33 @@ struct ProtectedView: View {
     }
 }
 
-/// Orbits, cloud and check on the right side of the protected hero.
+/// Orbits, cloud and check on the right of the protected hero, placed at the
+/// exact Figma coordinates ("02 · Koruma özeti", hero card 944 × 200),
+/// measured from the card's trailing edge so they hold at any window width.
 private struct HeroArtwork: View {
+    /// Figma card width the coordinates below are measured in.
+    private let designWidth: CGFloat = 944
+
     var body: some View {
-        ZStack {
-            Circle().fill(Theme.blue.opacity(0.05)).frame(width: 272).offset(x: 60, y: -50)
-            Circle().fill(Theme.blue.opacity(0.06)).frame(width: 235).offset(x: 12, y: 0)
-            Circle().fill(Theme.blue.opacity(0.08)).frame(width: 159).offset(x: 8, y: -2)
-            BrandCloud(color: Theme.blue, width: 96).offset(x: 5, y: -3)
+        GeometryReader { proxy in
+            let x = { (designX: CGFloat) in proxy.size.width - (designWidth - designX) }
             ZStack {
-                Circle().fill(.white).frame(width: 35)
+                Circle().fill(Theme.heroOrbitOuter).frame(width: 272, height: 272)
+                    .position(x: x(904), y: 95)
+                Circle().fill(Theme.heroOrbitInner).frame(width: 235, height: 235)
+                    .position(x: x(837.5), y: 119.5)
+                Circle().fill(Theme.heroCloudBase).frame(width: 159, height: 159)
+                    .position(x: x(820.5), y: 99.5)
+                BrandCloud(color: Theme.blue, width: 96)
+                    .position(x: x(819), y: 97)
+                Circle().fill(.white).frame(width: 35, height: 35)
+                    .position(x: x(867.5), y: 123.5)
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 22))
                     .foregroundStyle(Theme.green)
+                    .position(x: x(867.5), y: 123.5)
             }
-            .offset(x: 50, y: 24)
         }
-        .frame(width: 260, height: 200)
-        .padding(.trailing, 40)
         .accessibilityHidden(true)
     }
 }

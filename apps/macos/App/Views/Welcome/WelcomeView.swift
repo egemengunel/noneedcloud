@@ -14,17 +14,12 @@ struct WelcomeView: View {
             ZStack(alignment: .leading) {
                 Theme.navy
 
-                // Orbits and cloud on the right, partly off the edge like the cover.
-                ZStack {
-                    Circle().fill(Color(hex: 0x1D2B47)).frame(width: 560, height: 560)
-                    Circle().fill(Color(hex: 0x223258)).frame(width: 430, height: 430).offset(x: 40)
-                    BrandCloud(color: Theme.lightBlue, width: 300)
-                        .offset(x: -10, y: appeared ? -6 : 14)
-                        .scaleEffect(appeared ? 1 : 0.92)
-                        .opacity(appeared ? 1 : 0)
-                }
-                .frame(width: 560, height: 560)
-                .position(x: proxy.size.width - 150, y: proxy.size.height * 0.42)
+                // Cover rings with the cloud on their centre, partly off the
+                // trailing edge like the Figma cover (cloud centre 170 pt from it).
+                CoverRings(scale: 0.95, cloudOffsetY: appeared ? 0 : 14)
+                    .opacity(appeared ? 1 : 0)
+                    .scaleEffect(appeared ? 1 : 0.94)
+                    .position(x: proxy.size.width - 170, y: proxy.size.height * 0.5)
 
                 VStack(alignment: .leading, spacing: 0) {
                     Text("WELCOME")
