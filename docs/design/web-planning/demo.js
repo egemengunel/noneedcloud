@@ -77,6 +77,7 @@ function stageFor(name) {
     number: node.querySelector(".cue-value"),
     meter: node.querySelector(".cue-meter"),
     fill: node.querySelector(".cue-meter > span"),
+    static: node.hasAttribute("data-static"),
     effects: [],
     timers: [],
   };
@@ -112,7 +113,7 @@ function playVideo(stage, restart = false) {
 function showVideo(stage, scene) {
   const video = stage.video;
   if (!video) return;
-  const name = scene.video;
+  const name = stage.static ? null : scene.video;
   stage.mac.hidden = Boolean(name);
   video.hidden = !name;
   if (!name) {
@@ -218,7 +219,7 @@ async function setScene(stage, key, animate = true) {
   stage.number.textContent = key === "canli-yedekleme" ? `%${scene.meter}` : "";
   stage.meter.hidden = !scene.meter;
   stage.node.style.setProperty("--meter", `${scene.meter ?? 0}%`);
-  if (animate && root.dataset.motion === "on" && stage.node.classList.contains("active-visual")) animateStage(stage, key, scene);
+  if (animate && !stage.static && root.dataset.motion === "on" && stage.node.classList.contains("active-visual")) animateStage(stage, key, scene);
 }
 
 let heroVisible = false;
@@ -227,7 +228,7 @@ let heroIndex = 0;
 
 function updateHeroTimer() {
   clearTimeout(heroTimer);
-  if (heroFlowOn) return;
+  if (heroFlowOn || hero.static) return;
   if (root.dataset.motion !== "on" || !heroVisible || document.hidden ||
       heroIndex >= heroButtons.length - 1 || heroReel.matches(":hover, :focus-within")) return;
   heroTimer = setTimeout(() => selectHero(heroIndex + 1), 1950);
@@ -324,7 +325,7 @@ function updateScroll() {
     }
   }
   if (heroVisible) {
-    heroReel.style.setProperty("--hero-drift", root.dataset.motion === "on" ? `${Math.min(scrollY * .105, 62)}px` : "0px");
+    heroReel.style.setProperty("--hero-drift", root.dataset.motion === "on" && !hero.static ? `${Math.min(scrollY * .105, 62)}px` : "0px");
   }
 }
 
@@ -367,7 +368,7 @@ const activeVisuals = new IntersectionObserver((entries) => {
   }
 }, { threshold: .16 });
 function playVisible(stage) {
-  if (root.dataset.motion === "on" && stage.ready && !stage.played && stage.node.classList.contains("active-visual")) {
+  if (!stage.static && root.dataset.motion === "on" && stage.ready && !stage.played && stage.node.classList.contains("active-visual")) {
     animateStage(stage, stage.ready, sceneDefinitions[stage.ready]);
   }
 }
@@ -396,7 +397,7 @@ updateRail();
 
 // ---- Hero: the whole app flow as one 3x recording, with a backup progress panel.
 // Segment starts (seconds) match assets/recordings/flow.mp4.
-var heroFlowOn = Boolean(hero.video && document.querySelector("[data-flow-desktop]"));
+var heroFlowOn = !hero.static && Boolean(hero.video && document.querySelector("[data-flow-desktop]"));
 const flow = {
   src: "assets/recordings/flow.mp4",
   poster: "assets/recordings/flow-poster.jpg",

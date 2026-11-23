@@ -7,7 +7,7 @@
   <title>NoNeedCloud · iCloud arşivinin bir kopyası sende</title>
   <link rel="icon" href="assets/cloud.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="landing.css?v=9">
+  <link rel="stylesheet" href="landing.css?v=12">
   <script src="demo.js?v=9" defer></script>
 </head>
 <body class="landing" id="baslangic">
@@ -19,10 +19,8 @@
         <a href="#nasil">Nasıl çalışır</a>
         <a href="#urun">Ürün turu</a>
         <a href="#ornekler">Örnekler</a>
-        <a href="#gelir">Lisans</a>
       </nav>
       <div class="nav-actions">
-        <a class="nav-cta" href="#demo">Demoyu izle</a>
       </div>
     </div>
     <div class="scroll-progress" aria-hidden="true"></div>
@@ -32,17 +30,16 @@
     <section class="landing-hero" aria-labelledby="hero-title">
       <div class="wrap hero-grid">
         <div class="hero-copy">
-          <h1 id="hero-title">iCloud arşivinin <span>bir kopyası sende.</span></h1>
+          <h1 id="hero-title">Hatıralar <span>kiralanmaz.</span></h1>
           <p>iCloud’daki fotoğraf ve dosyalarını Mac’inden harici diskine veya ağ depolama alanına yedekle.</p>
           <div class="landing-actions">
-            <a class="landing-button strong" href="#demo">Demoyu izle</a>
             <a class="landing-button soft" href="#nasil">Nasıl çalışır?</a>
           </div>
         </div>
 
         <div class="hero-reel" id="demo">
           <div class="reel-ornaments" aria-hidden="true"><span></span><span></span><span></span></div>
-          <figure class="scene-visual hero-visual" data-stage="hero" data-scene="kurulum">
+          <figure class="scene-visual hero-visual" data-stage="hero" data-scene="kurulum" data-static>
             <div class="scene-devices">
               <img class="scene-mac" src="assets/case-1-mac.webp?v=2" fetchpriority="high" width="1087" height="740" alt="Mac’te yedeğin saklanacağı yeri seçme ekranı.">
               <video class="scene-video" muted loop playsinline preload="metadata" hidden></video>
@@ -70,7 +67,6 @@
             </figcaption>
           </figure>
           <div class="reel-controls">
-            <span class="reel-label">Ürün demosu</span>
             <div class="reel-scenes" aria-label="Demoda gösterilen ekran">
               <button type="button" data-hero-scene="kurulum" aria-pressed="true">Kurulum</button>
               <button type="button" data-hero-scene="canli-yedekleme" aria-pressed="false">Yedekleme</button>
@@ -207,17 +203,6 @@
       </div>
     </section>
 
-    <section id="gelir" class="landing-section licence" aria-labelledby="licence-title">
-      <div class="wrap licence-card reveal">
-        <div><h2 id="licence-title">Mac için tek seferlik lisans</h2><p>NoNeedCloud’un Mac sürümü için tek seferlik satın alma planlıyoruz.</p></div>
-        <dl class="licence-details">
-          <div><dt>Lisans kapsamı</dt><dd>Mac’teki temel yedekleme özellikleri lisansa dahil olacak. Yeni ana sürümler ve iPhone lisansı ayrı değerlendirilecek.</dd></div>
-          <div><dt>Depolama</dt><dd>Kendi diskini veya depolama hizmetini kullanırsın. Donanım ve varsa depolama ücreti ayrı ödenir.</dd></div>
-          <div><dt>Fiyat ve deneme</dt><dd>Fiyatı ve deneme koşullarını kullanıcı görüşmelerinden sonra belirleyeceğiz.</dd></div>
-        </dl>
-      </div>
-    </section>
-
     <section id="sorular" class="wrap landing-section faq" aria-labelledby="faq-title">
       <h2 id="faq-title" class="reveal">Sık sorulan sorular</h2>
       <div class="faq-items reveal">
@@ -225,6 +210,22 @@
         <details><summary>Yedeklerimi nasıl açarım?</summary><p>Kopyalar seçtiğin depolama alanında dosya ve klasör olarak saklanır. Mac’inde Finder’ı açıp yedek klasörüne gidebilirsin.</p></details>
         <details><summary>iPhone sürümü hangi aşamada?</summary><p>İlk sürümü Mac için tasarlıyoruz. iPhone ekranları şu an tasarım aşamasında.</p></details>
         <details id="kararlar"><summary>Ürün planında sırada ne var?</summary><p>Geniş bir iCloud arşivi ve harici diski veya NAS’ı olan Mac kullanıcılarıyla ilk yedeklemeyi, değişen dosyaların kopyalanmasını ve Finder’dan geri yüklemeyi deneyeceğiz. Sonra hangi fiyatın ve deneme koşullarının uygun olduğunu araştıracağız.</p></details>
+      </div>
+    </section>
+
+    <section id="kurucular" class="landing-section founders" aria-labelledby="founders-title">
+      <div class="wrap founders-stage">
+        <figure class="polaroid polaroid-murat reveal"><img src="assets/founders/murat.jpg" width="600" height="750" alt="Murat Aslan" loading="lazy"><figcaption>Murat Aslan</figcaption></figure>
+        <figure class="polaroid polaroid-egemen reveal"><img src="assets/founders/egemen.jpg" width="600" height="750" alt="Egemen Günel" loading="lazy"><figcaption>Egemen Günel</figcaption></figure>
+        <figure class="polaroid polaroid-deniz reveal"><img src="assets/founders/deniz.jpg" width="600" height="750" alt="Deniz Köktürk" loading="lazy"><figcaption>Deniz Köktürk</figcaption></figure>
+        <article class="founder-letter reveal">
+          <h2 id="founders-title">NoNeedCloud’u önce kendimiz için yaptık.</h2>
+          <p>Hepimizin telefonunda yıllardır biriken fotoğraflar, belgeler ve küçük hatıralar var. Çoğu yalnızca iCloud’da duruyor. Bir gün fark ettik ki iCloud senkronize ediyor ama yedeklemiyor: bir cihazdan silinen fotoğraf, hepsinden siliniyor.</p>
+          <p>Harici diskimiz de vardı, ağ depolama alanımız da. Eksik olan, iCloud arşivini oraya düzenli ve güvenle taşıyan sade bir Mac uygulamasıydı. Bulduğumuz araçlar ya fazla karmaşıktı ya da yedeği kendi formatlarına kilitliyordu.</p>
+          <p>Bu yüzden kuralları baştan koyduk: iCloud’daki hiçbir şeye dokunma. Yedeği sıradan dosya ve klasörler olarak sakla, Finder’dan açılabilsin. Her şey Mac’te olsun; hesap ya da sunucu gerekmesin.</p>
+          <p>NoNeedCloud bu kuralların sonucu. Kendi arşivimizi korumak için yaptık ve aynı huzuru başkalarına da verebileceğine inanıyoruz.</p>
+          <footer class="letter-signature"><strong>Murat, Egemen &amp; Deniz</strong><span>NoNeedCloud kurucuları</span></footer>
+        </article>
       </div>
     </section>
 
@@ -247,7 +248,7 @@
         <p>Mac için yedekleme uygulaması taslağı</p>
       </div>
       <div><h2>Ürün</h2><a href="#nasil">Nasıl çalışır</a><a href="#urun">Ürün turu</a><a href="#ornekler">Örnekler</a></div>
-      <div><h2>Plan</h2><a href="#gelir">Lisans</a><a href="#sorular">Sık sorulan sorular</a><a href="#kararlar">Sıradaki adımlar</a></div>
+      <div><h2>Plan</h2><a href="#sorular">Sık sorulan sorular</a><a href="#kurucular">Kurucular</a><a href="#kararlar">Sıradaki adımlar</a></div>
       <div><h2>Tasarım</h2><a href="onboarding/">Açılış animasyonları</a><a href="https://www.figma.com/design/UenSgbySVClALNNAwbcg50/Full-Time?node-id=1878-407">Figma dosyası</a><a href="#baslangic">Başa dön</a></div>
     </div>
   </footer>
